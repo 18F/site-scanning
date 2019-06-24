@@ -10,5 +10,6 @@ applications:
   memory: 256M
   instances: 1
   random-route: true
-  command: gunicorn -b :8080 scanner_ui.wsgi
-
+  command: python3 manage.py collectstatic --noinput ; gunicorn -b :8080 scanner_ui.wsgi
+  env:
+    DISABLE_COLLECTSTATIC: 1
