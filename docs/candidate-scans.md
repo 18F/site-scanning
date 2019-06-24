@@ -35,11 +35,11 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 
 ## Other Ideas
 
-* Discover `404` pages to uncover broken government websites.
-* Monitor government website performance, possibly using [Lighthouse](https://developers.google.com/web/tools/lighthouse/).
-* Monitor government website mobile responsiveness, possibly using [Google's Mobile-Friendly Test](https://search.google.com/test/mobile-friendly).
-* Monitor government's content distribution networks.
-* Monitor changes in agency's DNS record certificate holder, and alert agencies if there are changes, which may be a sign of malicious behavior. 
-* Uncover agency's social media pages for inclusion in the [U.S. Digital Registry](https://digital.gov/services/u-s-digital-registry/).
-* Uncover HTML metadata, which could help to populate sub-domain scanning capabilities.
+* **404 pages** - Discover `404` pages to uncover broken government websites.
+* **Website Performance** - Monitor government website performance, possibly using [Lighthouse](https://developers.google.com/web/tools/lighthouse/).
+* **Mobile Responsiveness** - Monitor government website mobile responsiveness, possibly using [Google's Mobile-Friendly Test](https://search.google.com/test/mobile-friendly).
+* **CDNs** - Monitor government's content distribution networks.
+* **DNS record certificate holder** - Monitor changes in agency's DNS record certificate holder, and alert agencies if there are changes, which may be a sign of malicious behavior. 
+* **Social media pages** - Uncover agency's social media pages for inclusion in the [U.S. Digital Registry](https://digital.gov/services/u-s-digital-registry/).
+* **HTML Metadata** - Uncover HTML metadata, which could help to populate sub-domain scanning capabilities.
 * Others from https://policy.cio.gov/.
