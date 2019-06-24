@@ -10,5 +10,5 @@ applications:
   memory: 256M
   instances: 1
   random-route: true
-  command: ./manage.py runserver
+  command: gunicorn -b :8080 scanner_ui.wsgi
 

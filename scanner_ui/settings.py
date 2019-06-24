@@ -133,6 +133,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# REST config
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    )
+}
+
 # AWS info
 if 'VCAP_SERVICES' not in os.environ:
     sys.exit('VCAP_SERVICES is not set')

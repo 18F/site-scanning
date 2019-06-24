@@ -3,6 +3,7 @@
 # This script is executed by cloud foundry
 #
 
+# set up domain-scan
 if [ ! -d domain-scan ] ; then
 	echo installing domain-scan
 	git clone https://github.com/18F/domain-scan --depth 1
@@ -13,3 +14,4 @@ pip3 install -r requirements-scanners.txt
 
 # install aws cli
 pip3 install awscli --upgrade --user
+

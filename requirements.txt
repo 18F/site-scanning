@@ -1,0 +1,13 @@
+boto3==1.9.174
+botocore==1.12.174
+Django==2.2.2
+djangorestframework==3.9.4
+docutils==0.14
+gunicorn==19.9.0
+jmespath==0.9.4
+python-dateutil==2.8.0
+pytz==2019.1
+s3transfer==0.2.1
+six==1.12.0
+sqlparse==0.3.0
+urllib3==1.25.3
