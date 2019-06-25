@@ -12,5 +12,8 @@ class ListScansView(generics.ListAPIView):
     """
     boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
     s3_resource = boto3.resource('s3')
+    # queryset = []
+    # for o in s3_resource.Bucket(settings.BUCKETNAME).objects.all():
+    # 	queryset.append(o)
     queryset = s3_resource.Bucket(settings.BUCKETNAME).objects.all()
     serializer_class = ScansSerializer

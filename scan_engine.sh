@@ -4,17 +4,40 @@
 # runs the scanners, collects the data, and puts it into s3.
 # It also cleans up old scans (>1y) to prevent clutter.
 #
+# It is meant to be run like so:
+#   cf run-task scanner-ui /app/scan_engine.sh
+
+export PYTHONPATH=/home/vcap/deps/0
+export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/.local/bin:$PATH
+export LD_LIBRARY_PATH=/home/vcap/deps/0/lib
+export LIBRARY_PATH=/home/vcap/deps/0/lib
 
 # make sure we have all the arguments we need
-if [ -z "$1" ] ; then
-	echo "no bucket supplied"
-	echo "usage:    $0 <s3 bucket name>"
-	echo "example:  $0 scanbucket"
-	exit 1
+if [ -n "$1" ] ; then
+	BUCKET="$1"
+else
+	BUCKET=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.bucket')
+	if [ -z "$BUCKET" ] ; then
+		echo "no bucket supplied"
+		echo "usage:    $0 <s3 bucket name>"
+		echo "example:  $0 scanbucket"
+		exit 1
+	fi
 fi
-BUCKET="$1"
 
+cd /app
+
+# install aws cli
+pip3 install awscli --upgrade --user
+
+# set up domain-scan
+if [ ! -d domain-scan ] ; then
+	echo installing domain-scan
+	git clone https://github.com/18F/domain-scan --depth 1
+fi
 cd domain-scan
+pip3 install -r requirements.txt
+pip3 install -r requirements-scanners.txt
 
 # get the list of domains
 #https://github.com/GSA/data/raw/master/dotgov-domains/current-full.csv
@@ -43,6 +66,14 @@ EOF
 # execute the scans
 #./scan domains.csv --scan=200
 ./scan /tmp/domains.csv --scan=pshtt
+
+# make sure the credentials are set
+AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
+export AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
+export AWS_SECRET_ACCESS_KEY
+AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
+export AWS_DEFAULT_REGION
 
 # put scan results into s3
 aws s3 cp cache/pshtt/ "s3://$BUCKET/" --recursive
