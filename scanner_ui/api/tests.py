@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
 from .serializers import DomainsSerializer
-from .views import getScansfromS3
+from .views import getDomainsFromS3
 from django.conf import settings
 import boto3
 
@@ -18,20 +18,20 @@ class CheckBucketTest(APITestCase):
     def test_bucket_parse(self):
         self.assertIsNotNone(settings.BUCKETNAME)
 
-class GetAllScansTest(APITestCase):
+class GetAllDomainsTest(APITestCase):
     client = APIClient()
 
-    def test_get_all_scans(self):
+    def test_get_all_domains(self):
         """
-        This test ensures that all scans
-        exist when we make a GET request to the scans/ endpoint
+        This test ensures that all domains
+        exist when we make a GET request to the domains/ endpoint
         """
         # hit the API endpoint
         response = self.client.get(
             reverse("domain-list", kwargs={"version": "v1"})
         )
         # fetch the data
-        expected = getScansfromS3()
+        expected = getDomainsFromS3()
 
         serialized = DomainsSerializer(expected, many=True)
         self.assertEqual(response.data, serialized.data)

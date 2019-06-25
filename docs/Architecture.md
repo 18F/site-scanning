@@ -11,9 +11,12 @@ There are three components to this project:
   scan results.
 
   The scan API map is thus:
-  - `/api/v1/scans/`
-  - `/api/v1/scans/{domain}`
-  - `/api/v1/scans/{domain}/scan/{scantype}`
+  - `/api/v1/domains/` lists the domains and what scan types are available for each of them.
+  - `/api/v1/domains/{domain}` pulls down all of the scan results for a particular domain.
+  - `/api/v1/domains/{domain}/scan/{scantype}` pulls down the particular scan result for a particular domain.
+  - `/api/v1/scans/` lists the scan types and what domains have scan data available for them.
+  - `/api/v1/scans/{scantype}` pulls down all of the scan results for all domains that have this scantype.
+  - `/api/v1/scans/{scantype}/domain/{domain}` pulls down the particular scan result for a particular domain.
 
 The components are deployed using CircleCI into cloud.gov and once a day, the scanning engine is
 executed using https://docs.cloudfoundry.org/devguide/using-tasks.html#run-tasks, generating
