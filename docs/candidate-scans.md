@@ -43,3 +43,4 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * **Social media pages** - Uncover agency's social media pages for inclusion in the [U.S. Digital Registry](https://digital.gov/services/u-s-digital-registry/).
 * **HTML Metadata** - Uncover HTML metadata, which could help to populate sub-domain scanning capabilities.
 * Others from https://policy.cio.gov/.
+* Security scans - https://github.com/mozilla/http-observatory-website/, https://github.com/zaproxy/zaproxy
