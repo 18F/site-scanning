@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import ListScansView
+from .views import ListDomainsView
 
 urlpatterns = [
-    path('scans/', ListScansView.as_view(), name="scans-all")
+    path('scans/', ListDomainsView.as_view(), name="domain-list")
 ]
 

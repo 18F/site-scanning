@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
-from .serializers import ScansSerializer
+from .serializers import DomainsSerializer
+from .views import getScansfromS3
 from django.conf import settings
 import boto3
 
@@ -27,14 +28,12 @@ class GetAllScansTest(APITestCase):
         """
         # hit the API endpoint
         response = self.client.get(
-            reverse("scans-all", kwargs={"version": "v1"})
+            reverse("domain-list", kwargs={"version": "v1"})
         )
         # fetch the data
-        boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
-        s3_resource = boto3.resource('s3')
-        expected = s3_resource.Bucket(settings.BUCKETNAME).objects.all()
+        expected = getScansfromS3()
 
-        serialized = ScansSerializer(expected, many=True)
+        serialized = DomainsSerializer(expected, many=True)
         self.assertEqual(response.data, serialized.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
