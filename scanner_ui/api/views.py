@@ -53,7 +53,7 @@ class DomainsViewset(viewsets.ViewSet):
 
 	def retrieve(self, request, pk=None):
 		domains = getDomain(pk)
-		serializer = DomainsSerializer(domains)
+		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
 
 class ScansViewset(viewsets.ViewSet):
@@ -64,5 +64,5 @@ class ScansViewset(viewsets.ViewSet):
 
 	def retrieve(self, request, pk=None):
 		domains = getScantype(pk)
-		serializer = DomainsSerializer(domains)
+		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
