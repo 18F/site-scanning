@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
 from .serializers import DomainsSerializer
-from .views import getDomainsFromS3
+from .views import getDomain
 from django.conf import settings
 import boto3
 
@@ -28,10 +28,10 @@ class GetAllDomainsTest(APITestCase):
         """
         # hit the API endpoint
         response = self.client.get(
-            reverse("domain-list", kwargs={"version": "v1"})
+            reverse("domains-list")
         )
         # fetch the data
-        expected = getDomainsFromS3()
+        expected = getDomain()
 
         serialized = DomainsSerializer(expected, many=True)
         self.assertEqual(response.data, serialized.data)

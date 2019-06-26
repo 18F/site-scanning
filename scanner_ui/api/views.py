@@ -1,55 +1,68 @@
 from django.shortcuts import render
+from django.conf import settings
 import boto3
 from rest_framework import generics
+from rest_framework import viewsets
+from rest_framework.response import Response
 from .serializers import DomainsSerializer
-from .serializers import ScansSerializer
-from django.conf import settings
 import os
+import json
 from collections import defaultdict
 
 # Create your views here.
 
-def getScansFromS3():
-	scans = defaultdict(list)
+def getScanFromS3(path):
+	boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
+	s3_resource = boto3.resource('s3')
+	response = s3_resource.Object(settings.BUCKETNAME,path).get()
+	return response['Body'].read()
+
+# If scantype is None, then we want all the scans.
+def getScantype(scantype=None):
+	scans = []
 	for f in getMetadatafromS3():
-		domain = os.path.basename(f.key)
-		scantype = os.path.dirname(f.key)
-		scans[scantype].append(domain)
+		s3scantype = os.path.dirname(f.key)
+		if scantype == None or s3scantype == scantype:
+			scandomain = os.path.basename(os.path.splitext(f.key)[0])
+			json_data = json.loads(getScanFromS3(f.key))
+			scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "data": json_data})
+	return scans
 
-	queryset = []
-	for scantype in scans:
-		queryset.append({"scan": scantype, "domains": scans[scantype]})
-	return queryset
-
-def getDomainsFromS3():
-	scans = defaultdict(list)
+# If domain is None, then we want all the domains.
+def getDomain(domain=None):
+	scans = []
 	for f in getMetadatafromS3():
-		domain = os.path.basename(f.key)
-		scantype = os.path.dirname(f.key)
-		scans[domain].append(scantype)
-
-	queryset = []
-	for domain in scans:
-		queryset.append({"domain": domain, "scans": scans[domain]})
-	return queryset
+		scandomain = os.path.basename(os.path.splitext(f.key)[0])
+		if domain == None or scandomain == domain:
+			scantype = os.path.dirname(f.key)
+			json_data = json.loads(getScanFromS3(f.key))
+			scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "data": json_data})
+	return scans
 
 def getMetadatafromS3():
 	boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
 	s3_resource = boto3.resource('s3')
 	return s3_resource.Bucket(settings.BUCKETNAME).objects.all()
 
-class ListDomainsView(generics.ListAPIView):
-	"""
-	Provides a get method handler.
-	"""
-	queryset = getDomainsFromS3()
 
-	serializer_class = DomainsSerializer
+class DomainsViewset(viewsets.ViewSet):
+	def list(self, request):
+		domains = getDomain()
+		serializer = DomainsSerializer(domains, many=True)
+		return Response(serializer.data)
 
-class ListScansView(generics.ListAPIView):
-	"""
-	Provides a get method handler.
-	"""
-	queryset = getScansFromS3()
+	def retrieve(self, request, pk=None):
+		domains = getDomain(pk)
+		serializer = DomainsSerializer(domains)
+		return Response(serializer.data)
 
-	serializer_class = ScansSerializer
+class ScansViewset(viewsets.ViewSet):
+	def list(self, request):
+		domains = getScantype()
+		serializer = DomainsSerializer(domains, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, pk=None):
+		domains = getScantype(pk)
+		serializer = DomainsSerializer(domains)
+		return Response(serializer.data)

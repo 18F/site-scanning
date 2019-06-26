@@ -18,6 +18,5 @@ from django.urls import path, re_path, include
 from scanner_ui.api import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    re_path('api/(?P<version>(v1|v2))/', include('scanner_ui.api.urls'))
+    path('api/v1/', include('scanner_ui.api.urls'))
 ]
