@@ -76,7 +76,4 @@ AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
 export AWS_DEFAULT_REGION
 
 # put scan results into s3
-aws s3 cp cache/pshtt/ "s3://$BUCKET/pshtt" --recursive
-
-# clean up old scans in s3
-
+aws s3 cp cache/pshtt/ "s3://$BUCKET/pshtt/" --recursive
