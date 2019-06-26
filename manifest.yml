@@ -1,0 +1,15 @@
+---
+applications:
+- name: scanner-ui
+  buildpacks:
+    - python_buildpack
+  disk_quota: 768M
+  timeout: 180
+  services:
+    - scanning-storage  # cf create-service s3 basic-sandbox scanning-storage
+  memory: 256M
+  instances: 1
+  random-route: true
+  command: python3 manage.py collectstatic --noinput ; gunicorn -b :8080 scanner_ui.wsgi
+  env:
+    DISABLE_COLLECTSTATIC: 1
