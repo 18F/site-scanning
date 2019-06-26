@@ -33,9 +33,13 @@ pip3 install awscli --upgrade --user
 # set up domain-scan
 if [ ! -d domain-scan ] ; then
 	echo installing domain-scan
-	git clone https://github.com/18F/domain-scan --depth 1
+	git clone https://github.com/18F/domain-scan
 fi
 cd domain-scan
+
+# XXX When we get this branch merged, remove this.
+git checkout tspencer/200scanner
+
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
@@ -65,7 +69,7 @@ EOF
 
 # execute the scans
 #./scan domains.csv --scan=200
-./scan /tmp/domains.csv --scan=pshtt
+./scan /tmp/domains.csv --scan=200
 
 # make sure the credentials are set
 AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
@@ -76,4 +80,4 @@ AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
 export AWS_DEFAULT_REGION
 
 # put scan results into s3
-aws s3 cp cache/pshtt/ "s3://$BUCKET/pshtt/" --recursive
+aws s3 cp cache/200/ "s3://$BUCKET/200/" --recursive

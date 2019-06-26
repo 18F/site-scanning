@@ -19,3 +19,6 @@ There are three components to this project:
 The components are deployed using CircleCI into cloud.gov and once a day, the scanning engine is
 executed using https://docs.cloudfoundry.org/devguide/using-tasks.html#run-tasks, generating
 it's json files into S3.  The UI then can be used to find and download the scan results.
+
+The scans are stored on disk as json files named by the domain and placed in a scantype
+subdirectory in an S3 bucket.
