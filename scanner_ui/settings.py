@@ -144,11 +144,13 @@ REST_FRAMEWORK = {
 
 # AWS info
 if 'VCAP_SERVICES' not in os.environ:
-    sys.exit('VCAP_SERVICES is not set')
-
-servicejson = os.environ['VCAP_SERVICES']
-services = json.loads(servicejson)
-BUCKETNAME = services['s3'][0]['credentials']['bucket']
-AWS_REGION = services['s3'][0]['credentials']['region']
-AWS_KEY_ID = services['s3'][0]['credentials']['access_key_id']
-AWS_ACCESS_KEY = services['s3'][0]['credentials']['secret_access_key']
+    print('VCAP_SERVICES not set, assuming you are testing')
+    BUCKETNAME = 'ryft-public-sample-data'
+    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
+else:
+    servicejson = os.environ['VCAP_SERVICES']
+    services = json.loads(servicejson)
+    BUCKETNAME = services['s3'][0]['credentials']['bucket']
+    os.environ['AWS_DEFAULT_REGION'] = services['s3'][0]['credentials']['region']
+    os.environ['AWS_ACCESS_KEY_ID'] = services['s3'][0]['credentials']['access_key_id']
+    os.environ['AWS_SECRET_ACCESS_KEY'] = services['s3'][0]['credentials']['secret_access_key']
