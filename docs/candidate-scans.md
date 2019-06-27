@@ -45,3 +45,5 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * Others from https://policy.cio.gov/.
 * Security scans - https://github.com/mozilla/http-observatory-website/, https://github.com/zaproxy/zaproxy
 * Mozilla Observatory scans - https://observatory.mozilla.org/analyze/www.gsa.gov
+* Owasp in general
+* Owasp with an eye to detecting ability to redirect
