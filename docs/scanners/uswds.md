@@ -45,3 +45,6 @@ Detects what version of USWDS is in use on a government website.
 [Insert proposed JSON here]
 
 ````
+
+#### Other Notes
+* [Human curated list of USWDS sites](https://designsystem.digital.gov/getting-started/showcase/all/)
