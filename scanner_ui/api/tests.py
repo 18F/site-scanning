@@ -26,16 +26,14 @@ class GetAllDomainsTest(APITestCase):
         """
         This test ensures that all domains
         exist when we make a GET request to the domains/ endpoint.
-        XXX It only runs when VCAP_SERVICES is set (fix this someday)
         """
-        if 'VCAP_SERVICES' in os.environ:
-            # hit the API endpoint
-            response = self.client.get(
-                reverse("domains-list")
-            )
-            # fetch the data
-            expected = getDomain()
+        # hit the API endpoint
+        response = self.client.get(
+            reverse("domains-list")
+        )
+        # fetch the data
+        expected = getDomain()
 
-            serialized = DomainsSerializer(expected, many=True)
-            self.assertEqual(response.data, serialized.data)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+        serialized = DomainsSerializer(expected, many=True)
+        self.assertEqual(response.data, serialized.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

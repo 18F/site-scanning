@@ -6,7 +6,7 @@ applications:
   disk_quota: 768M
   timeout: 180
   services:
-    - scanning-storage  # cf create-service s3 basic-sandbox scanning-storage
+    - scanner-storage  # cf create-service s3 basic-sandbox scanner-storage
   memory: 256M
   instances: 1
   random-route: true

@@ -144,9 +144,8 @@ REST_FRAMEWORK = {
 
 # AWS info
 if 'VCAP_SERVICES' not in os.environ:
-    print('VCAP_SERVICES not set, assuming you are testing')
-    BUCKETNAME = 'ryft-public-sample-data'
-    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
+    print('VCAP_SERVICES not set, assuming you are testing and have set AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and BUCKETNAME')
+    BUCKETNAME = os.environ['BUCKETNAME']
 else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
