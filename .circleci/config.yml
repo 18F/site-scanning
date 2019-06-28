@@ -53,6 +53,7 @@ jobs:
           name: deploy to cloud.gov
           command: |
             cf auth "$CF_USERNAME" "$CF_PASSWORD" --client-credentials
+            cf api https://api.fr.cloud.gov
             ./deploy-cloudgov.sh
 
 workflows:
