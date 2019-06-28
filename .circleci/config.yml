@@ -43,12 +43,12 @@ jobs:
       - run:
           name: install cf-cli
           command: |
-            apt-get update
-            apt-get install wget gnupg2
-            wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
-            echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-            apt-get update
-            apt-get install cf-cli
+            sudo apt-get update
+            sudo apt-get install wget gnupg2
+            sudo wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
+            echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+            sudo apt-get update
+            sudo apt-get install cf-cli
       - run:
           name: deploy to cloud.gov
           command: |
