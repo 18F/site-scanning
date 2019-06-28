@@ -52,7 +52,7 @@ jobs:
       - run:
           name: deploy to cloud.gov
           command: |
-            cf auth "$CLIENT_ID" "$CLIENT_SECRET" --client-credentials
+            cf auth "$CF_USERNAME" "$CF_PASSWORD" --client-credentials
             ./deploy-cloudgov.sh
 
 workflows:
