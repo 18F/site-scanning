@@ -12,7 +12,6 @@ from collections import defaultdict
 # Create your views here.
 
 def getScanFromS3(path):
-	boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
 	s3_resource = boto3.resource('s3')
 	response = s3_resource.Object(settings.BUCKETNAME,path).get()
 	return {'body': response['Body'].read(), 'lastmodified': response['LastModified']}
@@ -21,6 +20,8 @@ def getScanFromS3(path):
 def getScantype(scantype=None):
 	scans = []
 	for f in getMetadatafromS3():
+		if not re.search('\.json$', f.key):
+			continue
 		s3scantype = os.path.dirname(f.key)
 		if scantype == None or s3scantype == scantype:
 			scandomain = os.path.basename(os.path.splitext(f.key)[0])
@@ -44,7 +45,6 @@ def getDomain(domain=None):
 	return scans
 
 def getMetadatafromS3():
-	boto3.setup_default_session(region_name=settings.AWS_REGION,aws_access_key_id=settings.AWS_KEY_ID,aws_secret_access_key=settings.AWS_ACCESS_KEY)
 	s3_resource = boto3.resource('s3')
 	return s3_resource.Bucket(settings.BUCKETNAME).objects.all()
 

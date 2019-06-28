@@ -8,6 +8,7 @@ from .serializers import DomainsSerializer
 from .views import getDomain
 from django.conf import settings
 import boto3
+import os
 
 
 # tests for views
@@ -24,7 +25,7 @@ class GetAllDomainsTest(APITestCase):
     def test_get_all_domains(self):
         """
         This test ensures that all domains
-        exist when we make a GET request to the domains/ endpoint
+        exist when we make a GET request to the domains/ endpoint.
         """
         # hit the API endpoint
         response = self.client.get(
@@ -36,4 +37,3 @@ class GetAllDomainsTest(APITestCase):
         serialized = DomainsSerializer(expected, many=True)
         self.assertEqual(response.data, serialized.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-

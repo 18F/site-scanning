@@ -15,9 +15,9 @@ if service_exists "scanner-storage" ; then
   echo scanner-storage already created
 else
   if [ "$1" = "prod" ] ; then
-    cf create-service s3 basic scanner-storage
+    cf create-service s3 basic-public scanner-storage
   else
-    cf create-service s3 basic-sandbox scanner-storage
+    cf create-service s3 basic-public-sandbox scanner-storage
   fi
 fi
 
@@ -25,7 +25,7 @@ fi
 cf push
 
 # tell people where to go
-ROUTE=$(cf apps | grep scanner-ui | awk '{print $6}')
+ROUTE="$(cf apps | grep scanner-ui | awk '{print $6}')"
 echo
 echo
 echo "  to log into the site, you will want to go to https://${ROUTE}/"
