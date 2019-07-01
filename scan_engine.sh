@@ -65,7 +65,7 @@ pip3 install -r requirements-scanners.txt
 # LOGIN.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,tts-vulnerability-reports@gsa.gov
 # SAM.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Arlington,VA,(blank)
 # EOF
-wget -o /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
+wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 
 # execute the scans
 #./scan domains.csv --scan=200
