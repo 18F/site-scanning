@@ -68,8 +68,7 @@ pip3 install -r requirements-scanners.txt
 wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 
 # execute the scans
-#./scan domains.csv --scan=200
-./scan /tmp/domains.csv --scan=200 --workers=20
+time ./scan /tmp/domains.csv --scan=200
 
 # make sure the credentials are set
 AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
@@ -80,4 +79,4 @@ AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
 export AWS_DEFAULT_REGION
 
 # put scan results into s3
-aws s3 cp cache/200/ "s3://$BUCKET/200/" --recursive
+time aws s3 cp cache/200/ "s3://$BUCKET/200/" --recursive
