@@ -5,32 +5,27 @@ jobs:
       - image: circleci/python:3.7
     steps:
     - checkout
-
     # Download and cache dependencies
     - restore_cache:
         keys:
         - v1-python37-dependencies-{{ checksum "requirements.txt" }}
         # fallback to using the latest cache if no exact match is found
         - v1-python37-dependencies-
-
     - run:
         name: install dependencies
         command: |
           python3 -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
-
     - save_cache:
         paths:
           - ./venv
         key: v1-python37-dependencies-{{ checksum "requirements.txt" }}
-
     - run:
         name: run tests
         command: |
           . venv/bin/activate
           ./manage.py test
-
     - store_artifacts:
         path: test-reports
         destination: test-reports
@@ -40,7 +35,7 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
-      - run:
+      - run: &installcf
           name: install cf-cli
           command: |
             sudo apt-get update
@@ -52,6 +47,8 @@ jobs:
       - run:
           name: deploy to cloud.gov
           command: |
+            # If we do not specify a space, then deploy to the branch that we are on.
+            # This lets you have dev/staging/master branches that automatically go to the right place.
             if [ -z "$CF_SPACE" ] ; then
               export CF_SPACE="$CIRCLE_BRANCH"
             fi
@@ -64,6 +61,32 @@ jobs:
             cf target -o "$CF_ORG" -s "$CF_SPACE"
             ./deploy-cloudgov.sh
 
+  scan:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - run:
+          <<: &installcf
+      - run:
+          name: run scan
+          command: |
+            # If we do not specify a space, then deploy to the branch that we are on.
+            # This lets you have dev/staging/master branches that automatically go to the right place.
+            if [ -z "$CF_SPACE" ] ; then
+              export CF_SPACE="$CIRCLE_BRANCH"
+            fi
+            if [ -z "$CF_ORG" ] ; then
+              echo CF_ORG not set, aborting
+              exit 1
+            fi
+            cf api https://api.fr.cloud.gov
+            cf auth "$CF_USERNAME" "$CF_PASSWORD"
+            cf target -o "$CF_ORG" -s "$CF_SPACE"
+
+            # this tells cloud.gov to run the scan
+            cf run-task scanner-ui /app/scan_engine.sh
+
+
 workflows:
   version: 2
   build_and_test:
@@ -74,7 +97,9 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              # Add more branches here if you want dev/staging/whatever environments
+              only:
+                - master
   nightly:
     triggers:
       - schedule:
@@ -83,4 +108,4 @@ workflows:
             branches:
               only: master
     jobs:
-      - test
+      - scan
