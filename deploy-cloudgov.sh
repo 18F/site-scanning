@@ -25,9 +25,9 @@ if [ "$1" = "setup" ] ; then  echo
 	if service_exists "scanner-ui-deployer" ; then
 	  echo scanner-ui-deployer already created
 	else
-	  cf create-service cloud-gov-service-account space-deployer scanner-ui-deployer
-	  cf create-service-key scanner-ui-deployer scanner-ui-deployer
-	  echo "to get the CF_USERNAME and CF_PASSWORD, execute 'cf service-key scanner-ui-deployer scanner-ui-deployer'"
+	  cf create-service cloud-gov-service-account space-deployer scanner-ui
+	  cf create-service-key scanner-ui deployer
+	  echo "to get the CF_USERNAME and CF_PASSWORD, execute 'cf service-key scanner-ui deployer'"
 	fi
 fi
 
