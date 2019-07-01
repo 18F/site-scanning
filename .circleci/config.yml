@@ -106,6 +106,7 @@ workflows:
           cron: "45 0 * * *"
           filters:
             branches:
-              only: master
+              only:
+                - master
     jobs:
       - scan
