@@ -70,7 +70,7 @@ wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/c
 # execute the scans
 echo -n "Scan start: "
 date
-./scan /tmp/domains.csv --scan=200
+./scan /tmp/domains.csv --scan=200,uswds2
 
 # make sure the credentials are set
 AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
@@ -82,5 +82,6 @@ export AWS_DEFAULT_REGION
 
 # put scan results into s3
 aws s3 cp cache/200/ "s3://$BUCKET/200/" --recursive
+aws s3 cp cache/uswds2/ "s3://$BUCKET/uswds2/" --recursive
 echo -n "Scan end: "
 date
