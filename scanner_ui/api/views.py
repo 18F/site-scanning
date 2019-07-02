@@ -92,7 +92,7 @@ class DomainsViewset(viewsets.ViewSet):
 		return Response(serializer.data)
 
 	def retrieve(self, request, pk=None):
-		domains = getDomain(pk)
+		domains = getFullDomain(pk)
 		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
 
