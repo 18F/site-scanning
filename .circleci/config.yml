@@ -103,7 +103,8 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "45 0 * * *"
+          # this should be in the middle of the night for most everybody in the US
+          cron: "45 8 * * *"
           filters:
             branches:
               only:
