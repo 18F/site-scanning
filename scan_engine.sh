@@ -37,39 +37,19 @@ if [ ! -d domain-scan ] ; then
 fi
 cd domain-scan
 
-# XXX When we get this branch merged, remove this.
+# set the branch that your scanners are on here
 git checkout tspencer/200scanner
 
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
 # get the list of domains
-# XXX this is a subset of the list that we can use for testing
-# cat <<EOF > /tmp/domains.csv
-# Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
-# DATA.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,(blank)
-# 18F.GOV,Federal Agency - Executive,General Services Administration,18F,Washington,DC,tts-vulnerability-reports@gsa.gov
-# GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
-# USA.GOV,Federal Agency - Executive,General Services Administration,Office of Citizen Services and Communications,Washington,DC,(blank)
-# DIGITAL.GOV,Federal Agency - Executive,General Services Administration,The General Services Administration,Washington,DC,(blank)
-# FEDRAMP.GOV,Federal Agency - Executive,General Services Administration,Office of Citizen Services and Innovative Technologies,Washington,DC,(blank)
-# ACQUISITION.GOV,Federal Agency - Executive,General Services Administration,Integrated Acquisition Environment,Arlington,VA,(blank)
-# CIO.GOV,Federal Agency - Executive,General Services Administration,Chief Information Officers Council,Washington,DC,(blank)
-# IDMANAGEMENT.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,(blank)
-# PERFORMANCE.GOV,Federal Agency - Executive,General Services Administration,GSA - Office of Citizen Services Innovative Technologies - OSCIT,Washington,DC,(blank)
-# SECTION508.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,(blank)
-# CPARS.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
-# FBO.GOV,Federal Agency - Executive,General Services Administration,GSA/CAO/OAS,Arlington,VA,(blank)
-# GSAADVANTAGE.GOV,Federal Agency - Executive,General Services Administration,US General Services Administration,Washington,DC,(blank)
-# GSAAUCTIONS.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,ITServiceDesk@gsa.gov
-# LOGIN.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,tts-vulnerability-reports@gsa.gov
-# SAM.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Arlington,VA,(blank)
-# EOF
 wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 
 # execute the scans
 echo -n "Scan start: "
 date
+# add more scan types at the end here:
 ./scan /tmp/domains.csv --scan=200,uswds2
 
 # make sure the credentials are set
@@ -81,6 +61,7 @@ AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
 export AWS_DEFAULT_REGION
 
 # put scan results into s3
+# add more scan types here too
 aws s3 cp cache/200/ "s3://$BUCKET/200/" --recursive
 aws s3 cp cache/uswds2/ "s3://$BUCKET/uswds2/" --recursive
 echo -n "Scan end: "

@@ -86,6 +86,8 @@ vote.gov
 whitehouse.gov
 worker.gov
 EOF
+echo "Domain Name" > "$GOODDOMAINS"
+curl -s https://raw.githubusercontent.com/uswds/uswds/develop/docs/WHO_IS_USING_USWDS.md | egrep ^-  | sed 's/.*\](https*:\/\/\(.*\.gov\).*).*/\1/' | grep -v / >> "$GOODDOMAINS"
 
 export BADDOMAINS=/tmp/baddomains.$$.csv
 cat <<EOF > "$BADDOMAINS"
@@ -142,7 +144,7 @@ rm -f "$GOODDOMAINS"
 
 # stash results so that the next scan is clean
 mkdir -p /tmp/goodscans.$$
-mv cache/uswds2/*.json /tmp/goodscans.$$
+mv cache/uswds2/*.json /tmp/goodscans.$$/
 
 # scan bad domains
 ./scan "$BADDOMAINS" --scan=uswds2 >/dev/null 2>&1

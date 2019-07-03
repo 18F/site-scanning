@@ -129,3 +129,72 @@ branch, and it will do a test then deploy.
 
 Currently, there are stubs for being able to create a dev/staging/production deployment
 setup, but this is unfinished as of now.
+
+## Adding Scans
+
+The site-scanning project uses the [domain-scan](https://github.com/18F/domain-scan) engine
+to do the work of parallelizing and collecting all of the scan data.  There is a good
+section on how to [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners)
+which is excellent, but there are a few things that you might want to know about how to
+develop and test these things.
+
+### Set Up Local Development
+
+Check out the code: 
+```
+git clone https://github.com/18F/domain-scan/
+cd domain-scan
+# Temporary until https://github.com/18F/domain-scan/pull/307 is merged
+git checkout tspencer/200scanner
+python3 -m venv venv
+. venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-scanners.txt
+pip install -r requirements-gatherers.txt
+pip install -r requirements-dev.txt
+```
+
+You should now be able to run scans by hand as per the documentation:
+```
+./scan whitehouse.gov --scan=uswds2
+```
+
+So long as you just create scans that scrape web pages or gather other
+metadata directly, your scan should perform fine.  I would recommend that you
+make sure the workers are bumped up to 50 or something like that.
+
+A good thing to do is to copy the `domain-scan/scanners/uswds2.py` scanner
+plugin and use that as a template for your new scan.
+Either that or the `domain-scan/scanners/200.py` scanner.
+
+### Testing
+
+The scanner will output it's scan data into `domain-scan/cache/<scantype>/*.json`.
+These json files will be copied into the s3 bucket by the scanning engine, so
+make sure they have good data.
+
+If you need further testing, there are a few scripts in this repo which
+you might be able to look at in the `utilities` directory, like the `checkscanscores.sh`
+script, which checks how well the uswds2 scanner works by checking the scores for
+false positives and false negatives.
+
+### Configuring cloud.gov to use your branch
+
+Once you have developed your new scan type, you will need to check it into a branch
+and try to get it PR'ed into the domain-scan repo.  Until then, you will need to
+configure your forked repo to use that branch, and to execute your new scan type.
+
+To do this, edit the `site-scanning/scan_engine.sh` file and search for
+`set the branch that your scanners are on here` and change the branch to your branch.
+
+Also, search for `add more scan types here` and add the scan types onto the scan line,
+and also add another s3 copy line with your scan type in it to ensure that the data
+gets copied into the s3 bucket.
+
+### Kick off a cloud.gov scan for testing
+
+Once the code has made it into the master branch and the deploy to cloud.gov
+has completed,
+run `cf run-task scanner-ui /app/scan_engine.sh` to kick off a scan.
+You should be able to see how it goes with `cf logs scanner-ui`, and
+once it completes, you should be able to see your scans in the API.
