@@ -1,6 +1,6 @@
 boto3==1.9.174
 botocore==1.12.174
-Django==2.2.2
+Django>=2.2.3
 djangorestframework==3.9.4
 docutils==0.14
 gunicorn==19.9.0
