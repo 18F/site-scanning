@@ -55,3 +55,7 @@ We will start with two "200 scanners": Data & APIs.
 | 2  | 2  | Prototype is built and documented to make it extensible and replicable  | Individual can either stand-up their own copy or add their own scan  |
 | 3  | 2  | Path to scale prototype (if successful) is in place  | Recommendations for 10x phase III funding; recommendations for future scans; lessons learned; long-term data storage recommendations|
 
+
+## Contact Us
+
+If you have any questions or want to get in touch, feel free to [file an issue](https://github.com/18F/site-scanning/issues) or email us at site-scanning@gsa.gov.  
