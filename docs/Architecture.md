@@ -21,21 +21,55 @@ it's json files into S3.  The UI then can be used to find and download the scan 
 ## Scan API
 
 The scan API map is:
-  - `/api/v1/domains/` pulls down all of the scan results for all domains.
+  - `/api/v1/domains/` enumerates all of the scans for all domains.
   - `/api/v1/domains/{domain}` pulls down all of the scan results for a particular domain.
-  - `/api/v1/scans/` pulls down all of the scan results for all scantypes.
-  - `/api/v1/scans/{scantype}` pulls down all of the scan results for all domains that have this scantype.
+  - `/api/v1/scans/` enumerates all of the scans for all scantypes.
+  - `/api/v1/scans/{scantype}` enumerates all of the scans for all domains that have this scantype.
 
-The API returns data about the scans that we have, as well as a reference to where the scans are actually
-stored.  For example:
+The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
+stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
+too.  For example:
 ```
 $ curl -s https://APPNAME.app.cloud.gov/api/v1/domains/18f.gov/ | jq -r .
 [
   {
     "domain": "18f.gov",
     "scantype": "200",
+    "data": {
+      "/": "200",
+      "/code.json": "404",
+      "/data": "404",
+      "/data.json": "404",
+      "/developer": "200",
+      "/digitalstrategy/": "404",
+      "/open": "404",
+      "/privacy": "404",
+      "/robots.txt": "200",
+      "/sitemap.xml": "200"
+    },
     "scan_data_url": "https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/18f.gov.json",
-    "lastmodified": "2019-07-01T20:58:41Z"
+    "lastmodified": "2019-07-02T23:43:37Z"
+  },
+  {
+    "domain": "18f.gov",
+    "scantype": "uswds2",
+    "data": {
+      "domain": "18f.gov",
+      "flag_detected": 0,
+      "flagincss_detected": 0,
+      "grid_detected": 0,
+      "merriweatherfont_detected": 23,
+      "publicsansfont_detected": 0,
+      "sourcesansfont_detected": 20,
+      "status_code": 200,
+      "total_score": 125,
+      "usa_classes_detected": 26,
+      "usa_detected": 53,
+      "uswds_detected": 3,
+      "uswdsincss_detected": 0
+    },
+    "scan_data_url": "https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/uswds2/18f.gov.json",
+    "lastmodified": "2019-07-02T23:43:46Z"
   }
 ]
 $ curl -s https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/18f.gov.json | jq -r .
