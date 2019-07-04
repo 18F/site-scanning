@@ -29,6 +29,17 @@ if [ "$1" = "setup" ] ; then  echo
 	  cf create-service-key scanner-ui deployer
 	  echo "to get the CF_USERNAME and CF_PASSWORD, execute 'cf service-key scanner-ui deployer'"
 	fi
+
+	if service_exists "scanner-es" ; then
+	  echo scanner-es already created
+	else
+	  cf create-service elasticsearch56 medium scanner-es
+	  echo sleeping until ES is awake
+	  for i in a b c ; do
+	  	sleep 60
+	  	echo $i minutes...
+	  done
+	fi
 fi
 
 # launch the app

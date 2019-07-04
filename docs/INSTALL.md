@@ -182,14 +182,11 @@ false positives and false negatives.
 
 Once you have developed your new scan type, you will need to check it into a branch
 and try to get it PR'ed into the domain-scan repo.  Until then, you will need to
-configure your forked repo to use that branch, and to execute your new scan type.
+configure your forked repo to use that branch, and to add your new scan type.
 
-To do this, edit the `site-scanning/scan_engine.sh` file and search for
-`set the branch that your scanners are on here` and change the branch to your branch.
-
-Also, search for `add more scan types here` and add the scan types onto the scan line,
-and also add another s3 copy line with your scan type in it to ensure that the data
-gets copied into the s3 bucket.
+To do this, edit the `site-scanning/scan_engine.sh` file and add another line
+to the `SCANTYPES` definition near the top of the file for another scan, and
+edit the `BRANCH` variable to set it to your branch.
 
 ### Kick off a cloud.gov scan for testing
 

@@ -34,7 +34,7 @@ $ curl -s https://APPNAME.app.cloud.gov/api/v1/domains/18f.gov/ | jq -r .
 [
   {
     "domain": "18f.gov",
-    "scantype": "200",
+    "scantype": "200scanner",
     "data": {
       "/": "200",
       "/code.json": "404",
@@ -47,7 +47,7 @@ $ curl -s https://APPNAME.app.cloud.gov/api/v1/domains/18f.gov/ | jq -r .
       "/robots.txt": "200",
       "/sitemap.xml": "200"
     },
-    "scan_data_url": "https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/18f.gov.json",
+    "scan_data_url": "https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/18f.gov.json",
     "lastmodified": "2019-07-02T23:43:37Z"
   },
   {
@@ -72,7 +72,7 @@ $ curl -s https://APPNAME.app.cloud.gov/api/v1/domains/18f.gov/ | jq -r .
     "lastmodified": "2019-07-02T23:43:46Z"
   }
 ]
-$ curl -s https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/18f.gov.json | jq -r .
+$ curl -s https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/18f.gov.json | jq -r .
 {
   "/": "200",
   "/code.json": "404",
@@ -95,11 +95,11 @@ subdirectory in a public S3 bucket.  The location of the files can be found by q
 the API, like so:
 ```
 $ curl -s https://APPNAME.app.cloud.gov/api/v1/scans/ | jq -r '.[] | .scan_data_url'
-https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/18f.gov.json
-https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/2020census.gov.json
-https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/9-11commission.gov.json
-https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/911.gov.json
-https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200/911commission.gov.json
+https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/18f.gov.json
+https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/2020census.gov.json
+https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/9-11commission.gov.json
+https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/911.gov.json
+https://s3-us-gov-west-1.amazonaws.com/BUCKETNAME/200scanner/911commission.gov.json
 ...
 $ 
 ```
