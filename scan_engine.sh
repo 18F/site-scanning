@@ -2,7 +2,7 @@
 #
 # This script is what gets the list of domains to scan, 
 # runs the scanners, collects the data, and puts it into s3.
-# It also cleans up old scans (>1y) to prevent clutter.
+# It also cleans up old scans (>30 days) to prevent clutter.
 #
 # It is meant to be run like so:
 #   cf run-task scanner-ui /app/scan_engine.sh
@@ -98,6 +98,7 @@ for i in ${SCANTYPES} ; do
 
 		# slurp the data in
 		curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @/tmp/prettyscan.json
+		echo
 	done
 done
 
@@ -109,6 +110,7 @@ curl -s "$ESURL/_cat/indices" | awk '{print $3}' | while read line ; do
 	else
 		echo deleting "$line" index
 		curl -s -X DELETE "$ESURL/$line"
+		echo
 	fi
 done
 
