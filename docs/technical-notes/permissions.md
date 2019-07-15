@@ -6,8 +6,8 @@
 
 ## AWS
 
-* Engineer Tim Spencer and Product Owner Gray Brooks should have full admin rights to the AWS account.  
-* The public should have read access to all of the data files in the s3 bucket.  
+* Engineer Tim Spencer and Product Owner Gray Brooks should have full admin rights to the S3 account.  
+* The public should have read access to all of the data files in the S3 bucket.  
 
 ## GitHub Repo
 
