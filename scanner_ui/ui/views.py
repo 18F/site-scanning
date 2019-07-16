@@ -9,7 +9,7 @@ from elasticsearch_dsl import Search
 es = Elasticsearch([os.environ['ESURI']])
 
 def index(request):
-	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-")
+	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
 	allscanscount = Search(using=es, index=yesterdayindex).query().count()
 
 	context = {
