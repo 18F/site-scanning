@@ -13,12 +13,6 @@ import os
 
 
 # tests for views
-class CheckBucketTest(APITestCase):
-    """
-    This test case checks that the bucketname is getting parsed properly
-    """
-    def test_bucket_parse(self):
-        self.assertIsNotNone(settings.BUCKETNAME)
 
 class GetAllDomainsTest(APITestCase):
     client = APIClient()

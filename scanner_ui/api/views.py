@@ -14,11 +14,11 @@ from collections import defaultdict
 
 def getMetadatafromS3():
 	s3_resource = boto3.resource('s3')
-	return s3_resource.Bucket(settings.BUCKETNAME).objects.all()
+	return s3_resource.Bucket(os.environ['BUCKETNAME']).objects.all()
 
 def getScanFromS3(path):
 	s3_resource = boto3.resource('s3')
-	response = s3_resource.Object(settings.BUCKETNAME,path).get()
+	response = s3_resource.Object(os.environ['BUCKETNAME'],path).get()
 	return {'body': response['Body'].read(), 'lastmodified': response['LastModified']}
 
 
@@ -34,7 +34,7 @@ def getFullScantype(scantype=None):
 			scandomain = os.path.basename(os.path.splitext(f.key)[0])
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + settings.BUCKETNAME + "/" + f.key
+			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
 			lastmodified = scandata['lastmodified']
 			scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
@@ -49,7 +49,7 @@ def getScantype(scantype=None):
 		s3scantype = os.path.dirname(f.key)
 		if scantype == None or s3scantype == scantype:
 			scandomain = os.path.basename(os.path.splitext(f.key)[0])
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + settings.BUCKETNAME + "/" + f.key
+			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
 			scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
 	return scans
 
@@ -65,7 +65,7 @@ def getFullDomain(domain=None):
 			scantype = os.path.dirname(f.key)
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + settings.BUCKETNAME + "/" + f.key
+			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
 			lastmodified = scandata['lastmodified']
 			scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
@@ -80,7 +80,7 @@ def getDomain(domain=None):
 		scandomain = os.path.basename(os.path.splitext(f.key)[0])
 		if domain == None or scandomain == domain:
 			scantype = os.path.dirname(f.key)
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + settings.BUCKETNAME + "/" + f.key
+			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
 			scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
 	return scans
 

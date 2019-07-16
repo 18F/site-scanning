@@ -151,13 +151,17 @@ REST_FRAMEWORK = {
 # AWS info
 if 'VCAP_SERVICES' not in os.environ:
     print('VCAP_SERVICES not set, assuming you are testing and have set AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, ESURI, and BUCKETNAME')
-    BUCKETNAME = os.environ['BUCKETNAME']
-    ESURI = os.environ['ESURI']
+    if "BUCKETNAME" not in os.environ:
+        # XXX put a dummy in here for now
+        os.environ['BUCKETNAME'] = "dummybucket"
+    if "ESURI" not in os.environ:
+        # XXX put a dummy in here for now
+        os.environ['ESURI'] = "http://localhost:9300"
 else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
-    BUCKETNAME = services['s3'][0]['credentials']['bucket']
+    os.environ['BUCKETNAME'] = services['s3'][0]['credentials']['bucket']
     os.environ['AWS_DEFAULT_REGION'] = services['s3'][0]['credentials']['region']
     os.environ['AWS_ACCESS_KEY_ID'] = services['s3'][0]['credentials']['access_key_id']
     os.environ['AWS_SECRET_ACCESS_KEY'] = services['s3'][0]['credentials']['secret_access_key']
-    ESURI = services['elasticsearch56'][0]['credentials']['uri']
+    os.environ['ESURI'] = services['elasticsearch56'][0]['credentials']['uri']
