@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Scans Search Home</h1>
+  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+  <h2>Dynamic content</h2>
+  <p>The scan library has the following record counts:</p>
+  <ul>
+    <li><strong>Domains:</strong> {{ num_domains }}</li>
+    <li><strong>Scan Types:</strong> {{ num_scantypes }}</li>
+  </ul>
+{% endblock %}

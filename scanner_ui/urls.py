@@ -16,7 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from scanner_ui.api import views
+from scanner_ui.ui import views
 
 urlpatterns = [
-    path('api/v1/', include('scanner_ui.api.urls'))
+    path('api/v1/', include('scanner_ui.api.urls')),
+    path('', include('scanner_ui.ui.urls')),
 ]
+

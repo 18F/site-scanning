@@ -67,7 +67,9 @@ ROOT_URLCONF = 'scanner_ui.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'scanner_ui/ui/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,8 +133,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, "static"),
+    os.path.join(PROJECT_DIR, "ui/static"),
+]
+
 
 
 # REST config
@@ -144,8 +150,9 @@ REST_FRAMEWORK = {
 
 # AWS info
 if 'VCAP_SERVICES' not in os.environ:
-    print('VCAP_SERVICES not set, assuming you are testing and have set AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and BUCKETNAME')
+    print('VCAP_SERVICES not set, assuming you are testing and have set AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, ESURI, and BUCKETNAME')
     BUCKETNAME = os.environ['BUCKETNAME']
+    ESURI = os.environ['ESURI']
 else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
@@ -153,3 +160,4 @@ else:
     os.environ['AWS_DEFAULT_REGION'] = services['s3'][0]['credentials']['region']
     os.environ['AWS_ACCESS_KEY_ID'] = services['s3'][0]['credentials']['access_key_id']
     os.environ['AWS_SECRET_ACCESS_KEY'] = services['s3'][0]['credentials']['secret_access_key']
+    ESURI = services['elasticsearch56'][0]['credentials']['uri']
