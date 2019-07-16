@@ -27,3 +27,12 @@ def index(request):
 		'num_scans': allscanscount,
 	}
 	return render(request, "index.html", context=context)
+
+def search(request):
+	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
+
+	s = Search(using=es, index=yesterdayindex).query()
+	context = {
+		'search_results': s,
+	}
+	return render(request, "search.html", context=context)

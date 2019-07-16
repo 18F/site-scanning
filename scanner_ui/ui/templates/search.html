@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Scans Search</h1>
+  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+
+  <h2>Scan Results:</h2>
+  <ul>
+  	{% for scan in search_results %}
+    <li><strong>{{ i.domain }}:</strong> {{ i.to_dict() }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
