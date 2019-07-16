@@ -1,13 +1,12 @@
-from django.conf import settings
 from django.shortcuts import render
+import os
 import datetime
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
 # Create your views here.
 
-print(settings.ESURI)
-es = Elasticsearch([settings.ESURI])
+es = Elasticsearch([os.environ['ESURI']])
 
 def index(request):
 	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-")
