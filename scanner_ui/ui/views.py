@@ -30,14 +30,6 @@ def index(request):
 	return render(request, "index.html", context=context)
 
 def search(request):
-	# search for scantypes in ES
-	s = Search(using=es, index=index).query().source(['scantype'])
-	scantypemap = {}
-	for i in s.scan():
-	        scantypemap[i.scantype] = 1
-	scantypes = scantypemap.keys()
-	scantypes.insert(0, 'all')
-
 	# search in ES for dates
 	indexlist = es.indices.get_alias().keys()
 	datemap = {}
@@ -45,32 +37,44 @@ def search(request):
 		a = i.split('-', maxsplit=3)
 		date = '-'.join(a[0:3])
 		datemap[date] = 1
-	dates = datemap.keys()
+	dates = list(datemap.keys())
+	dates.sort(reverse=True)
 
 	date = request.GET.get('date')
 	if date == None:
 		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+		date = dates[0]
 	else:
 		index = date
 
 	scantype = request.GET.get('scantype')
-	if scantype == None or scantype == 'all':
+	if scantype == None or scantype == ' all':
 		index = index + '-*'
 	else:
 		index = index + '-' + scantype
 
+	# search for scantypes in ES
+	s = Search(using=es, index=index).query().source(['scantype'])
+	scantypemap = {}
+	for i in s.scan():
+	        scantypemap[i.scantype] = 1
+	scantypes = list(scantypemap.keys())
+	scantypes.insert(0, ' all')
+
+	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
 	if query == None:
-		s = Search(using=es, index=index).query()
+		s = []
 	else:
-		s = Search(using=es, index=index).query(query)
-
-	logging.warning("query is " + query + " scantype is " + scantype + " date is " + date)
+		s = Search(using=es, index=index).query()
 
 	context = {
 		'search_results': s,
 		'scantypes': scantypes,
 		'dates': dates,
 		'query': query,
+		'selected_scantype': scantype,
+		'selected_date': date,
 	}
+
 	return render(request, "search.html", context=context)

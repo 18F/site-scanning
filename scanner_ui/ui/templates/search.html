@@ -11,15 +11,27 @@
   	date popuplist
  -->
   <form action="{% url 'search' %}" method="get">
-    <input name="q" type="text" placeholder="search here">
+  	{% if query == None %}
+    <input name="q" type="text" placeholder="Search Here">
+    {% else %}
+    <input name="q" type="text" value="{{ query }}">
+    {% endif %}
     <select name="scantype">
     	{% for scantype in scantypes %}
+    		{% if selected_scantype == scantype %}
+    	<option value="{{ scantype }}" selected>{{ scantype }}</option>
+    		{% else %}
     	<option value="{{ scantype }}">{{ scantype }}</option>
+    		{% endif %}
     	{% endfor %}
     </select>
     <select name="date">
     	{% for date in dates %}
+    		{% if selected_date == date %}
+    	<option value="{{ date }}" selected>{{ date }}</option>
+    		{% else %}
     	<option value="{{ date }}">{{ date }}</option>
+    		{% endif %}
     	{% endfor %}
     </select>
   </form>
@@ -27,7 +39,7 @@
   <h2>Scan Results:</h2>
   <ul>
   	{% for scan in search_results %}
-    <li><strong>{{ i.domain }}:</strong> {{ i }}</li>
+    <li><strong>{{ scan.domain }}:</strong> {{ scan }}</li>
     {% endfor %}
   </ul>
 {% endblock %}
