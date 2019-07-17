@@ -16,10 +16,12 @@
     	{% for scantype in scantypes %}
     	<option value="{{ scantype }}">{{ scantype }}</option>
     	{% endfor %}
+    </select>
     <select name="date">
     	{% for date in dates %}
     	<option value="{{ date }}">{{ date }}</option>
     	{% endfor %}
+    </select>
   </form>
 
   <h2>Scan Results:</h2>
