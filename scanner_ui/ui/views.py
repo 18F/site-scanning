@@ -36,18 +36,23 @@ def search(request):
 	if date == None:
 		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
 	else:
-		index = date
+		index = date + '*'
 
-	# XXX search for scantypes in ES
-	scantypes = ['200scanner', 'uswds2']
+	# search for scantypes in ES
+	s = Search(using=es, index=index).query().source(['scantype'])
+	scantypemap = {}
+	for i in s.scan():
+	        scantypemap[i.scantype] = 1
+	scantypes = scantypemap.keys()
 
-	# XXX search in ES for dates
-	dates = [(datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*']
+	# search in ES for dates
+	dates = es.indices.get_alias().keys()
 
 	s = Search(using=es, index=index).query()
 	context = {
 		'search_results': s,
 		'scantypes': scantypes,
 		'dates': dates,
+		'query': query,
 	}
 	return render(request, "search.html", context=context)
