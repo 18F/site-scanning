@@ -25,7 +25,7 @@
   <h2>Scan Results:</h2>
   <ul>
   	{% for scan in search_results %}
-    <li><strong>{{ i.domain }}:</strong> {{ i.to_dict }}</li>
+    <li><strong>{{ i.domain }}:</strong> {{ i }}</li>
     {% endfor %}
   </ul>
 {% endblock %}
