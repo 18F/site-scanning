@@ -54,7 +54,7 @@ def search(request):
 		index = date
 
 	scantype = request.GET.get('scantype')
-	if scantype == None || scantype == 'all':
+	if scantype == None or scantype == 'all':
 		index = index + '-*'
 	else:
 		index = index + '-' + scantype
