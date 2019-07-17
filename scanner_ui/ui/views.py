@@ -34,9 +34,9 @@ def search(request):
 	date = request.GET.get('date')
 
 	if date == None:
-		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
+		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d") + '-*'
 	else:
-		index = date + '*'
+		index = date + '-*'
 
 	# search for scantypes in ES
 	s = Search(using=es, index=index).query().source(['scantype'])
@@ -46,7 +46,13 @@ def search(request):
 	scantypes = scantypemap.keys()
 
 	# search in ES for dates
-	dates = es.indices.get_alias().keys()
+	indexlist = es.indices.get_alias().keys()
+	datemap = {}
+	for i in indexlist:
+		a = i.split('-', maxsplit=3)
+		date = '-'.join(a[0:3])
+		datemap[date] = 1
+	dates = datemap.keys()
 
 	s = Search(using=es, index=index).query()
 	context = {
