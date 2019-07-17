@@ -29,10 +29,19 @@ def index(request):
 	return render(request, "index.html", context=context)
 
 def search(request):
-	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
+	query = self.request.GET.get('q')
+	scantype = self.request.GET.get('scantype')
+	date = self.request.GET.get('date')
 
-	s = Search(using=es, index=yesterdayindex).query()
+	if date == nil:
+		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
+	else:
+		index = date
+
+	s = Search(using=es, index=index).query()
 	context = {
 		'search_results': s,
+		'scantypes': XXX,
+		'dates': XXX,
 	}
 	return render(request, "search.html", context=context)

@@ -4,6 +4,24 @@
   <h1>Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
 
+<!--
+	XXX: need search queries here:
+  	text (examples:  foo, foo=bar, foo:bar, kibana query language?)
+  	scantype popuplist
+  	date popuplist
+ -->
+  <form action="{% url 'search' %}" method="get">
+    <input name="q" type="text" placeholder="search here">
+    <select name="scantype">
+    	{% for scantype in scantypes %}
+    	<option value="{{ scantype }}">{{ scantype }}</option>
+    	{% endfor %}
+    <select name="date">
+    	{% for date in dates %}
+    	<option value="{{ date }}">{{ date }}</option>
+    	{% endfor %}
+  </form>
+
   <h2>Scan Results:</h2>
   <ul>
   	{% for scan in search_results %}
