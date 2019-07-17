@@ -38,10 +38,16 @@ def search(request):
 	else:
 		index = date
 
+	# XXX search for scantypes in ES
+	scantypes = ['200scanner', 'uswds2']
+
+	# XXX search in ES for dates
+	dates = [(datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*']
+
 	s = Search(using=es, index=index).query()
 	context = {
 		'search_results': s,
-		'scantypes': XXX,
-		'dates': XXX,
+		'scantypes': scantypes,
+		'dates': dates,
 	}
 	return render(request, "search.html", context=context)
