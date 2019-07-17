@@ -29,9 +29,9 @@ def index(request):
 	return render(request, "index.html", context=context)
 
 def search(request):
-	query = self.request.GET.get('q')
-	scantype = self.request.GET.get('scantype')
-	date = self.request.GET.get('date')
+	query = request.GET.get('q')
+	scantype = request.GET.get('scantype')
+	date = request.GET.get('date')
 
 	if date == nil:
 		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
