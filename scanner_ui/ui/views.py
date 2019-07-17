@@ -33,7 +33,7 @@ def search(request):
 	scantype = request.GET.get('scantype')
 	date = request.GET.get('date')
 
-	if date == nil:
+	if date == None:
 		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
 	else:
 		index = date
