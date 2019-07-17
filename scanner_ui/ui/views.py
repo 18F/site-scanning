@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import os
 import datetime
+import logging
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
@@ -29,21 +30,13 @@ def index(request):
 	return render(request, "index.html", context=context)
 
 def search(request):
-	query = request.GET.get('q')
-	scantype = request.GET.get('scantype')
-	date = request.GET.get('date')
-
-	if date == None:
-		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d") + '-*'
-	else:
-		index = date + '-*'
-
 	# search for scantypes in ES
 	s = Search(using=es, index=index).query().source(['scantype'])
 	scantypemap = {}
 	for i in s.scan():
 	        scantypemap[i.scantype] = 1
 	scantypes = scantypemap.keys()
+	scantypes.insert(0, 'all')
 
 	# search in ES for dates
 	indexlist = es.indices.get_alias().keys()
@@ -54,7 +47,26 @@ def search(request):
 		datemap[date] = 1
 	dates = datemap.keys()
 
-	s = Search(using=es, index=index).query()
+	date = request.GET.get('date')
+	if date == None:
+		index = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+	else:
+		index = date
+
+	scantype = request.GET.get('scantype')
+	if scantype == None || scantype == 'all':
+		index = index + '-*'
+	else:
+		index = index + '-' + scantype
+
+	query = request.GET.get('q')
+	if query == None:
+		s = Search(using=es, index=index).query()
+	else:
+		s = Search(using=es, index=index).query(query)
+
+	logging.warning("query is " + query + " scantype is " + scantype + " date is " + date)
+
 	context = {
 		'search_results': s,
 		'scantypes': scantypes,
