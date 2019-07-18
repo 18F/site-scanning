@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import os
 import datetime
 import logging
@@ -54,7 +55,8 @@ def search(request):
 		index = index + '-' + scantype
 
 	# search for scantypes in ES
-	s = Search(using=es, index=index).query().source(['scantype'])
+	yesterdayindex = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d-") + '*'
+	s = Search(using=es, index=yesterdayindex).query().source(['scantype'])
 	scantypemap = {}
 	for i in s.scan():
 	        scantypemap[i.scantype] = 1
@@ -64,17 +66,30 @@ def search(request):
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
 	if query == None:
-		s = []
+		# XXX this is ugly, but I don't know how to get an empty search yet
+		s = Search(using=es, index=index).query("match", nothingrealblahblah=-22339)
 	else:
 		s = Search(using=es, index=index).query()
 
+	page_no = request.GET.get('page')
+	paginator = Paginator(s, 50)
+	try:
+		page = paginator.page(page_no)
+	except PageNotAnInteger:
+		page = paginator.page(1)
+	except EmptyPage:
+		page = paginator.page(paginator.num_pages)
+	results = page.object_list.execute()
+	# XXX make the results be a list that looks pretty
+
 	context = {
-		'search_results': s,
+		'search_results': results.hits,
 		'scantypes': scantypes,
 		'dates': dates,
 		'query': query,
 		'selected_scantype': scantype,
 		'selected_date': date,
+		'page_obj': page,
 	}
 
 	return render(request, "search.html", context=context)
