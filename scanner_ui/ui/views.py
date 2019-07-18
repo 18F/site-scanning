@@ -145,7 +145,8 @@ def search200(request):
 		if my200page == ' all':
 			s = Search(using=es, index=index).query("simple_query_string", query=query)
 		else:
-			s = Search(using=es, index=index).query("simple_query_string", query=query, fields=[my200page])
+			field = 'data.' + my200page
+			s = Search(using=es, index=index).query("simple_query_string", query=query, fields=[field])
 
 	# set up pagination here
 	page_no = request.GET.get('page')
@@ -157,7 +158,6 @@ def search200(request):
 	except EmptyPage:
 		page = paginator.page(paginator.num_pages)
 	results = page.object_list.execute()
-	# XXX make the results be a list that looks pretty
 
 	context = {
 		'search_results': results.hits,
