@@ -6,5 +6,6 @@ import os
 
 urlpatterns = [
 	path('search/', views.search, name='search'),
+	path('search200/', views.search200, name='search200'),
     path('', views.index, name='index'),
 ]

@@ -1,0 +1,82 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Scans Search</h1>
+  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+  <p>This search will search the 200 scanner results.  Example search queries: 
+  	<ul>
+  		<li><pre>4*</pre> XXX.</li>
+  		<li>You can also use <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/query-dsl-simple-query-string-query.html#_simple_query_string_syntax">query string syntax</a> to help narrow/tune your searches.</li>
+  	</ul>
+  </p>
+
+  <form action="{% url 'search200' %}" method="get">
+  	{% if query == None %}
+    <input name="q" type="text" placeholder="Search Here" size=100>
+    {% else %}
+    <input name="q" type="text" value="{{ query }}">
+    {% endif %}
+    <select name="200page">
+    	{% for my200page in my200pages %}
+    		{% if selected_200page == my200page %}
+    	<option value="{{ my200page }}" selected>{{ my200page }}</option>
+    		{% else %}
+    	<option value="{{ my200page }}">{{ my200page }}</option>
+    		{% endif %}
+    	{% endfor %}
+    </select>
+    <select name="date">
+    	{% for date in dates %}
+    		{% if selected_date == date %}
+    	<option value="{{ date }}" selected>{{ date }}</option>
+    		{% else %}
+    	<option value="{{ date }}">{{ date }}</option>
+    		{% endif %}
+    	{% endfor %}
+    </select>
+  </form>
+
+  <h2>Scan Results:</h2>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; first</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+  <table>
+  	{% for scan in search_results %}
+    <tr><td><strong>{{ scan.domain }}:</strong></td> <td>{{ scan }}</td></tr>
+    {% endfor %}
+  </table>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; first</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+{% endblock %}

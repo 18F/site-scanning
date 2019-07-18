@@ -3,16 +3,17 @@
 {% block content %}
   <h1>Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+  <p>This search will search all fields for the text you input.  Example search queries: 
+  	<ul>
+  		<li><pre>gsa*</pre> will show you scans that have fields that start with gsa, which will probably be mostly domain names like gsa.gov, gsaadvantage.gov, etc.</li>
+  		<li><pre>General Services Administration</pre> will show you all the scans associated with the GSA.</li>
+  		<li>You can also use <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/query-dsl-simple-query-string-query.html#_simple_query_string_syntax">query string syntax</a> to help narrow/tune your searches.</li>
+  	</ul>
+  </p>
 
-<!--
-	XXX: need search queries here:
-  	text (examples:  foo, foo=bar, foo:bar, kibana query language?)
-  	scantype popuplist
-  	date popuplist
- -->
   <form action="{% url 'search' %}" method="get">
   	{% if query == None %}
-    <input name="q" type="text" placeholder="Search Here">
+    <input name="q" type="text" placeholder="Search Here" size=100>
     {% else %}
     <input name="q" type="text" value="{{ query }}">
     {% endif %}
@@ -37,6 +38,24 @@
   </form>
 
   <h2>Scan Results:</h2>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'search' %}?scantype={{selected_scantype | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; first</a>
+            <a href="{% url 'search' %}?scantype={{selected_scantype| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{% url 'search' %}?scantype={{selected_scantype | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">next</a>
+            <a href="{% url 'search' %}?scantype={{selected_scantype | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
   <table>
   	{% for scan in search_results %}
     <tr><td><strong>{{ scan.domain }}:</strong></td> <td>{{ scan }}</td></tr>
