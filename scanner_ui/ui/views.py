@@ -69,7 +69,7 @@ def search(request):
 		# XXX this is ugly, but I don't know how to get an empty search yet
 		s = Search(using=es, index=index).query("match", nothingrealblahblah=-22339)
 	else:
-		s = Search(using=es, index=index).query()
+		s = Search(using=es, index=index).query("simple_query_string", query=query)
 
 	page_no = request.GET.get('page')
 	paginator = Paginator(s, 50)

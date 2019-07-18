@@ -67,7 +67,11 @@ for i in ${SCANTYPES} ; do
 		SCANLIST="$i,$SCANLIST"
 	fi
 done
-./scan /tmp/domains.csv --scan="$SCANLIST"
+if ./scan /tmp/domains.csv --scan="$SCANLIST" ; then
+	echo "scan of $SCANLIST successful"
+else
+	echo "scan of $SCANLIST errored out for some reason"
+fi
 
 # make sure the credentials are set
 AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
@@ -79,7 +83,11 @@ export AWS_DEFAULT_REGION
 
 # put scan results into s3
 for i in ${SCANTYPES} ; do
-	aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive
+	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive ; then
+		echo "copy of $i to s3 bucket successful"
+	else
+		echo "copy of $i to s3 bucket errored out"
+	fi
 done
 
 # put scan results into ES
@@ -105,8 +113,9 @@ for i in ${SCANTYPES} ; do
 		jq . /tmp/scan.json > /tmp/prettyscan.json
 
 		# slurp the data in
-		curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @/tmp/prettyscan.json
-		echo
+		if curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @/tmp/prettyscan.json | grep error ; then
+			echo "problem importing $(cat /tmp/prettyscan.json)"
+		fi
 	done
 done
 
