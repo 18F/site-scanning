@@ -7,7 +7,8 @@
   	<ul>
       <li>Find all pages that exist:<pre>200</pre></li>
       <li>Find all pages that do not exist:<pre>-200</pre></li>
-      <li>Find all pages that are unreachable:<pre>-"-1"</pre></li>
+      <li>Find all pages that are unreachable:<pre>"-1"</pre></li>
+      <li>Find all pages that are not unreachable:<pre>-"-1"</pre></li>
       <li>Find all pages that are giving errors (5xx) or 404s:<pre>5* 404</pre></li>
       <li>You can tune what page you want to look for with the pages popup list.</li>
       <li>You can tune what day you want to look at with the date popup list.</li>
@@ -45,8 +46,8 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; first</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">previous</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -54,8 +55,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">next</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">last &raquo;</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">Next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
@@ -63,15 +64,19 @@
   <table>
     <tr><strong><td>Domain:</td><td>Agency</td><td>Other Scan Results</td></strong></tr>
   	{% for scan in search_results %}
+      {% if selected_200page == ' all' %}
     <tr><td><strong><a href="http://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+      {% else %}
+    <tr><td><strong><a href="http://{{ scan.domain }}{{selected_200page}}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+      {% endif %}
     {% endfor %}
   </table>
 
   <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; first</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">previous</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -79,8 +84,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">next</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">last &raquo;</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">Next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
