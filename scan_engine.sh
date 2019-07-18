@@ -90,8 +90,16 @@ for i in ${SCANTYPES} ; do
 		DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
 		SHORTDATE=$(date +%Y-%m-%d)
 
+		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
+		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}')
+		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}')
+
 		# add metadata
-		echo "{\"domain\":\"$DOMAIN\",\"scantype\":\"$i\",\"data\":" > /tmp/scan.json
+		echo "{\"domain\":\"$DOMAIN\"," > /tmp/scan.json
+		echo " \"scantype\":\"$i\"," >> /tmp/scan.json
+		echo " \"domaintype\":\"$DOMAINTYPE\"," >> /tmp/scan.json
+		echo " \"agency\":\"$AGENCY\"," >> /tmp/scan.json
+		echo " \"data\":" >> /tmp/scan.json
 		cat "$j" >> /tmp/scan.json
 		echo ",\"scan_data_url\":\"https://s3-$AWS_DEFAULT_REGION.amazonaws.com/$BUCKET/$i/$DOMAIN.json\",\"lastmodified\":\"$DATE\"}" >> /tmp/scan.json
 		jq . /tmp/scan.json > /tmp/prettyscan.json
