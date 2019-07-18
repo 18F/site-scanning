@@ -5,10 +5,12 @@
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
   <p>This search will search the 200 scanner results.  Search terms are <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http status codes</a>, except for -1, which is a site that was unreachable (probably requiring VPN). Example search queries:
   	<ul>
-      <li>Find all pages that exist<pre>200</pre></li>
-      <li>Find all pages that do not exist<pre>-200</pre></li>
-      <li>Find all pages that are unreachable<pre>-"-1"</pre></li>
+      <li>Find all pages that exist:<pre>200</pre></li>
+      <li>Find all pages that do not exist:<pre>-200</pre></li>
+      <li>Find all pages that are unreachable:<pre>-"-1"</pre></li>
+      <li>Find all pages that are giving errors (5xx) or 404s:<pre>5* 404</pre></li>
       <li>You can tune what page you want to look for with the pages popup list.</li>
+      <li>You can tune what day you want to look at with the date popup list.</li>
   		<li>You can also use <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/query-dsl-simple-query-string-query.html#_simple_query_string_syntax">query string syntax</a> to help narrow/tune your searches.</li>
   	</ul>
   </p>
