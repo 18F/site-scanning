@@ -65,9 +65,9 @@
     <tr><strong><td>Domain:</td><td>Agency</td><td>Other Scan Results</td></strong></tr>
   	{% for scan in search_results %}
       {% if selected_200page == ' all' %}
-    <tr><td><strong><a href="http://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
       {% else %}
-    <tr><td><strong><a href="http://{{ scan.domain }}{{selected_200page}}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    <tr><td><strong><a href="https://{{ scan.domain }}{{selected_200page}}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
       {% endif %}
     {% endfor %}
   </table>
