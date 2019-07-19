@@ -10,7 +10,8 @@ from elasticsearch_dsl import Search
 
 es = Elasticsearch([os.environ['ESURI']])
 
-def index(request):
+def getdates():
+	# search in ES for dates we can search in
 	indexlist = es.indices.get_alias().keys()
 	datemap = {}
 	for i in indexlist:
@@ -19,7 +20,12 @@ def index(request):
 		datemap[date] = 1
 	dates = list(datemap.keys())
 	dates.sort(reverse=True)
-	latestindex = dates[0] + '-*'
+	dates.insert(0, 'latest')
+	return dates
+
+def index(request):
+	dates = getdates()
+	latestindex = dates[1] + '-*'
 
 	allscanscount = Search(using=es, index=latestindex).query().count()
 
@@ -39,16 +45,7 @@ def index(request):
 	return render(request, "index.html", context=context)
 
 def search(request):
-	# search in ES for dates we can search in
-	indexlist = es.indices.get_alias().keys()
-	datemap = {}
-	for i in indexlist:
-		a = i.split('-', maxsplit=3)
-		date = '-'.join(a[0:3])
-		datemap[date] = 1
-	dates = list(datemap.keys())
-	dates.sort(reverse=True)
-	dates.insert(0, 'latest')
+	dates = getdates()
 
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
@@ -58,7 +55,7 @@ def search(request):
 
 	# get scantype and if selected, use that index, otherwise search all indexes.
 	scantype = request.GET.get('scantype')
-	if scantype == None or scantype == ' all':
+	if scantype == None or scantype == ' all scantypes':
 		index = index + '-*'
 	else:
 		index = index + '-' + scantype
@@ -69,7 +66,7 @@ def search(request):
 	for i in s.scan():
 	        scantypemap[i.scantype] = 1
 	scantypes = list(scantypemap.keys())
-	scantypes.insert(0, ' all')
+	scantypes.insert(0, ' all scantypes')
 
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
@@ -104,16 +101,7 @@ def search(request):
 	return render(request, "search.html", context=context)
 
 def search200(request):
-	# search in ES for dates we can search in
-	indexlist = es.indices.get_alias().keys()
-	datemap = {}
-	for i in indexlist:
-		a = i.split('-', maxsplit=3)
-		date = '-'.join(a[0:3])
-		datemap[date] = 1
-	dates = list(datemap.keys())
-	dates.sort(reverse=True)
-	dates.insert(0, 'latest')
+	dates = getdates()
 
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
@@ -127,14 +115,14 @@ def search200(request):
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
 	if my200page == None:
-		my200page == ' all'
+		my200page == ' all pages'
 	s = Search(using=es, index=index).query().params(terminate_after=1)
 	pagemap = {}
 	for i in s.scan():
 			for z in i.data.to_dict().keys():
 				pagemap[z] = 1
 	my200pages = list(pagemap.keys())
-	my200pages.insert(0, ' all')
+	my200pages.insert(0, ' all pages')
 
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
@@ -142,7 +130,7 @@ def search200(request):
 		# XXX this is ugly, but I don't know how to get an empty search yet
 		s = Search(using=es, index=index).query("match", nothingrealblahblah=-22339)
 	else:
-		if my200page == ' all':
+		if my200page == ' all pages':
 			s = Search(using=es, index=index).query("simple_query_string", query=query)
 		else:
 			field = 'data.' + my200page

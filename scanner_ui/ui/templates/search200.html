@@ -22,7 +22,7 @@
     {% else %}
     <input name="q" type="text" value="{{ query }}">
     {% endif %}
-    <select name="200page">
+    <select name="200page" onchange="this.form.submit()">
     	{% for my200page in my200pages %}
     		{% if selected_200page == my200page %}
     	<option value="{{ my200page }}" selected>{{ my200page }}</option>
@@ -31,7 +31,7 @@
     		{% endif %}
     	{% endfor %}
     </select>
-    <select name="date">
+    <select name="date" onchange="this.form.submit()">
     	{% for date in dates %}
     		{% if selected_date == date %}
     	<option value="{{ date }}" selected>{{ date }}</option>
@@ -62,12 +62,12 @@
   </div>
 
   <table>
-    <tr><strong><td>Domain:</td><td>Agency</td><td>Other Scan Results</td></strong></tr>
+    <tr><td><strong>Domain:</strong></td><td><strong>Type/Branch:</strong></td><td><strong>Agency:</strong></td><td><strong>Other Scan Results:</strong></td></tr>
   	{% for scan in search_results %}
-      {% if selected_200page == ' all' %}
-    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+      {% if selected_200page == ' all pages' %}
+    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
       {% else %}
-    <tr><td><strong><a href="https://{{ scan.domain }}{{selected_200page}}">{{ scan.domain }}</a>:</strong></td> <td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    <tr><td><strong><a href="https://{{ scan.domain }}{{selected_200page}}">{{ scan.domain }}</a>:</strong></td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
       {% endif %}
     {% endfor %}
   </table>
