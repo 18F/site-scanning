@@ -67,8 +67,8 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -76,8 +76,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
@@ -92,8 +92,8 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&&version={{version | urlencode}}q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&&version={{selected_version | urlencode}}q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -101,8 +101,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
