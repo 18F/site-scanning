@@ -3,11 +3,20 @@
 {% block content %}
   <h1>Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
-  <p>This search will search the USWDS scanner results. Example search queries:
-  	<ul>
-      <li>XXX:<pre>XXX</pre></li>
-  	</ul>
-  </p>
+  <p>This search will search the USWDS scanner results.  The query parameter
+    here will search for sites that have a score greater than the number you
+    input.  The USWDS score is an attempt to be able to autodetect USWDS sites
+    by searching for things that indicate that the people who created the site
+    used USWDS-related content.  The more things we find, the more the score
+    adds up.  It is not perfect, but we think it may be a useful indicator.
+    Details of how we make this score can be found in the
+    <a href="https://github.com/18F/domain-scan/blob/tspencer/200scanner/scanners/uswds2.py#L36-L123">domain-scan codebase</a>.
+    </p>
+    <p>The best indicator if a site is an actual USWDS-compliant site is the
+      version tag, which can be found in some of the CSS files, but apparently,
+      not all sites use this, or it has been digested in some way so that we
+      cannot find it.  You can select for this with the versions popup list.
+    </p>
 
   <form action="{% url 'searchUSWDS' %}" method="get">
   	{% if query == None %}
