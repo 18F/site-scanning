@@ -15,7 +15,7 @@
   	{% if query == None %}
     <input name="q" type="text" placeholder="Search Here" size=100>
     {% else %}
-    <input name="q" type="text" value="{{ query }}">
+    <input name="q" type="text" value="{{ query }}" size=100>
     {% endif %}
     <select name="scantype">
     	{% for scantype in scantypes %}

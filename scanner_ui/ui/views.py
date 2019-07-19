@@ -108,9 +108,7 @@ def search200(request):
 		index = dates[1]
 	else:
 		index = date
-
-	scantype = '200scanner'
-	index = index + '-' + scantype
+	index = index + '-' + '200scanner'
 
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
@@ -124,17 +122,46 @@ def search200(request):
 	my200pages = list(pagemap.keys())
 	my200pages.insert(0, ' all pages')
 
+	# search in ES for the agencies/domaintype
+	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
+	agencymap = {}
+	domaintypemap = {}
+	for i in s.scan():
+	        agencymap[i.agency] = 1
+	        domaintypemap[i.domaintype] = 1
+	agencies = list(agencymap.keys())
+	agencies.sort()
+	agencies.insert(0, 'all agencies')
+	domaintypes = list(domaintypemap.keys())
+	domaintypes.sort()
+	domaintypes.insert(0, 'all Types/Branches')
+
+	agency = request.GET.get('agency')
+	if agency == None:
+		agency = 'all agencies'
+
+	domaintype = request.GET.get('domaintype')
+	if domaintype == None:
+		domaintype = 'all Types/Branches'
+
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
+	s = Search(using=es, index=index)
 	if query == None:
 		# XXX this is ugly, but I don't know how to get an empty search yet
-		s = Search(using=es, index=index).query("match", nothingrealblahblah=-22339)
+		s = s.query("match", nothingrealblahblah=-22339)
 	else:
 		if my200page == ' all pages':
-			s = Search(using=es, index=index).query("simple_query_string", query=query)
+			s = s.query("simple_query_string", query=query)
 		else:
 			field = 'data.' + my200page
-			s = Search(using=es, index=index).query("simple_query_string", query=query, fields=[field])
+			s = s.query("simple_query_string", query=query, fields=[field])
+		if agency != 'all agencies':
+			agencyquery = '"' + agency + '"'
+			s = s.query("query_string", query=agencyquery, fields=['agency'])
+		if domaintype != 'all Types/Branches':
+			domaintypequery = '"' + domaintype + '"'
+			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
 
 	# set up pagination here
 	page_no = request.GET.get('page')
@@ -155,6 +182,10 @@ def search200(request):
 		'selected_200page': my200page,
 		'my200pages': my200pages,
 		'page_obj': page,
+		'agencies': agencies,
+		'selected_agency': agency,
+		'domaintypes': domaintypes,
+		'selected_domaintype': domaintype,
 	}
 
 	return render(request, "search200.html", context=context)

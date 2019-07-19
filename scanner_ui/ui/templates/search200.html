@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
-  <p>This search will search the 200 scanner results.  Search terms are <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http status codes</a>, except for -1, which is a site that was unreachable (probably requiring VPN). Example search queries:
+  <p>This search will search the 200 scanner results.  Search terms are <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http status codes</a>, except for -1, which is a site that was unreachable (probably requiring VPN, or there is no public DNS entry for it). Example search queries:
   	<ul>
       <li>Find all pages that exist:<pre>200</pre></li>
       <li>Find all pages that do not exist:<pre>-200</pre></li>
@@ -18,7 +18,7 @@
 
   <form action="{% url 'search200' %}" method="get">
   	{% if query == None %}
-    <input name="q" type="text" placeholder="Search Here" size=100>
+    <input name="q" type="text" placeholder="Search Here">
     {% else %}
     <input name="q" type="text" value="{{ query }}">
     {% endif %}
@@ -40,14 +40,32 @@
     		{% endif %}
     	{% endfor %}
     </select>
+    <select name="agency" onchange="this.form.submit()">
+      {% for agency in agencies %}
+        {% if selected_agency == agency %}
+      <option value="{{ agency }}" selected>{{ agency }}</option>
+        {% else %}
+      <option value="{{ agency }}">{{ agency }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <select name="domaintype" onchange="this.form.submit()">
+      {% for domaintype in domaintypes %}
+        {% if selected_domaintype == domaintype %}
+      <option value="{{ domaintype }}" selected>{{ domaintype }}</option>
+        {% else %}
+      <option value="{{ domaintype }}">{{ domaintype }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
   </form>
 
   <h2>Scan Results:</h2>
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; First</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">Previous</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -55,8 +73,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">Next</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
@@ -72,11 +90,11 @@
     {% endfor %}
   </table>
 
-  <div class="pagination">
+    <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}">&laquo; First</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}">Previous</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -84,8 +102,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}">Next</a>
-            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
