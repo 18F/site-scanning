@@ -1,0 +1,100 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Scans Search</h1>
+  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+  <p>This search will search the USWDS scanner results. Example search queries:
+  	<ul>
+      <li>XXX:<pre>XXX</pre></li>
+  	</ul>
+  </p>
+
+  <form action="{% url 'searchUSWDS' %}" method="get">
+  	{% if query == None %}
+    <input name="q" type="text" placeholder="Search Here">
+    {% else %}
+    <input name="q" type="text" value="{{ query }}">
+    {% endif %}
+    <select name="version" onchange="this.form.submit()">
+      {% for version in versions %}
+        {% if selected_version == version %}
+      <option value="{{ version }}" selected>{{ version }}</option>
+        {% else %}
+      <option value="{{ version }}">{{ version }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <select name="date" onchange="this.form.submit()">
+    	{% for date in dates %}
+    		{% if selected_date == date %}
+    	<option value="{{ date }}" selected>{{ date }}</option>
+    		{% else %}
+    	<option value="{{ date }}">{{ date }}</option>
+    		{% endif %}
+    	{% endfor %}
+    </select>
+    <select name="agency" onchange="this.form.submit()">
+      {% for agency in agencies %}
+        {% if selected_agency == agency %}
+      <option value="{{ agency }}" selected>{{ agency }}</option>
+        {% else %}
+      <option value="{{ agency }}">{{ agency }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <select name="domaintype" onchange="this.form.submit()">
+      {% for domaintype in domaintypes %}
+        {% if selected_domaintype == domaintype %}
+      <option value="{{ domaintype }}" selected>{{ domaintype }}</option>
+        {% else %}
+      <option value="{{ domaintype }}">{{ domaintype }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </form>
+
+  <h2>Scan Results:</h2>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+  <table>
+    <tr><td><strong>Domain:</strong></td><td><strong>Score:</strong></td><td><strong>USWDS Version:</strong></td><td><strong>Type/Branch:</strong></td><td><strong>Agency:</strong></td><td><strong>Other Scan Results:</strong></td></tr>
+  	{% for scan in search_results %}
+    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td><td>{{scan.data.total_score}}</td><td>{{scan.data.uswdsversion}}</td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    {% endfor %}
+  </table>
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&&version={{version | urlencode}}q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&version={{version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+{% endblock %}

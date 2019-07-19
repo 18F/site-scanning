@@ -5,6 +5,7 @@ import datetime
 import logging
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import Range, Bool
 
 # Create your views here.
 
@@ -189,3 +190,100 @@ def search200(request):
 	}
 
 	return render(request, "search200.html", context=context)
+
+def searchUSWDS(request):
+	dates = getdates()
+
+	date = request.GET.get('date')
+	if date == None or date == 'latest':
+		index = dates[1]
+	else:
+		index = date
+	index = index + '-' + 'uswds2'
+
+	# search in ES for the agencies/domaintype
+	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
+	agencymap = {}
+	domaintypemap = {}
+	for i in s.scan():
+	        agencymap[i.agency] = 1
+	        domaintypemap[i.domaintype] = 1
+	agencies = list(agencymap.keys())
+	agencies.sort()
+	agencies.insert(0, 'all agencies')
+	domaintypes = list(domaintypemap.keys())
+	domaintypes.sort()
+	domaintypes.insert(0, 'all Types/Branches')
+
+	agency = request.GET.get('agency')
+	if agency == None:
+		agency = 'all agencies'
+
+	domaintype = request.GET.get('domaintype')
+	if domaintype == None:
+		domaintype = 'all Types/Branches'
+
+	# search in ES for versions that have been detected
+	s = Search(using=es, index=index).query().source(['data.uswdsversion'])
+	versionmap = {}
+	for i in s.scan():
+			if isinstance(i.data.uswdsversion, str) and i.data.uswdsversion != '':
+			    versionmap[i.data.uswdsversion] = 1
+	versions = list(versionmap.keys())
+	versions.sort()
+	versions.insert(0, 'detected versions')
+	versions.insert(0, 'all versions')
+
+	version = request.GET.get('version')
+	if version == None:
+		version = 'all versions'
+
+	# the query should be a number that we are comparing to total_score
+	query = request.GET.get('q')
+	try:
+		query = int(query)
+	except:
+		query = 0
+
+	# do the actual query here.
+	s = Search(using=es, index=index)
+	s = s.query(Bool(should=[Range(data__total_score={'gt': query})]))
+	if version != 'all versions':
+		if version == 'detected versions':
+			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
+		else:
+			versionquery = '"' + version + '"'
+			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
+	if agency != 'all agencies':
+		agencyquery = '"' + agency + '"'
+		s = s.query("query_string", query=agencyquery, fields=['agency'])
+	if domaintype != 'all Types/Branches':
+		domaintypequery = '"' + domaintype + '"'
+		s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+
+	# set up pagination here
+	page_no = request.GET.get('page')
+	paginator = Paginator(s, 50)
+	try:
+		page = paginator.page(page_no)
+	except PageNotAnInteger:
+		page = paginator.page(1)
+	except EmptyPage:
+		page = paginator.page(paginator.num_pages)
+	results = page.object_list.execute()
+
+	context = {
+		'search_results': results.hits,
+		'dates': dates,
+		'query': query,
+		'selected_date': date,
+		'page_obj': page,
+		'agencies': agencies,
+		'selected_agency': agency,
+		'domaintypes': domaintypes,
+		'selected_domaintype': domaintype,
+		'versions': versions,
+		'selected_version': version,
+	}
+
+	return render(request, "searchUSWDS.html", context=context)
