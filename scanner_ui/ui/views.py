@@ -109,7 +109,7 @@ def search200(request):
 		index = dates[1]
 	else:
 		index = date
-	index = index + '-' + '200scanner'
+	index = index + '-200scanner'
 
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
@@ -197,9 +197,10 @@ def searchUSWDS(request):
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
 		index = dates[1]
+		date = 'latest'
 	else:
 		index = date
-	index = index + '-' + 'uswds2'
+	index = index + '-uswds2'
 
 	# search in ES for the agencies/domaintype
 	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
@@ -247,7 +248,7 @@ def searchUSWDS(request):
 
 	# do the actual query here.
 	s = Search(using=es, index=index)
-	s = s.query(Bool(should=[Range(data__total_score={'gt': query})]))
+	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
 	if version != 'all versions':
 		if version == 'detected versions':
 			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
