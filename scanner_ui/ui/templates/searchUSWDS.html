@@ -92,7 +92,7 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&version={{selected_version | urlencode}}q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page=1&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
             <a href="{% url 'searchUSWDS' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}">Previous</a>
         {% endif %}
 
