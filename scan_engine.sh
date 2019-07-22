@@ -26,6 +26,14 @@ export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/.l
 export LD_LIBRARY_PATH=/home/vcap/deps/0/lib
 export LIBRARY_PATH=/home/vcap/deps/0/lib
 
+# make sure the credentials are set
+AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
+export AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
+export AWS_SECRET_ACCESS_KEY
+AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
+export AWS_DEFAULT_REGION
+
 # make sure we have all the arguments we need
 if [ -n "$1" ] ; then
 	BUCKET="$1"
@@ -82,22 +90,33 @@ for i in ${SCANTYPES} ; do
 		SHORTDATE=$(date +%Y-%m-%d)
 
 		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
-		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}')
-		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}')
+		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}' | tr -d \")
+		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}' | tr -d \")
 
 		# add metadata
 		echo "{\"domain\":\"$DOMAIN\"," > /tmp/scan.json
 		echo " \"scantype\":\"$i\"," >> /tmp/scan.json
 		echo " \"domaintype\":\"$DOMAINTYPE\"," >> /tmp/scan.json
 		echo " \"agency\":\"$AGENCY\"," >> /tmp/scan.json
-		echo " \"scandata\":" >> /tmp/scan.json
+		echo " \"scan_data_url\":\"https://s3-$AWS_DEFAULT_REGION.amazonaws.com/$BUCKET/$i/$DOMAIN.json\"," >> /tmp/scan.json
+		echo " \"lastmodified\":\"$DATE\"," >> /tmp/scan.json
+		echo " \"data\":" >> /tmp/scan.json
+
+		# This is because you cannot have . in field names in ES,
+		# so we are replacing them with // for the document we are
+		# going to index.
+		cp /tmp/scan.json /tmp/noperiodsscan.json
+		../deperiodkeys.py "$j" >> /tmp/noperiodsscan.json
+		echo "}" >> /tmp/noperiodsscan.json
+
+		# This is the document that will go into S3.
 		cat "$j" >> /tmp/scan.json
-		echo ",\"scan_data_url\":\"https://s3-$AWS_DEFAULT_REGION.amazonaws.com/$BUCKET/$i/$DOMAIN.json\",\"lastmodified\":\"$DATE\"}" >> /tmp/scan.json
+		echo "}" >> /tmp/scan.json
 		jq . /tmp/scan.json > "$j"
 
 		# slurp the data in
-		if curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @"$j" | grep error ; then
-			echo "problem importing $(cat "$j")"
+		if curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @/tmp/noperiodsscan.json | grep error ; then
+			echo "problem importing $j: $(cat /tmp/noperiodsscan.json)"
 		fi
 	done
 done
@@ -113,14 +132,6 @@ curl -s "$ESURL/_cat/indices" | awk '{print $3}' | while read line ; do
 		echo
 	fi
 done
-
-# make sure the credentials are set
-AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
-export AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
-export AWS_SECRET_ACCESS_KEY
-AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
-export AWS_DEFAULT_REGION
 
 # put scan results into s3
 for i in ${SCANTYPES} ; do

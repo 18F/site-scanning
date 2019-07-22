@@ -34,7 +34,6 @@ def getFullScantype(scantype=None):
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
 			scans.append(json_data)
-			# scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
 
 # This function provides a reference to the domain scan data in it's s3 bucket
@@ -63,7 +62,6 @@ def getFullDomain(domain=None):
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
 			scans.append(json_data)
-			# scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
 
 # This function provides a reference to the scan data in it's s3 bucket

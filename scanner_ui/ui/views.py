@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import os
 import datetime
 import logging
+import re
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool
@@ -101,6 +102,18 @@ def search(request):
 
 	return render(request, "search.html", context=context)
 
+def deperiodize(mystring):
+	if mystring == None:
+		return None
+	else:
+		return re.sub(r'\.', '//', mystring)
+
+def periodize(mystring):
+	if mystring == None:
+		return None
+	else:
+		return re.sub(r'\/\/', '.', mystring)	
+
 def search200(request):
 	dates = getdates()
 
@@ -118,8 +131,8 @@ def search200(request):
 	s = Search(using=es, index=index).query().params(terminate_after=1)
 	pagemap = {}
 	for i in s.scan():
-			for z in i.scandata.to_dict().keys():
-				pagemap[z] = 1
+			for z in i.data.to_dict().keys():
+				pagemap[periodize(z)] = 1
 	my200pages = list(pagemap.keys())
 	my200pages.insert(0, ' all pages')
 
@@ -155,7 +168,7 @@ def search200(request):
 		if my200page == ' all pages':
 			s = s.query("simple_query_string", query=query)
 		else:
-			field = 'scandata.' + my200page
+			field = 'data.' + deperiodize(my200page)
 			s = s.query("simple_query_string", query=query, fields=[field])
 		if agency != 'all agencies':
 			agencyquery = '"' + agency + '"'
@@ -180,7 +193,7 @@ def search200(request):
 		'dates': dates,
 		'query': query,
 		'selected_date': date,
-		'selected_200page': my200page,
+		'selected_200page': periodize(my200page),
 		'my200pages': my200pages,
 		'page_obj': page,
 		'agencies': agencies,
@@ -225,11 +238,11 @@ def searchUSWDS(request):
 		domaintype = 'all Types/Branches'
 
 	# search in ES for versions that have been detected
-	s = Search(using=es, index=index).query().source(['scandata.uswdsversion'])
+	s = Search(using=es, index=index).query().source(['data.uswdsversion'])
 	versionmap = {}
 	for i in s.scan():
-			if isinstance(i.scandata.uswdsversion, str) and i.scandata.uswdsversion != '':
-			    versionmap[i.scandata.uswdsversion] = 1
+			if isinstance(i.data.uswdsversion, str) and i.data.uswdsversion != '':
+			    versionmap[i.data.uswdsversion] = 1
 	versions = list(versionmap.keys())
 	versions.sort()
 	versions.insert(0, 'detected versions')
@@ -248,13 +261,13 @@ def searchUSWDS(request):
 
 	# do the actual query here.
 	s = Search(using=es, index=index)
-	s = s.query(Bool(should=[Range(scandata__total_score={'gte': query})]))
+	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
 	if version != 'all versions':
 		if version == 'detected versions':
-			s = s.query("query_string", query='v*', fields=['scandata.uswdsversion'])
+			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
 		else:
 			versionquery = '"' + version + '"'
-			s = s.query("query_string", query=versionquery, fields=['scandata.uswdsversion'])
+			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
 	if agency != 'all agencies':
 		agencyquery = '"' + agency + '"'
 		s = s.query("query_string", query=agencyquery, fields=['agency'])
