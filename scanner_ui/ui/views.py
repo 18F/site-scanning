@@ -118,7 +118,7 @@ def search200(request):
 	s = Search(using=es, index=index).query().params(terminate_after=1)
 	pagemap = {}
 	for i in s.scan():
-			for z in i.data.to_dict().keys():
+			for z in i.scandata.to_dict().keys():
 				pagemap[z] = 1
 	my200pages = list(pagemap.keys())
 	my200pages.insert(0, ' all pages')
@@ -155,7 +155,7 @@ def search200(request):
 		if my200page == ' all pages':
 			s = s.query("simple_query_string", query=query)
 		else:
-			field = 'data.' + my200page
+			field = 'scandata.' + my200page
 			s = s.query("simple_query_string", query=query, fields=[field])
 		if agency != 'all agencies':
 			agencyquery = '"' + agency + '"'
@@ -225,11 +225,11 @@ def searchUSWDS(request):
 		domaintype = 'all Types/Branches'
 
 	# search in ES for versions that have been detected
-	s = Search(using=es, index=index).query().source(['data.uswdsversion'])
+	s = Search(using=es, index=index).query().source(['scandata.uswdsversion'])
 	versionmap = {}
 	for i in s.scan():
-			if isinstance(i.data.uswdsversion, str) and i.data.uswdsversion != '':
-			    versionmap[i.data.uswdsversion] = 1
+			if isinstance(i.scandata.uswdsversion, str) and i.scandata.uswdsversion != '':
+			    versionmap[i.scandata.uswdsversion] = 1
 	versions = list(versionmap.keys())
 	versions.sort()
 	versions.insert(0, 'detected versions')
@@ -248,13 +248,13 @@ def searchUSWDS(request):
 
 	# do the actual query here.
 	s = Search(using=es, index=index)
-	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
+	s = s.query(Bool(should=[Range(scandata__total_score={'gte': query})]))
 	if version != 'all versions':
 		if version == 'detected versions':
-			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
+			s = s.query("query_string", query='v*', fields=['scandata.uswdsversion'])
 		else:
 			versionquery = '"' + version + '"'
-			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
+			s = s.query("query_string", query=versionquery, fields=['scandata.uswdsversion'])
 	if agency != 'all agencies':
 		agencyquery = '"' + agency + '"'
 		s = s.query("query_string", query=agencyquery, fields=['agency'])

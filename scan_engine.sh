@@ -73,24 +73,7 @@ else
 	echo "scan of $SCANLIST errored out for some reason"
 fi
 
-# make sure the credentials are set
-AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
-export AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
-export AWS_SECRET_ACCESS_KEY
-AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
-export AWS_DEFAULT_REGION
-
-# put scan results into s3
-for i in ${SCANTYPES} ; do
-	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive ; then
-		echo "copy of $i to s3 bucket successful"
-	else
-		echo "copy of $i to s3 bucket errored out"
-	fi
-done
-
-# put scan results into ES
+# put scan results into ES and add metadata
 ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
 for i in ${SCANTYPES} ; do
 	for j in cache/"$i"/*.json ; do
@@ -107,14 +90,14 @@ for i in ${SCANTYPES} ; do
 		echo " \"scantype\":\"$i\"," >> /tmp/scan.json
 		echo " \"domaintype\":\"$DOMAINTYPE\"," >> /tmp/scan.json
 		echo " \"agency\":\"$AGENCY\"," >> /tmp/scan.json
-		echo " \"data\":" >> /tmp/scan.json
+		echo " \"scandata\":" >> /tmp/scan.json
 		cat "$j" >> /tmp/scan.json
 		echo ",\"scan_data_url\":\"https://s3-$AWS_DEFAULT_REGION.amazonaws.com/$BUCKET/$i/$DOMAIN.json\",\"lastmodified\":\"$DATE\"}" >> /tmp/scan.json
-		jq . /tmp/scan.json > /tmp/prettyscan.json
+		jq . /tmp/scan.json > "$j"
 
 		# slurp the data in
-		if curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @/tmp/prettyscan.json | grep error ; then
-			echo "problem importing $(cat /tmp/prettyscan.json)"
+		if curl -s -XPOST "$ESURL/$SHORTDATE-$i/scan" -d @"$j" | grep error ; then
+			echo "problem importing $(cat "$j")"
 		fi
 	done
 done
@@ -128,6 +111,23 @@ curl -s "$ESURL/_cat/indices" | awk '{print $3}' | while read line ; do
 		echo deleting "$line" index
 		curl -s -X DELETE "$ESURL/$line"
 		echo
+	fi
+done
+
+# make sure the credentials are set
+AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
+export AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
+export AWS_SECRET_ACCESS_KEY
+AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
+export AWS_DEFAULT_REGION
+
+# put scan results into s3
+for i in ${SCANTYPES} ; do
+	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive ; then
+		echo "copy of $i to s3 bucket successful"
+	else
+		echo "copy of $i to s3 bucket errored out"
 	fi
 done
 

@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Scans Search</h1>
+  <h1>USWDS Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
   <p>This search will search the USWDS scanner results.  The query parameter
     here will search for sites that have a score greater than or equal to the
@@ -85,7 +85,7 @@
   <table>
     <tr><td><strong>Domain:</strong></td><td><strong>Score:</strong></td><td><strong>USWDS Version:</strong></td><td><strong>Type/Branch:</strong></td><td><strong>Agency:</strong></td><td><strong>Other Scan Results:</strong></td></tr>
   	{% for scan in search_results %}
-    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td><td>{{scan.data.total_score}}</td><td>{{scan.data.uswdsversion}}</td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td><td>{{scan.scandata.total_score}}</td><td>{{scan.scandata.uswdsversion}}</td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
     {% endfor %}
   </table>
 

@@ -31,12 +31,10 @@ def getFullScantype(scantype=None):
 			continue
 		s3scantype = os.path.dirname(f.key)
 		if scantype == None or s3scantype == scantype:
-			scandomain = os.path.basename(os.path.splitext(f.key)[0])
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
-			lastmodified = scandata['lastmodified']
-			scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
+			scans.append(json_data)
+			# scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
 
 # This function provides a reference to the domain scan data in it's s3 bucket
@@ -50,7 +48,7 @@ def getScantype(scantype=None):
 		if scantype == None or s3scantype == scantype:
 			scandomain = os.path.basename(os.path.splitext(f.key)[0])
 			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
-			scans.append({"domain": scandomain, "scantype": s3scantype, "path": f.key, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
+			scans.append({"domain": scandomain, "scantype": s3scantype, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
 	return scans
 
 # This function pulls down the domain scan data and puts it inline.
@@ -62,12 +60,10 @@ def getFullDomain(domain=None):
 			continue
 		scandomain = os.path.basename(os.path.splitext(f.key)[0])
 		if domain == None or scandomain == domain:
-			scantype = os.path.dirname(f.key)
 			scandata = getScanFromS3(f.key)
 			json_data = json.loads(scandata['body'])
-			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
-			lastmodified = scandata['lastmodified']
-			scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
+			scans.append(json_data)
+			# scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": lastmodified, "data": json_data, "scan_data_url": scan_data_url})
 	return scans
 
 # This function provides a reference to the scan data in it's s3 bucket
@@ -81,7 +77,7 @@ def getDomain(domain=None):
 		if domain == None or scandomain == domain:
 			scantype = os.path.dirname(f.key)
 			scan_data_url = "https://s3-" + os.environ['AWS_DEFAULT_REGION'] + ".amazonaws.com/" + os.environ['BUCKETNAME'] + "/" + f.key
-			scans.append({"domain": scandomain, "scantype": scantype, "path": f.key, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
+			scans.append({"domain": scandomain, "scantype": scantype, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
 	return scans
 
 
