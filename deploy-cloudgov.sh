@@ -49,6 +49,5 @@ cf push
 ROUTE="$(cf apps | grep scanner-ui | awk '{print $6}')"
 echo
 echo
-echo "to log into the site, you will want to go to https://${ROUTE}/api/v1/scans/ or https://${ROUTE}/api/v1/domains/"
-echo "Have fun!"
-
+echo "to log into the site, you will want to go to https://${ROUTE}/"
+echo 'Have fun!'
