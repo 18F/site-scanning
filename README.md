@@ -32,10 +32,9 @@ The prototype will return data that the stakeholder(s) identify as useful, and w
 The current scanning infrastructure is not actively maintained, and some prototype scanners are sitting in a dev environment, un-deployed. There is no long-term solution for storing results (cloud.gov sandbox), and site scanning not architected to be either replicable (for interested parties to stand up their own copy of site scans) or extensible (for new, custom scans to be added to the suite). 
 
 ### Prototypes
-We will start with two "200 scanners": Data & APIs. 
 
-- **Data** - This scan will return binary data on [agency].gov/data.json pages. Using this scan, we can incorporate these open data results onto [Data.gov](https://www.data.gov/) for cost savings, transparency, opportunities for small businesses, research and scientific discoveries, and improved public services. This scan can also help agencies comply with [OPEN Data Act](https://www.congress.gov/bill/115th-congress/house-bill/4174/text), [Executive Order](https://obamawhitehouse.archives.gov/the-press-office/2013/05/09/executive-order-making-open-and-machine-readable-new-default-government-), and [White House Memo](https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2013/m-13-13.pdf).
-- **APIs**- This scan will return binary data on [agency].gov/developer pages. Using this scan, we can incorporate these open API results onto [API.data.gov](https://api.data.gov/) for cost savings and improved public services. This scan can also help agencies comply with White House Memos [M-13-13](https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2013/m-13-13.pdf) and [M-17-06](https://www.whitehouse.gov/sites/whitehouse.gov/files/omb/memoranda/2017/m-17-06.pdf).
+- [**200 scanner**](https://scanner-ui-exhausted-swan.app.cloud.gov/search200/)Checks domains for the presence of absence of a file at a specific location, specifically by analyzing the server response code at that location, such as x.gov/code.json, x.gov/data.jason, x.gov/data, x.gov/developer, x.gov/digitalstrategy, x.gov/open, x.gov/privacy, x.gov/robots.txt, x.gov/sitemap.xml
+- [**U.S. Web Design System**](https://scanner-ui-exhausted-swan.app.cloud.gov/searchUSWDS/)Checks domains for the presence or absence of U.S. Web Design System (USWDS) components and USWDS version in use.
 
 ### Scope of work
 #### In scope
