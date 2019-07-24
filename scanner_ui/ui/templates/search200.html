@@ -22,6 +22,15 @@
     {% else %}
     <input name="q" type="text" value="{{ query }}">
     {% endif %}
+    <select name="resultcode" onchange="this.form.submit()">
+      {% for resultcode in resultcodes %}
+        {% if selected_resultcode == resultcode %}
+      <option value="{{ resultcode }}" selected>{{ resultcode }}</option>
+        {% else %}
+      <option value="{{ resultcode }}">{{ resultcode }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
     <select name="200page" onchange="this.form.submit()">
     	{% for my200page in my200pages %}
     		{% if selected_200page == my200page %}

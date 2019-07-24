@@ -136,6 +136,18 @@ def search200(request):
 	my200pages = list(pagemap.keys())
 	my200pages.insert(0, ' all pages')
 
+	# search in ES for result codes we can select
+	resultcode = request.GET.get('resultcode')
+	if resultcode == None:
+		resultcode = ' all resultcodes'
+	s = Search(using=es, index=index).query().source(['data.*'])
+	resultcodemap = {}
+	for i in s.scan():
+			for k,v in i.data.to_dict().items():
+				resultcodemap[v] = 1
+	resultcodes = list(resultcodemap.keys())
+	resultcodes.insert(0, ' all resultcodes')
+
 	# search in ES for the agencies/domaintype
 	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
 	agencymap = {}
@@ -159,7 +171,11 @@ def search200(request):
 		domaintype = 'all Types/Branches'
 
 	# do the actual query here.  Start out with an empty query if this is our first time.
-	query = request.GET.get('q')
+	if resultcode == ' all resultcodes':
+		query = request.GET.get('q')
+	else:
+		query = resultcode
+
 	s = Search(using=es, index=index)
 	if query == None:
 		# XXX this is ugly, but I don't know how to get an empty search yet
@@ -176,6 +192,7 @@ def search200(request):
 		if domaintype != 'all Types/Branches':
 			domaintypequery = '"' + domaintype + '"'
 			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+
 
 	# set up pagination here
 	page_no = request.GET.get('page')
@@ -200,6 +217,8 @@ def search200(request):
 		'selected_agency': agency,
 		'domaintypes': domaintypes,
 		'selected_domaintype': domaintype,
+		'resultcodes': resultcodes,
+		'selected_resultcode': resultcode,
 	}
 
 	return render(request, "search200.html", context=context)
