@@ -176,7 +176,7 @@ def search200(request):
 	if resultcode == ' all resultcodes':
 		query = request.GET.get('q')
 	else:
-		query = resultcode
+		query = '"' + resultcode + '"'
 
 	s = Search(using=es, index=index)
 	if query == None:
