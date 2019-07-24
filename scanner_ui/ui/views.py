@@ -145,7 +145,8 @@ def search200(request):
 	for i in s.scan():
 			for k,v in i.data.to_dict().items():
 				resultcodemap[v] = 1
-	resultcodes = list(resultcodemap.keys())
+	# make sure everybody is a string, then sort it
+	resultcodes = list(map(str, resultcodemap.keys()))
 	resultcodes.sort()
 	resultcodes.insert(0, ' all resultcodes')
 
