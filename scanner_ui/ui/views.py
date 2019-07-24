@@ -146,6 +146,7 @@ def search200(request):
 			for k,v in i.data.to_dict().items():
 				resultcodemap[v] = 1
 	resultcodes = list(resultcodemap.keys())
+	resultcodes.sort()
 	resultcodes.insert(0, ' all resultcodes')
 
 	# search in ES for the agencies/domaintype
