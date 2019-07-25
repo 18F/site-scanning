@@ -6,5 +6,5 @@ This section documents scans that are active in the Site Scanning program. Scans
 ### Links to Live Scans
 
 * [Scans Search Home](https://scanner-ui-patient-chipmunk.app.cloud.gov/)
-* [USWDS Scanner](https://scanner-ui-exhausted-swan.app.cloud.gov/searchUSWDS/)
-* [200 Scanner](https://scanner-ui-exhausted-swan.app.cloud.gov/search200/)
+* [USWDS Scanner](https://scanner-ui-patient-chipmunk.app.cloud.gov/searchUSWDS/)
+* [200 Scanner](https://scanner-ui-patient-chipmunk.app.cloud.gov/search200/)
