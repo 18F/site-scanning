@@ -1,7 +1,7 @@
 # U.S. Web Design System (USWDS) Scanner
 
 ## Summary
-A [scan](https://scanner-ui-exhausted-swan.app.cloud.gov/searchUSWDS/) to check each domain for the presence or absence of a USWDS component (i.e. font, style sheet) and the version in use of USWDS.
+A [scan](https://scanner-ui-patient-chipmunk.app.cloud.gov/searchUSWDS/) to check each domain for the presence or absence of a USWDS component (i.e. font, style sheet) and the version in use of USWDS.
 
 * USWDS adoption
 * USWDS configuration
