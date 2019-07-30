@@ -6,7 +6,7 @@ import logging
 import re
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Range, Bool
+from elasticsearch_dsl.query import Range, Bool, Q
 
 # Create your views here.
 
@@ -51,19 +51,19 @@ def search(request):
 
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
-		index = dates[1]
+		indexbase = dates[1]
 	else:
-		index = date
+		indexbase = date
 
 	# get scantype and if selected, use that index, otherwise search all indexes.
 	scantype = request.GET.get('scantype')
 	if scantype == None or scantype == ' all scantypes':
-		index = index + '-*'
+		index = indexbase + '-*'
 	else:
-		index = index + '-' + scantype
+		index = indexbase + '-' + scantype
 
 	# search for scantypes in ES
-	s = Search(using=es, index=dates[1] + '-*').query().source(['scantype'])
+	s = Search(using=es, index=indexbase + '-*').query().source(['scantype'])
 	scantypemap = {}
 	for i in s.scan():
 	        scantypemap[i.scantype] = 1
@@ -102,27 +102,59 @@ def search(request):
 
 	return render(request, "search.html", context=context)
 
+
+# Periods in fields are now illegal, so we use this function to fix this.
 def deperiodize(mystring):
 	if mystring == None:
 		return None
 	else:
 		return re.sub(r'\.', '//', mystring)
 
+
+# Periods in fields are now illegal, so we use this function to get proper names back.
 def periodize(mystring):
 	if mystring == None:
 		return None
 	else:
 		return re.sub(r'\/\/', '.', mystring)	
 
+
+# Slashes in values need to be escaped
+def deslash(mystring):
+	if mystring == None:
+		return None
+	else:
+		return re.sub(r'\/', '\/', mystring)
+
+
+# This function is meant to search the pagedata index for domains
+# which have page data that match the key/value supplied and return
+# the list to the caller.
+def domainsWith(page, key, value, index):
+	fielddata = [
+		'data.*.content_type',
+		'domain'
+	]
+	searchfields = ['data.' + deperiodize(page) + '.' + key]
+	s = Search(using=es, index=index)
+	s = s.query("query_string", query=deslash(value), fields=searchfields)
+	s = s.source(fielddata)
+	domainmap = {}
+	for i in s.scan():
+		domainmap[i.domain] = 1
+	domains = list(domainmap.keys())
+	return list(domainmap.keys())
+
+
 def search200(request):
 	dates = getdates()
 
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
-		index = dates[1]
+		indexbase = dates[1]
 	else:
-		index = date
-	index = index + '-200scanner'
+		indexbase = date
+	index = indexbase + '-200scanner'
 
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
@@ -172,6 +204,25 @@ def search200(request):
 	if domaintype == None:
 		domaintype = 'all Types/Branches'
 
+
+	# Find list of mime types from the pagedata index
+	fielddata = [
+		'data.*.content_type',
+	]
+	s = Search(using=es, index=indexbase + '-pagedata').query().source(fielddata)
+	mimetypemap = {}
+	for i in s.scan():
+		for k,v in i.data.to_dict().items():
+			mimetypemap[v['content_type']] = 1
+
+	mimetype = request.GET.get('mimetype')
+	if mimetype == None:
+		mimetype = 'all content_types'
+	mimetypes = list(mimetypemap.keys())
+	mimetypes.sort()
+	mimetypes.insert(0, 'all content_types')
+
+
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	if resultcode == ' all resultcodes':
 		query = request.GET.get('q')
@@ -180,8 +231,8 @@ def search200(request):
 
 	s = Search(using=es, index=index)
 	if query == None:
-		# XXX this is ugly, but I don't know how to get an empty search yet
-		s = s.query("match", nothingrealblahblah=-22339)
+		# produce an empty query
+		s = s.query(~Q('match_all'))
 	else:
 		if my200page == ' all pages':
 			s = s.query("simple_query_string", query=query)
@@ -195,6 +246,13 @@ def search200(request):
 			domaintypequery = '"' + domaintype + '"'
 			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
 
+		# filter with data derived from the pagedata index (if needed)
+		pagedatadomains = []
+		if mimetype != 'all content_types':
+			domains = domainsWith(my200page, 'content_type', mimetype, indexbase + '-pagedata')
+			pagedatadomains.extend(domains)
+		if len(pagedatadomains) > 0:
+			s = s.filter("terms", domain=pagedatadomains)
 
 	# set up pagination here
 	page_no = request.GET.get('page')
@@ -206,6 +264,40 @@ def search200(request):
 	except EmptyPage:
 		page = paginator.page(paginator.num_pages)
 	results = page.object_list.execute()
+
+	# mix in the pagedata scan into the page we are displaying.
+	pagedomainlist = []
+	# get list of domains to search for in the pagedata index
+	for i in results:
+		pagedomainlist.insert(0, i.domain)
+	s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=pagedomainlist)
+	pagedatastructure = {}
+	# get data from pagedata index
+	for i in s.scan():
+		pagedatastructure[i.domain] = i.data.to_dict()
+	# mix pagedata into results
+	pagekeys = []
+	if my200page != ' all pages':
+		for i in results:
+			try:
+				keys = list(pagedatastructure[i.domain][deperiodize(my200page)].keys())
+				pagekeys = list(set().union(keys, pagekeys))
+			except:
+				logging.error('could not find pagedata to merge in for ' + i.domain)
+	pagekeys.sort()
+	for i in results:
+		if my200page == ' all pages':
+			i['url'] = 'https://' + i.domain
+			i['pagedata'] = []
+		else:
+			i['url'] = 'https://' + i.domain + my200page
+			i['pagedata'] = []
+			for k in pagekeys:
+				try:
+					i['pagedata'].append(pagedatastructure[i.domain][deperiodize(my200page)][k])
+				except:
+					i['pagedata'].append('')
+
 
 	context = {
 		'search_results': results.hits,
@@ -221,6 +313,9 @@ def search200(request):
 		'selected_domaintype': domaintype,
 		'resultcodes': resultcodes,
 		'selected_resultcode': resultcode,
+		'mimetypes': mimetypes,
+		'selected_mimetype': mimetype,
+		'pagekeys': pagekeys,
 	}
 
 	return render(request, "search200.html", context=context)
