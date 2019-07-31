@@ -5,7 +5,7 @@
 # It also cleans up old scans (>30 days) to prevent clutter.
 #
 # It is meant to be run like so:
-#   cf run-task scanner-ui /app/scan_engine.sh
+#   cf run-task scanner-ui /app/scan_engine.sh -m 2048
 
 # This is where you add more scan types
 SCANTYPES="
@@ -82,13 +82,20 @@ else
 	echo "scan of $SCANLIST errored out for some reason"
 fi
 
-# put scan results into ES and add metadata
+# add metadata and put scan results into ES
 ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
 for i in ${SCANTYPES} ; do
+	# set the domain field to be a keyword rather than text so we can sort on it
+	DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
+	SHORTDATE=$(date +%Y-%m-%d)
+	echo '{"mappings": {"scan": {"properties": {"domain": {"type": "keyword"}}}}}' > /tmp/mapping.json
+	if curl -s -XPUT "$ESURL/$SHORTDATE-$i" -d @/tmp/mapping.json | grep error ; then
+		echo "problem creating mapping"
+	fi
+
+	# import all of the scans
 	for j in cache/"$i"/*.json ; do
 		DOMAIN=$(basename -s .json "$j")
-		DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
-		SHORTDATE=$(date +%Y-%m-%d)
 
 		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
 		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}' | tr -d \")

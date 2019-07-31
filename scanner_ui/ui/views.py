@@ -230,6 +230,8 @@ def search200(request):
 		query = '"' + resultcode + '"'
 
 	s = Search(using=es, index=index)
+	# XXX should make this selectable with a popup, but will need fields to be keyword, not text
+	s = s.sort('domain')
 	if query == None:
 		# produce an empty query
 		s = s.query(~Q('match_all'))
