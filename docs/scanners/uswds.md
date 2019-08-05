@@ -48,3 +48,23 @@ Detects what version of USWDS is in use on a government website.
 
 #### Other Notes
 * [Human curated list of USWDS sites](https://designsystem.digital.gov/getting-started/showcase/all/)
+
+
+
+#### Version Tracking
+
+
+##### v 0.3
+
+...
+
+##### v 0.2
+
+... current?
+
+##### v 0.1
+
+...
+
+
+
