@@ -47,3 +47,4 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * Mozilla Observatory scans - https://observatory.mozilla.org/analyze/www.gsa.gov
 * Owasp with an eye to detecting ability to redirect (or could be done without owasp) - _[note coverage of this](https://gizmodo.com/a-year-later-u-s-government-websites-are-still-redire-1835336087)_
 * For any of these scans that detect a machine readable file, copy and store in perpetuity the files themselves, so that powers that be can track trends.  
+* /socialmediaTOS - Per [this](https://digital.gov/resources/federal-compatible-terms-of-service-agreements/#for-federal-agency-points-of-contact) and [this](https://www.whitehouse.gov/sites/whitehouse.gov/files/omb/memoranda/2013/m-13-10.pdf)
