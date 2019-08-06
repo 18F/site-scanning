@@ -49,62 +49,6 @@ def index(request):
 	}
 	return render(request, "index.html", context=context)
 
-def search(request):
-	dates = getdates()
-
-	date = request.GET.get('date')
-	if date == None or date == 'latest':
-		indexbase = dates[1]
-	else:
-		indexbase = date
-
-	# get scantype and if selected, use that index, otherwise search all indexes.
-	scantype = request.GET.get('scantype')
-	if scantype == None or scantype == ' all scantypes':
-		index = indexbase + '-*'
-	else:
-		index = indexbase + '-' + scantype
-
-	# search for scantypes in ES
-	s = Search(using=es, index=indexbase + '-*').query().source(['scantype'])
-	scantypemap = {}
-	for i in s.scan():
-	        scantypemap[i.scantype] = 1
-	scantypes = list(scantypemap.keys())
-	scantypes.insert(0, ' all scantypes')
-
-	# do the actual query here.  Start out with an empty query if this is our first time.
-	query = request.GET.get('q')
-	if query == None:
-		# produce an empty query
-		s = s.query(~Q('match_all'))
-	else:
-		s = Search(using=es, index=index).query("simple_query_string", query=query)
-
-	# set up pagination here
-	page_no = request.GET.get('page')
-	paginator = Paginator(s, 50)
-	try:
-		page = paginator.page(page_no)
-	except PageNotAnInteger:
-		page = paginator.page(1)
-	except EmptyPage:
-		page = paginator.page(paginator.num_pages)
-	results = page.object_list.execute()
-	# XXX make the results be a list that looks pretty
-
-	context = {
-		'search_results': results.hits,
-		'scantypes': scantypes,
-		'dates': dates,
-		'query': query,
-		'selected_scantype': scantype,
-		'selected_date': date,
-		'page_obj': page,
-	}
-
-	return render(request, "search.html", context=context)
-
 
 # Periods in fields are now illegal, so we use this function to fix this.
 def deperiodize(mystring):
@@ -186,6 +130,9 @@ def search200json(request):
 	mimetype = request.GET.get('mimetype')
 	query = request.GET.get('q')
 
+	if my200page == None:
+		my200page = ' all pages'
+
 	dates = getdates()
 	indexbase = ''
 	if date == 'None' or date == 'latest' or date == None:
@@ -197,8 +144,22 @@ def search200json(request):
 	response = HttpResponse(content_type='application/json')
 	response['Content-Disposition'] = 'attachment; filename="200scan.json"'
 
+	# write out a valid json array
+	response.write('[')
+	count = s.count()
 	for i in s.scan():
-		response.write(json.dumps(i.to_dict()))
+		scan = i.to_dict()
+		scandata = scan['data']
+
+		# pull the scan data out into the top level to make it look better
+		del scan['data']
+		for k,v in scandata.items():
+			scan[periodize(k)] = v
+		response.write(json.dumps(scan))
+		if count > 1:
+			response.write(',')
+		count = count - 1
+	response.write(']')
 
 	return response
 
@@ -210,6 +171,9 @@ def search200csv(request):
 	domaintype = request.GET.get('domaintype')
 	mimetype = request.GET.get('mimetype')
 	query = request.GET.get('q')
+
+	if my200page == None:
+		my200page = ' all pages'
 
 	dates = getdates()
 	indexbase = ''
@@ -223,12 +187,27 @@ def search200csv(request):
 	response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
 
 	r = s.execute()
-	fieldnames = r.hits[0].to_dict().keys()
+
+	# pull the scan data out into the top level to make it look better
+	firsthit = r.hits[0].to_dict()
+	fieldnames = list(firsthit.keys())
+	firsthitdata = firsthit['data']
+	fieldnames.remove('data')
+	for k,v in firsthitdata.items():
+		fieldnames.append(periodize(k))
+
 	writer = csv.DictWriter(response, fieldnames=fieldnames)
 	writer.writeheader()
 
 	for i in s.scan():
-		writer.writerow(i.to_dict())
+		scan = i.to_dict()
+		scandata = scan['data']
+
+		# pull the scan data out into the top level to make it look better
+		del scan['data']
+		for k,v in scandata.items():
+			scan[periodize(k)] = v
+		writer.writerow(scan)
 
 	return response
 
@@ -246,7 +225,7 @@ def search200(request):
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
 	if my200page == None:
-		my200page == ' all pages'
+		my200page = ' all pages'
 	s = Search(using=es, index=index).query().params(terminate_after=1)
 	pagemap = {}
 	for i in s.scan():

@@ -14,12 +14,14 @@
     <div class="row">
       <div class="col-sm-2">
       {% block sidebar %}
+        <strong>Overview</strong>
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'index' %}">About</a></li>
-          <li><a href="{% url 'index' %}">API</a></li>
-<!--           <li><a href="{% url 'search' %}">Search</a></li> -->
-          <li><strong>200 Scanner</strong></li>
+          <li><a href="/api/v1/domains/">API</a></li>
+        </ul>
+        <strong>200 Scanner</strong>
+        <ul>
           <li><a href="{% url 'index' %}">/code.json scan results</a></li>
           <li><a href="{% url 'index' %}">/data scan results</a></li>
           <li><a href="{% url 'index' %}">/data.json scan results</a></li>
@@ -28,10 +30,10 @@
           <li><a href="{% url 'index' %}">/robots.txt scan results</a></li>
           <li><a href="{% url 'index' %}">/sitemap.xml scan results</a></li>
           <li><a href="{% url 'search200' %}">All 200 scanner results</a></li>
-          <li><strong>USWDS Scanner</strong></li>
+        </ul>
+        <strong>USWDS Scanner</strong>
+        <ul>
           <li><a href="{% url 'searchUSWDS' %}">USWDS scanner results</a></li>
-<!--          <li><a href="/api/v1/domains/">All scans by domain</a></li> -->
-<!--          <li><a href="/api/v1/scans/">All scans by scan type</a></li> -->
         </ul>
      {% endblock %}
       </div>
