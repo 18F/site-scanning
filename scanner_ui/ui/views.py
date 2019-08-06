@@ -151,10 +151,12 @@ def search200json(request):
 		scan = i.to_dict()
 		scandata = scan['data']
 
-		# pull the scan data out into the top level to make it look better
+		# keys cannot have . in them, so do this to make it look proper
 		del scan['data']
+		scan['data'] = {}
 		for k,v in scandata.items():
-			scan[periodize(k)] = v
+			scan['data'][periodize(k)] = v
+
 		response.write(json.dumps(scan))
 		if count > 1:
 			response.write(',')

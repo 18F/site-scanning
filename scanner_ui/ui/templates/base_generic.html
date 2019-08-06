@@ -22,13 +22,13 @@
         </ul>
         <strong>200 Scanner</strong>
         <ul>
-          <li><a href="{% url 'index' %}">/code.json scan results</a></li>
-          <li><a href="{% url 'index' %}">/data scan results</a></li>
-          <li><a href="{% url 'index' %}">/data.json scan results</a></li>
-          <li><a href="{% url 'index' %}">/developer scan results</a></li>
-          <li><a href="{% url 'index' %}">/privacy scan results</a></li>
-          <li><a href="{% url 'index' %}">/robots.txt scan results</a></li>
-          <li><a href="{% url 'index' %}">/sitemap.xml scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/code.json' | urlencode}}&q={{'200' | urlencode}}">/code.json scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/data' | urlencode}}&q={{'200' | urlencode}}">/data scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/data.json' | urlencode}}&q={{'200' | urlencode}}">/data.json scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/developer' | urlencode}}&q={{'200' | urlencode}}">/developer scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/privacy' | urlencode}}&q={{'200' | urlencode}}">/privacy scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/robots.txt' | urlencode}}&q={{'200' | urlencode}}">/robots.txt scan results</a></li>
+          <li><a href="{% url 'search200' %}?200page={{'/sitemap.xml' | urlencode}}&q={{'200' | urlencode}}">/sitemap.xml scan results</a></li>
           <li><a href="{% url 'search200' %}">All 200 scanner results</a></li>
         </ul>
         <strong>USWDS Scanner</strong>
