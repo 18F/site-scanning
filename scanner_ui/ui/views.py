@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponse
 import os
 import datetime
 import logging
 import re
+import json
+import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool, Q
@@ -73,8 +76,8 @@ def search(request):
 	# do the actual query here.  Start out with an empty query if this is our first time.
 	query = request.GET.get('q')
 	if query == None:
-		# XXX this is ugly, but I don't know how to get an empty search yet
-		s = Search(using=es, index=index).query("match", nothingrealblahblah=-22339)
+		# produce an empty query
+		s = s.query(~Q('match_all'))
 	else:
 		s = Search(using=es, index=index).query("simple_query_string", query=query)
 
@@ -144,6 +147,90 @@ def domainsWith(page, key, value, index):
 		domainmap[i.domain] = 1
 	domains = list(domainmap.keys())
 	return list(domainmap.keys())
+
+def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
+	index = indexbase + '-200scanner'
+	s = Search(using=es, index=index)
+	s = s.sort('domain')
+	if query == None:
+		# produce an empty query
+		s = s.query(~Q('match_all'))
+	else:
+		if my200page == ' all pages':
+			s = s.query("simple_query_string", query=query)
+		else:
+			field = 'data.' + deperiodize(my200page)
+			s = s.query("simple_query_string", query=query, fields=[field])
+		if agency != 'all agencies':
+			agencyquery = '"' + agency + '"'
+			s = s.query("query_string", query=agencyquery, fields=['agency'])
+		if domaintype != 'all Types/Branches':
+			domaintypequery = '"' + domaintype + '"'
+			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+
+		# filter with data derived from the pagedata index (if needed)
+		pagedatadomains = []
+		if mimetype != 'all content_types':
+			domains = domainsWith(my200page, 'content_type', mimetype, indexbase + '-pagedata')
+			pagedatadomains.extend(domains)
+		if len(pagedatadomains) > 0:
+			s = s.filter("terms", domain=pagedatadomains)
+
+	return s
+
+def search200json(request):
+	my200page = request.GET.get('200page')
+	date = request.GET.get('date')
+	agency = request.GET.get('agency')
+	domaintype = request.GET.get('domaintype')
+	mimetype = request.GET.get('mimetype')
+	query = request.GET.get('q')
+
+	dates = getdates()
+	indexbase = ''
+	if date == 'None' or date == 'latest' or date == None:
+		indexbase = dates[1]
+	else:
+		indexbase = date
+
+	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
+	response = HttpResponse(content_type='application/json')
+	response['Content-Disposition'] = 'attachment; filename="200scan.json"'
+
+	for i in s.scan():
+		response.write(json.dumps(i.to_dict()))
+
+	return response
+
+
+def search200csv(request):
+	my200page = request.GET.get('200page')
+	date = request.GET.get('date')
+	agency = request.GET.get('agency')
+	domaintype = request.GET.get('domaintype')
+	mimetype = request.GET.get('mimetype')
+	query = request.GET.get('q')
+
+	dates = getdates()
+	indexbase = ''
+	if date == 'None' or date == 'latest' or date == None:
+		indexbase = dates[1]
+	else:
+		indexbase = date
+
+	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
+
+	r = s.execute()
+	fieldnames = r.hits[0].to_dict().keys()
+	writer = csv.DictWriter(response, fieldnames=fieldnames)
+	writer.writeheader()
+
+	for i in s.scan():
+		writer.writerow(i.to_dict())
+
+	return response
 
 
 def search200(request):
@@ -223,38 +310,12 @@ def search200(request):
 	mimetypes.insert(0, 'all content_types')
 
 
-	# do the actual query here.  Start out with an empty query if this is our first time.
+	# do the actual query here.
 	if resultcode == ' all resultcodes':
 		query = request.GET.get('q')
 	else:
 		query = '"' + resultcode + '"'
-
-	s = Search(using=es, index=index)
-	# XXX should make this selectable with a popup, but will need fields to be keyword, not text
-	s = s.sort('domain')
-	if query == None:
-		# produce an empty query
-		s = s.query(~Q('match_all'))
-	else:
-		if my200page == ' all pages':
-			s = s.query("simple_query_string", query=query)
-		else:
-			field = 'data.' + deperiodize(my200page)
-			s = s.query("simple_query_string", query=query, fields=[field])
-		if agency != 'all agencies':
-			agencyquery = '"' + agency + '"'
-			s = s.query("query_string", query=agencyquery, fields=['agency'])
-		if domaintype != 'all Types/Branches':
-			domaintypequery = '"' + domaintype + '"'
-			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
-
-		# filter with data derived from the pagedata index (if needed)
-		pagedatadomains = []
-		if mimetype != 'all content_types':
-			domains = domainsWith(my200page, 'content_type', mimetype, indexbase + '-pagedata')
-			pagedatadomains.extend(domains)
-		if len(pagedatadomains) > 0:
-			s = s.filter("terms", domain=pagedatadomains)
+	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
 
 	# set up pagination here
 	page_no = request.GET.get('page')

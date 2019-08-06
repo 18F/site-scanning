@@ -82,6 +82,10 @@
   </form>
 
   <h2>Scan Results:</h2>
+    <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&mimetype={{selected_mimetype | urlencode}}">JSON Export</a>
+
+    <a href="{% url 'search200csv' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&mimetype={{selected_mimetype | urlencode}}">CSV Export</a>
+
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
