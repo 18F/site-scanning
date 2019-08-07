@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.generic import RedirectView
 from scanner_ui.api import views
 from scanner_ui.ui import views
 
 urlpatterns = [
     path('api/v1/', include('scanner_ui.api.urls')),
+    path('data.json', RedirectView.as_view(url='/static/data.json', permanent=False)),
     path('', include('scanner_ui.ui.urls')),
 ]
-
