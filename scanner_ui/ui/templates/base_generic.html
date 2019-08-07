@@ -14,14 +14,11 @@
     <div class="row">
       <div class="col-sm-2">
       {% block sidebar %}
-        <strong>Overview</strong>
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
-          <li><a href="{% url 'index' %}">About</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
           <li><a href="/api/v1/domains/">API</a></li>
-        </ul>
-        <strong>200 Scanner</strong>
-        <ul>
+          <li><strong>200 Scanner</strong></li>
           <li><a href="{% url 'search200' %}?200page={{'/code.json' | urlencode}}&q={{'200' | urlencode}}">/code.json scan results</a></li>
           <li><a href="{% url 'search200' %}?200page={{'/data' | urlencode}}&q={{'200' | urlencode}}">/data scan results</a></li>
           <li><a href="{% url 'search200' %}?200page={{'/data.json' | urlencode}}&q={{'200' | urlencode}}">/data.json scan results</a></li>
@@ -32,9 +29,7 @@
           <li><a href="{% url 'search200' %}?200page={{'/robots.txt' | urlencode}}&q={{'200' | urlencode}}">/robots.txt scan results</a></li>
           <li><a href="{% url 'search200' %}?200page={{'/sitemap.xml' | urlencode}}&q={{'200' | urlencode}}">/sitemap.xml scan results</a></li>
           <li><a href="{% url 'search200' %}">All 200 scanner results</a></li>
-        </ul>
-        <strong>USWDS Scanner</strong>
-        <ul>
+          <li><strong>USWDS Scanner</strong></li>
           <li><a href="{% url 'searchUSWDS' %}">USWDS scanner results</a></li>
         </ul>
      {% endblock %}

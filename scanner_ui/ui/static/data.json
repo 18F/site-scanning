@@ -1,0 +1,48 @@
+{
+  "conformsTo": "https://project-open-data.cio.gov/v1.1/schema",
+  "dataset": [
+    {
+      "accessLevel": "public",
+      "bureauCode": [
+        "023:00"
+      ],
+      "contactPoint": {
+        "fn": "Gray Brooks",
+        "hasEmail": "mailto:gray.brooks@gsa.gov"
+      },
+      "description": "This dataset provides scan results from a couple of specialized scanners that monitor government websites",
+      "distribution": [
+        {
+          "downloadURL": "https://scanner-ui-patient-chipmunk.app.cloud.gov/api/v1/domains/",
+          "mediaType": "application/json"
+        },
+        {
+          "accessURL": "https://scanner-ui-patient-chipmunk.app.cloud.gov/"
+        }
+      ],
+      "identifier": "https://github.com/18F/site-scanning",
+      "keyword": [
+        "site-scanner",
+        "uswds",
+        "200"
+      ],
+      "modified": "2019-08-07T12:00:00Z",
+      "programCode": [
+        "023:019"
+      ],
+      "publisher": {
+        "name": "18F",
+        "subOrganizationOf": {
+          "name": "Technology Transformation Services",
+          "subOrganizationOf": {
+            "name": "General Services Administration",
+            "subOrganizationOf": {
+              "name": "U.S. Government"
+            }
+          }
+        }
+      },
+      "title": "U.S. Widget Manufacturing Statistics"
+    }
+  ]
+}

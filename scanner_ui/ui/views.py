@@ -28,6 +28,17 @@ def getdates():
 	dates.insert(0, 'latest')
 	return dates
 
+def about(request):
+	# This is just to show how to get data from python into the page.
+	# You could just edit the template directly to add this static text
+	# too.
+	info = 'Hello world!'
+
+	context = {
+		'info': info,
+	}
+	return render(request, "about.html", context=context)
+
 def index(request):
 	dates = getdates()
 	latestindex = dates[1] + '-*'
