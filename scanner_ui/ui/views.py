@@ -122,6 +122,15 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 
 	return s
 
+
+# mix in the pagedata scan in.
+def mixpagedatain(scan, indexbase):
+	s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=[scan['domain']])
+	for i in s.scan():
+		scan['pagedata'] = i.data.to_dict()
+	return scan
+
+
 def search200json(request):
 	my200page = request.GET.get('200page')
 	date = request.GET.get('date')
@@ -156,6 +165,17 @@ def search200json(request):
 		scan['data'] = {}
 		for k,v in scandata.items():
 			scan['data'][periodize(k)] = v
+
+		# mix in pagedata scan if we can
+		if my200page != ' all pages':
+			scan = mixpagedatain(scan, indexbase)
+			pagedata = scan['pagedata']
+
+			# keys cannot have . in them, so do this to make it look proper
+			del scan['pagedata']
+			scan['pagedata'] = {}
+			for k,v in pagedata.items():
+				scan['pagedata'][periodize(k)] = v
 
 		response.write(json.dumps(scan))
 		if count > 1:
@@ -192,23 +212,40 @@ def search200csv(request):
 
 	# pull the scan data out into the top level to make it look better
 	firsthit = r.hits[0].to_dict()
+	firsthit = mixpagedatain(firsthit, indexbase)
 	fieldnames = list(firsthit.keys())
-	firsthitdata = firsthit['data']
 	fieldnames.remove('data')
-	for k,v in firsthitdata.items():
+	for k,v in firsthit['data'].items():
 		fieldnames.append(periodize(k))
+	if 'pagedata' in fieldnames:
+		fieldnames.remove('pagedata')
+		for k,v in firsthit['pagedata'].items():
+			for field,value in v.items():
+				fieldnames.append(periodize(k) + ' ' + field)
 
 	writer = csv.DictWriter(response, fieldnames=fieldnames)
 	writer.writeheader()
 
 	for i in s.scan():
 		scan = i.to_dict()
-		scandata = scan['data']
+
+		# mix in pagedata scan if we can
+		if my200page != ' all pages':
+			scan = mixpagedatain(scan, indexbase)
+
+			# pull the page data out into the top level to make it look better
+			pagedata = scan['pagedata']
+			del scan['pagedata']
+			for k,v in pagedata.items():
+				for field,value in v.items():
+					scan[periodize(k) + ' ' + field] = value
 
 		# pull the scan data out into the top level to make it look better
+		scandata = scan['data']
 		del scan['data']
 		for k,v in scandata.items():
 			scan[periodize(k)] = v
+
 		writer.writerow(scan)
 
 	return response
