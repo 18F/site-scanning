@@ -491,25 +491,29 @@ def searchUSWDScsv(request):
 	r = s.execute()
 
 	# pull the scan data out into the top level to make it look better
-	firsthit = r.hits[0].to_dict()
-	fieldnames = list(firsthit.keys())
-	fieldnames.remove('data')
-	for k,v in firsthit['data'].items():
-		fieldnames.append(k)
+	try:
+		firsthit = r.hits[0].to_dict()
+		fieldnames = list(firsthit.keys())
+		fieldnames.remove('data')
+		for k,v in firsthit['data'].items():
+			fieldnames.append(k)
 
-	writer = csv.DictWriter(response, fieldnames=fieldnames)
-	writer.writeheader()
+		writer = csv.DictWriter(response, fieldnames=fieldnames)
+		writer.writeheader()
 
-	for i in s.scan():
-		scan = i.to_dict()
+		for i in s.scan():
+			scan = i.to_dict()
 
-		# pull the scan data out into the top level to make it look better
-		scandata = scan['data']
-		del scan['data']
-		for k,v in scandata.items():
-			scan[k] = v
+			# pull the scan data out into the top level to make it look better
+			scandata = scan['data']
+			del scan['data']
+			for k,v in scandata.items():
+				scan[k] = v
 
-		writer.writerow(scan)
+			writer.writerow(scan)
+	except:
+		writer = csv.writer(response)
+		writer.writerow(['No Data'])
 
 	return response
 
