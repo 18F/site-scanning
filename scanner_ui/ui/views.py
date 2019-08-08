@@ -416,7 +416,9 @@ def search200(request):
 
 def getUSWDSquery(indexbase, query, version, agency, domaintype):
 	index = indexbase + '-uswds2'
-	if query == None or not isinstance(query, int):
+	try:
+		query = int(query)
+	except:
 		query = 0
 
 	s = Search(using=es, index=index)
