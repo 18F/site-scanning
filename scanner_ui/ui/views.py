@@ -28,6 +28,7 @@ def getdates():
 	dates.insert(0, 'latest')
 	return dates
 
+
 def about(request):
 	# This is just to show how to get data from python into the page.
 	# You could just edit the template directly to add this static text
@@ -412,16 +413,122 @@ def search200(request):
 
 	return render(request, "search200.html", context=context)
 
+
+def getUSWDSquery(indexbase, query, version, agency, domaintype):
+	index = indexbase + '-uswds2'
+	if query == None or not isinstance(query, int):
+		query = 0
+
+	s = Search(using=es, index=index)
+	s = s.sort('domain')
+	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
+	if version != 'all versions':
+		if version == 'detected versions':
+			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
+		else:
+			versionquery = '"' + version + '"'
+			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
+	if agency != 'all agencies':
+		agencyquery = '"' + agency + '"'
+		s = s.query("query_string", query=agencyquery, fields=['agency'])
+	if domaintype != 'all Types/Branches':
+		domaintypequery = '"' + domaintype + '"'
+		s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+
+	return s
+
+
+def searchUSWDSjson(request):
+	date = request.GET.get('date')
+	version = request.GET.get('version')
+	query = request.GET.get('q')
+	agency = request.GET.get('agency')
+	domaintype = request.GET.get('domaintype')
+
+	dates = getdates()
+	indexbase = ''
+	if date == 'None' or date == 'latest' or date == None:
+		indexbase = dates[1]
+	else:
+		indexbase = date
+
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
+	response = HttpResponse(content_type='application/json')
+	response['Content-Disposition'] = 'attachment; filename="USWDSscan.json"'
+
+	# write out a valid json array
+	response.write('[')
+	count = s.count()
+	for i in s.scan():
+		scan = i.to_dict()
+		response.write(json.dumps(i.to_dict()))
+		if count > 1:
+			response.write(',')
+		count = count - 1
+	response.write(']')
+
+	return response
+
+
+def searchUSWDScsv(request):
+	date = request.GET.get('date')
+	version = request.GET.get('version')
+	query = request.GET.get('q')
+	agency = request.GET.get('agency')
+	domaintype = request.GET.get('domaintype')
+
+	dates = getdates()
+	indexbase = ''
+	if date == 'None' or date == 'latest' or date == None:
+		indexbase = dates[1]
+	else:
+		indexbase = date
+
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="USWDSscan.csv"'
+
+	r = s.execute()
+
+	# pull the scan data out into the top level to make it look better
+	firsthit = r.hits[0].to_dict()
+	firsthit = mixpagedatain(firsthit, indexbase)
+	fieldnames = list(firsthit.keys())
+	fieldnames.remove('data')
+	for k,v in firsthit['data'].items():
+		fieldnames.append(periodize(k))
+	if 'pagedata' in fieldnames:
+		fieldnames.remove('pagedata')
+		for k,v in firsthit['pagedata'].items():
+			for field,value in v.items():
+				fieldnames.append(periodize(k) + ' ' + field)
+
+	writer = csv.DictWriter(response, fieldnames=fieldnames)
+	writer.writeheader()
+
+	for i in s.scan():
+		scan = i.to_dict()
+
+		# pull the scan data out into the top level to make it look better
+		scandata = scan['data']
+		del scan['data']
+		for k,v in scandata.items():
+			scan[periodize(k)] = v
+
+		writer.writerow(scan)
+
+	return response
+
+
 def searchUSWDS(request):
 	dates = getdates()
 
 	date = request.GET.get('date')
 	if date == None or date == 'latest':
-		index = dates[1]
-		date = 'latest'
+		indexbase = dates[1]
 	else:
-		index = date
-	index = index + '-uswds2'
+		indexbase = date
+	index = indexbase + '-uswds2'
 
 	# search in ES for the agencies/domaintype
 	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
@@ -468,20 +575,7 @@ def searchUSWDS(request):
 		query = 0
 
 	# do the actual query here.
-	s = Search(using=es, index=index)
-	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
-	if version != 'all versions':
-		if version == 'detected versions':
-			s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
-		else:
-			versionquery = '"' + version + '"'
-			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
-	if agency != 'all agencies':
-		agencyquery = '"' + agency + '"'
-		s = s.query("query_string", query=agencyquery, fields=['agency'])
-	if domaintype != 'all Types/Branches':
-		domaintypequery = '"' + domaintype + '"'
-		s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
 
 	# set up pagination here
 	page_no = request.GET.get('page')

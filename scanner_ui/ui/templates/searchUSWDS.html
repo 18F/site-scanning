@@ -64,6 +64,10 @@
   </form>
 
   <h2>Scan Results:</h2>
+    <a href="{% url 'searchUSWDSjson' %}?date={{selected_date | urlencode}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">JSON Export</a>
+
+    <a href="{% url 'searchUSWDScsv' %}?date={{selected_date | urlencode}}&version={{selected_version | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">CSV Export</a>
+
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
