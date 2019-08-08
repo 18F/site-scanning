@@ -299,18 +299,10 @@ def search200(request):
 	resultcodes.sort()
 	resultcodes.insert(0, ' all resultcodes')
 
-	# search in ES for the agencies/domaintype
-	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
-	agencymap = {}
-	domaintypemap = {}
-	for i in s.scan():
-	        agencymap[i.agency] = 1
-	        domaintypemap[i.domaintype] = 1
-	agencies = list(agencymap.keys())
-	agencies.sort()
+	# get the agencies/domaintypes
+	agencies = getListFromFields(index, 'agency')
 	agencies.insert(0, 'all agencies')
-	domaintypes = list(domaintypemap.keys())
-	domaintypes.sort()
+	domaintypes = getListFromFields(index, 'domaintype')
 	domaintypes.insert(0, 'all Types/Branches')
 
 	agency = request.GET.get('agency')
@@ -520,6 +512,17 @@ def searchUSWDScsv(request):
 	return response
 
 
+# search in ES for the unique values in a particular field
+def getListFromFields(index, field):
+	s = Search(using=es, index=index).query().source([field])
+	valuemap = {}
+	for i in s.scan():
+	        valuemap[i[field]] = 1
+	values = list(valuemap.keys())
+	values.sort()
+	return values
+
+
 def searchUSWDS(request):
 	dates = getdates()
 
@@ -530,18 +533,10 @@ def searchUSWDS(request):
 		indexbase = date
 	index = indexbase + '-uswds2'
 
-	# search in ES for the agencies/domaintype
-	s = Search(using=es, index=index).query().source(['agency', 'domaintype'])
-	agencymap = {}
-	domaintypemap = {}
-	for i in s.scan():
-	        agencymap[i.agency] = 1
-	        domaintypemap[i.domaintype] = 1
-	agencies = list(agencymap.keys())
-	agencies.sort()
+	# get the agencies/domaintypes
+	agencies = getListFromFields(index, 'agency')
 	agencies.insert(0, 'all agencies')
-	domaintypes = list(domaintypemap.keys())
-	domaintypes.sort()
+	domaintypes = getListFromFields(index, 'domaintype')
 	domaintypes.insert(0, 'all Types/Branches')
 
 	agency = request.GET.get('agency')
