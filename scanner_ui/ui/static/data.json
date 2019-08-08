@@ -8,16 +8,16 @@
       ],
       "contactPoint": {
         "fn": "Gray Brooks",
-        "hasEmail": "mailto:gray.brooks@gsa.gov"
+        "hasEmail": "mailto:site-scanning@gsa.gov"
       },
       "description": "This dataset provides scan results from a couple of specialized scanners that monitor government websites",
       "distribution": [
         {
-          "downloadURL": "https://scanner-ui-patient-chipmunk.app.cloud.gov/api/v1/domains/",
+          "downloadURL": "https://site-scanning.app.cloud.gov/api/v1/domains/",
           "mediaType": "application/json"
         },
         {
-          "accessURL": "https://scanner-ui-patient-chipmunk.app.cloud.gov/"
+          "accessURL": "https://site-scanning.app.cloud.gov/"
         }
       ],
       "identifier": "https://github.com/18F/site-scanning",
@@ -42,7 +42,7 @@
           }
         }
       },
-      "title": "U.S. Widget Manufacturing Statistics"
+      "title": "Site Scanning"
     }
   ]
 }

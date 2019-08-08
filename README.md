@@ -33,8 +33,8 @@ The current scanning infrastructure is not actively maintained, and some prototy
 
 ### Prototypes
 
-- [**200 scanner**](https://scanner-ui-patient-chipmunk.app.cloud.gov/search200/) - Checks domains for the presence of absence of a file at a specific location, specifically by analyzing the server response code at that location, such as x.gov/code.json, x.gov/data.jason, x.gov/data, x.gov/developer, x.gov/digitalstrategy, x.gov/open, x.gov/privacy, x.gov/robots.txt, x.gov/sitemap.xml
-- [**U.S. Web Design System**](https://scanner-ui-patient-chipmunk.app.cloud.gov/searchUSWDS/) - Checks domains for the presence or absence of U.S. Web Design System (USWDS) components and USWDS version in use.
+- [**200 scanner**](https://site-scanning.app.cloud.gov/search200/) - Checks domains for the presence of absence of a file at a specific location, specifically by analyzing the server response code at that location, such as x.gov/code.json, x.gov/data.jason, x.gov/data, x.gov/developer, x.gov/digitalstrategy, x.gov/open, x.gov/privacy, x.gov/robots.txt, x.gov/sitemap.xml
+- [**U.S. Web Design System**](https://site-scanning.app.cloud.gov/searchUSWDS/) - Checks domains for the presence or absence of U.S. Web Design System (USWDS) components and USWDS version in use.
 
 ### Scope of work
 #### In scope

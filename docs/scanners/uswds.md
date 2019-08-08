@@ -1,7 +1,7 @@
 # U.S. Web Design System (USWDS) Scanner
 
 ## Summary
-A [scan](https://scanner-ui-patient-chipmunk.app.cloud.gov/searchUSWDS/) to check each domain for the presence or absence of a USWDS component (i.e. font, style sheet) and the version in use of USWDS.
+A [scan](https://site-scanning.app.cloud.gov/searchUSWDS/) to check each domain for the presence or absence of a USWDS component (i.e. font, style sheet) and the version in use of USWDS.
 
 Specifically, the scan [searches for](https://github.com/18F/domain-scan/blob/tspencer/200scanner/scanners/uswds2.py#L36-L123): presence of `-usa` class in the style sheets, `uswds` in html text, `.usa-` in html text, `favicon-57.png` (the USWDS flag) on a website, checks for the fonts used by USWDS (current and former versions) - `Public Sans`, `Source Sans`, and `Merriweather`, searches for `uswds` or `uswds version` or `flavicon-57.png` in CSS.
 
