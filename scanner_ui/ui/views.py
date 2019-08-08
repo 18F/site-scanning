@@ -492,7 +492,6 @@ def searchUSWDScsv(request):
 
 	# pull the scan data out into the top level to make it look better
 	firsthit = r.hits[0].to_dict()
-	firsthit = mixpagedatain(firsthit, indexbase)
 	fieldnames = list(firsthit.keys())
 	fieldnames.remove('data')
 	for k,v in firsthit['data'].items():
@@ -513,7 +512,7 @@ def searchUSWDScsv(request):
 		scandata = scan['data']
 		del scan['data']
 		for k,v in scandata.items():
-			scan[periodize(k)] = v
+			scan[k] = v
 
 		writer.writerow(scan)
 
