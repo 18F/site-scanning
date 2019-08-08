@@ -495,12 +495,7 @@ def searchUSWDScsv(request):
 	fieldnames = list(firsthit.keys())
 	fieldnames.remove('data')
 	for k,v in firsthit['data'].items():
-		fieldnames.append(periodize(k))
-	if 'pagedata' in fieldnames:
-		fieldnames.remove('pagedata')
-		for k,v in firsthit['pagedata'].items():
-			for field,value in v.items():
-				fieldnames.append(periodize(k) + ' ' + field)
+		fieldnames.append(k)
 
 	writer = csv.DictWriter(response, fieldnames=fieldnames)
 	writer.writeheader()
