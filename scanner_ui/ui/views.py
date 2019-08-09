@@ -99,10 +99,14 @@ def domainsWith(page, key, value, index):
 	s = s.query("query_string", query=deslash(value), fields=searchfields)
 	s = s.source(fielddata)
 	domainmap = {}
-	for i in s.scan():
-		domainmap[i.domain] = 1
+	try:
+		for i in s.scan():
+			domainmap[i.domain] = 1
+	except:
+		logging.error('error searching for domains in index: ' + index)
 	domains = list(domainmap.keys())
 	return list(domainmap.keys())
+
 
 def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 	index = indexbase + '-200scanner'
@@ -138,8 +142,11 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 # mix in the pagedata scan in.
 def mixpagedatain(scan, indexbase):
 	s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=[scan['domain']])
-	for i in s.scan():
-		scan['pagedata'] = i.data.to_dict()
+	try:
+		for i in s.scan():
+			scan['pagedata'] = i.data.to_dict()
+	except:
+		logging.error('could not find pagedata index for mixing pagedata in')
 	return scan
 
 
@@ -320,9 +327,12 @@ def search200(request):
 	]
 	s = Search(using=es, index=indexbase + '-pagedata').query().source(fielddata)
 	mimetypemap = {}
-	for i in s.scan():
-		for k,v in i.data.to_dict().items():
-			mimetypemap[v['content_type']] = 1
+	try:
+		for i in s.scan():
+			for k,v in i.data.to_dict().items():
+				mimetypemap[v['content_type']] = 1
+	except:
+		logging.error('could not find pagedata index to generate the mimetypemap')
 
 	mimetype = request.GET.get('mimetype')
 	if mimetype == None:
@@ -358,8 +368,12 @@ def search200(request):
 	s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=pagedomainlist)
 	pagedatastructure = {}
 	# get data from pagedata index
-	for i in s.scan():
-		pagedatastructure[i.domain] = i.data.to_dict()
+	try:
+		for i in s.scan():
+			pagedatastructure[i.domain] = i.data.to_dict()
+	except:
+		logging.error('could not find pagedata index to create the pagedatastructure')
+
 	# mix pagedata into results
 	pagekeys = []
 	if my200page != ' all pages':
@@ -382,7 +396,6 @@ def search200(request):
 					i['pagedata'].append(pagedatastructure[i.domain][deperiodize(my200page)][k])
 				except:
 					i['pagedata'].append('')
-
 
 	context = {
 		'search_results': results.hits,
