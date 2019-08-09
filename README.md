@@ -18,7 +18,7 @@ Between 2015 - 2017, DHS builts scans for [HTTPS](https://github.com/18F/domain-
 
 ## Overview
 ### Vision
-TTS offers a low-cost, automated scanning solution to determine which government websites are following best practices. The results are published as simple, open data files, allowing TTS to measure TTS product performance, and agencies to customize reporting and take action to improve outcomes for the public. 
+TTS offers a low-cost, automated scanning solution to determine which government websites are following best practices. The results are published as simple queries and open data files, allowing TTS to measure TTS product performance, and agencies to customize reporting and take action to improve outcomes for the public. 
 
 The prototype will return data that the stakeholder(s) identify as useful, and will be built and documented to make it extensible and replicable.
 
