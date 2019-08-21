@@ -25,7 +25,7 @@ def getdates():
 		datemap[date] = 1
 	dates = list(datemap.keys())
 	dates.sort(reverse=True)
-	dates.insert(0, 'latest')
+	dates.insert(0, 'Scan Date')
 	return dates
 
 
@@ -116,17 +116,18 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 		# produce an empty query
 		s = s.query(~Q('match_all'))
 	else:
-		if my200page == ' all pages':
+		if my200page == 'All Scans':
 			s = s.query("simple_query_string", query=query)
 		else:
 			field = 'data.' + deperiodize(my200page)
 			s = s.query("simple_query_string", query=query, fields=[field])
-		if agency != 'all agencies':
+		if agency != 'All Agencies':
 			agencyquery = '"' + agency + '"'
 			s = s.query("query_string", query=agencyquery, fields=['agency'])
-		if domaintype != 'all Types/Branches':
+		if domaintype != 'All Branches':
 			domaintypequery = '"' + domaintype + '"'
 			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+		logging.error('query is %s', s)
 
 		# filter with data derived from the pagedata index (if needed)
 		pagedatadomains = []
@@ -159,11 +160,11 @@ def search200json(request):
 	query = request.GET.get('q')
 
 	if my200page == None:
-		my200page = ' all pages'
+		my200page = 'All Scans'
 
 	dates = getdates()
 	indexbase = ''
-	if date == 'None' or date == 'latest' or date == None:
+	if date == 'None' or date == 'Scan Date' or date == None:
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -186,7 +187,7 @@ def search200json(request):
 			scan['data'][periodize(k)] = v
 
 		# mix in pagedata scan if we can
-		if my200page != ' all pages':
+		if my200page != 'All Scans':
 			scan = mixpagedatain(scan, indexbase)
 			pagedata = scan['pagedata']
 
@@ -214,11 +215,11 @@ def search200csv(request):
 	query = request.GET.get('q')
 
 	if my200page == None:
-		my200page = ' all pages'
+		my200page = 'All Scans'
 
 	dates = getdates()
 	indexbase = ''
-	if date == 'None' or date == 'latest' or date == None:
+	if date == 'None' or date == 'Scan Date' or date == None:
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -249,7 +250,7 @@ def search200csv(request):
 		scan = i.to_dict()
 
 		# mix in pagedata scan if we can
-		if my200page != ' all pages':
+		if my200page != 'All Scans':
 			scan = mixpagedatain(scan, indexbase)
 
 			# pull the page data out into the top level to make it look better
@@ -274,7 +275,7 @@ def search200(request):
 	dates = getdates()
 
 	date = request.GET.get('date')
-	if date == None or date == 'latest':
+	if date == None or date == 'Scan Date':
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -283,42 +284,31 @@ def search200(request):
 	# search in ES for 200 pages we can select
 	my200page = request.GET.get('200page')
 	if my200page == None:
-		my200page = ' all pages'
+		my200page = 'All Scans'
 	s = Search(using=es, index=index).query().params(terminate_after=1)
 	pagemap = {}
-	for i in s.scan():
-			for z in i.data.to_dict().keys():
-				pagemap[periodize(z)] = 1
-	my200pages = list(pagemap.keys())
-	my200pages.insert(0, ' all pages')
-
-	# search in ES for result codes we can select
-	resultcode = request.GET.get('resultcode')
-	if resultcode == None:
-		resultcode = ' all resultcodes'
-	s = Search(using=es, index=index).query().source(['data.*'])
-	resultcodemap = {}
-	for i in s.scan():
-			for k,v in i.data.to_dict().items():
-				resultcodemap[v] = 1
-	# make sure everybody is a string, then sort it
-	resultcodes = list(map(str, resultcodemap.keys()))
-	resultcodes.sort()
-	resultcodes.insert(0, ' all resultcodes')
+	try:
+		for i in s.scan():
+				for z in i.data.to_dict().keys():
+					pagemap[periodize(z)] = 1
+		my200pages = list(pagemap.keys())
+	except:
+		my200pages = []
+	my200pages.insert(0, 'All Scans')
 
 	# get the agencies/domaintypes
 	agencies = getListFromFields(index, 'agency')
-	agencies.insert(0, 'all agencies')
+	agencies.insert(0, 'All Agencies')
 	domaintypes = getListFromFields(index, 'domaintype')
-	domaintypes.insert(0, 'all Types/Branches')
+	domaintypes.insert(0, 'All Branches')
 
 	agency = request.GET.get('agency')
 	if agency == None:
-		agency = 'all agencies'
+		agency = 'All Agencies'
 
 	domaintype = request.GET.get('domaintype')
 	if domaintype == None:
-		domaintype = 'all Types/Branches'
+		domaintype = 'All Branches'
 
 
 	# Find list of mime types from the pagedata index
@@ -341,12 +331,23 @@ def search200(request):
 	mimetypes.sort()
 	mimetypes.insert(0, 'all content_types')
 
+	# find whether we want to do present/notpresent/all
+	present = request.GET.get('present')
+	if present == None:
+			present = "Present"
+	presentlist = [
+		"Present",
+		"Not Present",
+		"All"
+	]
 
 	# do the actual query here.
-	if resultcode == ' all resultcodes':
-		query = request.GET.get('q')
+	if present == 'Present':
+		query = '"200"'
+	elif present == 'Not Present':
+		query = '-"200"'
 	else:
-		query = '"' + resultcode + '"'
+		query = '*'
 	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
 
 	# set up pagination here
@@ -376,7 +377,7 @@ def search200(request):
 
 	# mix pagedata into results
 	pagekeys = []
-	if my200page != ' all pages':
+	if my200page != 'All Scans':
 		for i in results:
 			try:
 				keys = list(pagedatastructure[i.domain][deperiodize(my200page)].keys())
@@ -385,7 +386,7 @@ def search200(request):
 				logging.error('could not find pagedata to merge in for ' + i.domain)
 	pagekeys.sort()
 	for i in results:
-		if my200page == ' all pages':
+		if my200page == 'All Scans':
 			i['url'] = 'https://' + i.domain
 			i['pagedata'] = []
 		else:
@@ -409,8 +410,8 @@ def search200(request):
 		'selected_agency': agency,
 		'domaintypes': domaintypes,
 		'selected_domaintype': domaintype,
-		'resultcodes': resultcodes,
-		'selected_resultcode': resultcode,
+		'presentlist': presentlist,
+		'selected_present': present,
 		'mimetypes': mimetypes,
 		'selected_mimetype': mimetype,
 		'pagekeys': pagekeys,
@@ -435,10 +436,10 @@ def getUSWDSquery(indexbase, query, version, agency, domaintype):
 		else:
 			versionquery = '"' + version + '"'
 			s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
-	if agency != 'all agencies':
+	if agency != 'All Agencies':
 		agencyquery = '"' + agency + '"'
 		s = s.query("query_string", query=agencyquery, fields=['agency'])
-	if domaintype != 'all Types/Branches':
+	if domaintype != 'All Branches':
 		domaintypequery = '"' + domaintype + '"'
 		s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
 
@@ -454,7 +455,7 @@ def searchUSWDSjson(request):
 
 	dates = getdates()
 	indexbase = ''
-	if date == 'None' or date == 'latest' or date == None:
+	if date == 'None' or date == 'Scan Date' or date == None:
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -486,7 +487,7 @@ def searchUSWDScsv(request):
 
 	dates = getdates()
 	indexbase = ''
-	if date == 'None' or date == 'latest' or date == None:
+	if date == 'None' or date == 'Scan Date' or date == None:
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -529,10 +530,13 @@ def searchUSWDScsv(request):
 def getListFromFields(index, field):
 	s = Search(using=es, index=index).query().source([field])
 	valuemap = {}
-	for i in s.scan():
-	        valuemap[i[field]] = 1
-	values = list(valuemap.keys())
-	values.sort()
+	try:
+		for i in s.scan():
+		        valuemap[i[field]] = 1
+		values = list(valuemap.keys())
+		values.sort()
+	except:
+		values = []
 	return values
 
 
@@ -540,7 +544,7 @@ def searchUSWDS(request):
 	dates = getdates()
 
 	date = request.GET.get('date')
-	if date == None or date == 'latest':
+	if date == None or date == 'Scan Date':
 		indexbase = dates[1]
 	else:
 		indexbase = date
@@ -548,26 +552,29 @@ def searchUSWDS(request):
 
 	# get the agencies/domaintypes
 	agencies = getListFromFields(index, 'agency')
-	agencies.insert(0, 'all agencies')
+	agencies.insert(0, 'All Agencies')
 	domaintypes = getListFromFields(index, 'domaintype')
-	domaintypes.insert(0, 'all Types/Branches')
+	domaintypes.insert(0, 'All Branches')
 
 	agency = request.GET.get('agency')
 	if agency == None:
-		agency = 'all agencies'
+		agency = 'All Agencies'
 
 	domaintype = request.GET.get('domaintype')
 	if domaintype == None:
-		domaintype = 'all Types/Branches'
+		domaintype = 'All Branches'
 
 	# search in ES for versions that have been detected
 	s = Search(using=es, index=index).query().source(['data.uswdsversion'])
 	versionmap = {}
-	for i in s.scan():
-			if isinstance(i.data.uswdsversion, str) and i.data.uswdsversion != '':
-			    versionmap[i.data.uswdsversion] = 1
-	versions = list(versionmap.keys())
-	versions.sort()
+	try:
+		for i in s.scan():
+				if isinstance(i.data.uswdsversion, str) and i.data.uswdsversion != '':
+				    versionmap[i.data.uswdsversion] = 1
+		versions = list(versionmap.keys())
+		versions.sort()
+	except:
+		versions = []
 	versions.insert(0, 'detected versions')
 	versions.insert(0, 'all versions')
 

@@ -3,33 +3,19 @@
 {% block content %}
   <h1>200 Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
-  <p>This search will search the 200 scanner results.  Search terms are <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http status codes</a>, except for -1, which is a site that was unreachable (probably requiring VPN, or there is no public DNS entry for it). Example search queries:
-  	<ul>
-      <li>Find all pages that exist:<pre>200</pre></li>
-      <li>Find all pages that do not exist:<pre>-200</pre></li>
-      <li>Find all pages that are unreachable:<pre>"-1"</pre></li>
-      <li>Find all pages that are not unreachable:<pre>-"-1"</pre></li>
-      <li>Find all pages that are giving errors (5xx) or 404s:<pre>5* 404</pre></li>
-      <li>You can tune other things you want to look at with the other popup lists.  NOTE:  If you select a resultcode, that will be turned into your search query until you select 'all resultcodes' again.</li>
-  		<li>You can also use <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/query-dsl-simple-query-string-query.html#_simple_query_string_syntax">query string syntax</a> to help narrow/tune your searches.</li>
-  	</ul>
-  </p>
+  <p>This search will search the 200 scanner results.</p>
 
   <form action="{% url 'search200' %}" method="get">
-  	{% if query == None %}
-    <input name="q" type="text" placeholder="Search Here">
-    {% else %}
-    <input name="q" type="text" value="{{ query }}">
-    {% endif %}
-    <select name="resultcode" onchange="this.form.submit()">
-      {% for resultcode in resultcodes %}
-        {% if selected_resultcode == resultcode %}
-      <option value="{{ resultcode }}" selected>{{ resultcode }}</option>
+    <select name="present" onchange="this.form.submit()">
+      {% for present in presentlist %}
+        {% if selected_present == present %}
+      <option value="{{ present }}" selected>{{ present }}</option>
         {% else %}
-      <option value="{{ resultcode }}">{{ resultcode }}</option>
+      <option value="{{ present }}">{{ present }}</option>
         {% endif %}
       {% endfor %}
     </select>
+
     <select name="200page" onchange="this.form.submit()">
     	{% for my200page in my200pages %}
     		{% if selected_200page == my200page %}
@@ -39,6 +25,7 @@
     		{% endif %}
     	{% endfor %}
     </select>
+
     <select name="date" onchange="this.form.submit()">
     	{% for date in dates %}
     		{% if selected_date == date %}
@@ -48,6 +35,7 @@
     		{% endif %}
     	{% endfor %}
     </select>
+
     <select name="agency" onchange="this.form.submit()">
       {% for agency in agencies %}
         {% if selected_agency == agency %}
@@ -57,6 +45,7 @@
         {% endif %}
       {% endfor %}
     </select>
+
     <select name="domaintype" onchange="this.form.submit()">
       {% for domaintype in domaintypes %}
         {% if selected_domaintype == domaintype %}
@@ -66,7 +55,8 @@
         {% endif %}
       {% endfor %}
     </select>
-    {% if selected_200page == ' all pages' %}
+
+    {% if selected_200page == 'All Scans' %}
     <select name="mimetype" onchange="this.form.submit()" disabled>
     {% else %}
     <select name="mimetype" onchange="this.form.submit()">

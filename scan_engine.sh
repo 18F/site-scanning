@@ -5,7 +5,7 @@
 # It also cleans up old scans (>30 days) to prevent clutter.
 #
 # It is meant to be run like so:
-#   cf run-task scanner-ui /app/scan_engine.sh -m 2048
+#   cf run-task scanner-ui /app/scan_engine.sh -m 2048M
 
 # This is where you add more scan types
 SCANTYPES="
@@ -16,7 +16,7 @@ SCANTYPES="
 
 # This is where you set the repo/branch
 DOMAINSCANREPO="https://github.com/18F/domain-scan"
-BRANCH="tspencer/200scanner"
+BRANCH="tspencer/expanded200scanner"
 
 # How many days to keep around in the index
 INDEXDAYS=30
