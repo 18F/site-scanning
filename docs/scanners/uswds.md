@@ -58,15 +58,18 @@ Detects what version of USWDS is in use on a government website.
 
 ##### v 0.3
 
-...
+* Added organization field
 
 ##### v 0.2
 
-... current?
+* Fixed bug that was wrongly associating 404 and 500 server codes with 200
+* Added domaintype and agency 
+* Refined the scoring model
 
 ##### v 0.1
 
-...
+* The initial rough MVP that we threw together to get started.
+
 
 
 
