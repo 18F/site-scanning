@@ -5,7 +5,7 @@
 # It also cleans up old scans (>30 days) to prevent clutter.
 #
 # It is meant to be run like so:
-#   cf run-task scanner-ui /app/scan_engine.sh -m 2048
+#   cf run-task scanner-ui /app/scan_engine.sh -m 2048M
 
 # This is where you add more scan types
 SCANTYPES="
