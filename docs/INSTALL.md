@@ -192,6 +192,6 @@ edit the `BRANCH` variable to set it to your branch.
 
 Once the code has made it into the master branch and the deploy to cloud.gov
 has completed,
-run `cf run-task scanner-ui /app/scan_engine.sh` to kick off a scan.
+run `cf run-task scanner-ui /app/scan_engine.sh -m 2048M` to kick off a scan.
 You should be able to see how it goes with `cf logs scanner-ui`, and
 once it completes, you should be able to see your scans in the API.
