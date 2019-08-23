@@ -23,11 +23,7 @@ Detects whether USWDS is in use on an agency website.
 
 #### Sample Data File
 
-````
-
-[Insert proposed JSON here]
-
-````
+TBA
 
 ### USWDS configuration
 
@@ -42,11 +38,7 @@ Detects what version of USWDS is in use on a government website.
 
 #### Sample Data File
 
-````
-
-[Insert proposed JSON here]
-
-````
+TBA
 
 #### Other Notes
 * [Human curated list of USWDS sites](https://designsystem.digital.gov/getting-started/showcase/all/)
