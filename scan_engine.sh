@@ -16,7 +16,7 @@ SCANTYPES="
 
 # This is where you set the repo/branch
 DOMAINSCANREPO="https://github.com/18F/domain-scan"
-BRANCH="tspencer/expanded200scanner"
+BRANCH="tspencer/200scanner"
 
 # How many days to keep around in the index
 INDEXDAYS=30
