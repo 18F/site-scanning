@@ -33,7 +33,7 @@ if [ "$1" = "setup" ] ; then  echo
 	if service_exists "scanner-es" ; then
 	  echo scanner-es already created
 	else
-	  cf create-service elasticsearch56 medium scanner-es
+	  cf create-service elasticsearch56 medium-ha scanner-es
 	  echo sleeping until ES is awake
 	  for i in a b c ; do
 	  	sleep 60
