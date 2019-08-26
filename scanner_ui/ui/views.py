@@ -120,14 +120,13 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 			s = s.query("simple_query_string", query=query)
 		else:
 			field = 'data.' + deperiodize(my200page)
-			s = s.query("simple_query_string", query=query, fields=[field])
+			s = s.query("query_string", query=query, fields=[field])
 		if agency != 'All Agencies':
 			agencyquery = '"' + agency + '"'
 			s = s.query("query_string", query=agencyquery, fields=['agency'])
 		if domaintype != 'All Branches':
 			domaintypequery = '"' + domaintype + '"'
 			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
-		logging.error('query is %s', s)
 
 		# filter with data derived from the pagedata index (if needed)
 		pagedatadomains = []
@@ -137,6 +136,7 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 		if len(pagedatadomains) > 0:
 			s = s.filter("terms", domain=pagedatadomains)
 
+	logging.error(s.to_dict())
 	return s
 
 
