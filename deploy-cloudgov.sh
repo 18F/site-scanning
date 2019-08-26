@@ -43,7 +43,13 @@ if [ "$1" = "setup" ] ; then  echo
 fi
 
 # launch the app
-cf push
+if [ "$1" = "zdt" ] ; then
+	# Do a zero downtime deploy.  This requires enough memory for
+	# two scanner-ui apps to exist in the org/space at one time.
+	cf v3-zdt-push scanner-ui
+else
+	cf push
+fi
 
 # tell people where to go
 ROUTE="$(cf apps | grep scanner-ui | awk '{print $6}')"

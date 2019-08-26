@@ -9,9 +9,9 @@
 
 # This is where you add more scan types
 SCANTYPES="
+	pagedata
 	200scanner
 	uswds2
-	pagedata
 "
 
 # This is where you set the repo/branch
@@ -70,17 +70,12 @@ wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/c
 echo -n "Scan start: "
 date
 for i in ${SCANTYPES} ; do
-	if [ -z "$SCANLIST" ] ; then
-		SCANLIST="$i"
+	if ./scan /tmp/domains.csv --scan="$i" ; then
+		echo "scan of $i successful"
 	else
-		SCANLIST="$i,$SCANLIST"
+		echo "scan of $i errored out for some reason"
 	fi
 done
-if ./scan /tmp/domains.csv --scan="$SCANLIST" ; then
-	echo "scan of $SCANLIST successful"
-else
-	echo "scan of $SCANLIST errored out for some reason"
-fi
 
 # add metadata and put scan results into ES
 ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
