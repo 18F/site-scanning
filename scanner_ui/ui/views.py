@@ -351,8 +351,8 @@ def search200(request):
 	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
 
 	# set up pagination here
+	hitsperpagelist = ['20', '50', '100', '200']
 	hitsperpage = request.GET.get('hitsperpage')
-	hitsperpagelist = [20, 50, 100, 200]
 	if hitsperpage == None:
 		hitsperpage = hitsperpagelist[1]
 	page_no = request.GET.get('page')
@@ -599,7 +599,7 @@ def searchUSWDS(request):
 	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
 
 	# set up pagination here
-	hitsperpagelist = [20, 50, 100, 200]
+	hitsperpagelist = ['20', '50', '100', '200']
 	hitsperpage = request.GET.get('hitsperpage')
 	if hitsperpage == None:
 		hitsperpage = hitsperpagelist[1]
