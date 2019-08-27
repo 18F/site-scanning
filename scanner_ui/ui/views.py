@@ -135,8 +135,6 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 		if len(pagedatadomains) > 0:
 			s = s.filter("terms", domain=pagedatadomains)
 
-	# XXX debug stuff
-	logging.error(s.to_dict())
 	return s
 
 
