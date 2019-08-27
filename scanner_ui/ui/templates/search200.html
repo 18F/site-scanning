@@ -69,7 +69,6 @@
         {% endif %}
       {% endfor %}
     </select>
-  </form>
 
   <h2>Scan Results:</h2>
     <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&mimetype={{selected_mimetype | urlencode}}">JSON Export</a>
@@ -77,6 +76,16 @@
     <a href="{% url 'search200csv' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&mimetype={{selected_mimetype | urlencode}}">CSV Export</a>
 
     <div class="pagination">
+    <p>Hits Per Page:
+    <select name="hitsperpage" onchange="this.form.submit()" style="width: 100px;">
+      {% for hits in hitsperpagelist %}
+        {% if selected_hitsperpage == hits %}
+          <option value="{{ hits }}" selected>{{ hits }}</option>
+        {% else %}
+          <option value="{{ hits }}">{{ hits }}</option>
+        {% endif %}
+      {% endfor %}
+    </select></p>
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="{% url 'search200' %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&mimetype={{selected_mimetype | urlencode}}">&laquo; First</a>
@@ -93,6 +102,7 @@
         {% endif %}
     </span>
   </div>
+  </form>
 
   <table>
     <tr>

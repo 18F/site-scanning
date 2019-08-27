@@ -108,6 +108,7 @@ def domainsWith(page, key, value, index):
 	return list(domainmap.keys())
 
 
+# This function generates the actual 200 scanner query
 def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 	index = indexbase + '-200scanner'
 	s = Search(using=es, index=index)
@@ -122,11 +123,9 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 			field = 'data.' + deperiodize(my200page)
 			s = s.query("query_string", query=query, fields=[field])
 		if agency != 'All Agencies':
-			agencyquery = '"' + agency + '"'
-			s = s.query("query_string", query=agencyquery, fields=['agency'])
+			s = s.filter("term", agency=agency)
 		if domaintype != 'All Branches':
-			domaintypequery = '"' + domaintype + '"'
-			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+			s = s.filter("term", domaintype=domaintype)
 
 		# filter with data derived from the pagedata index (if needed)
 		pagedatadomains = []
@@ -136,6 +135,7 @@ def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
 		if len(pagedatadomains) > 0:
 			s = s.filter("terms", domain=pagedatadomains)
 
+	# XXX debug stuff
 	logging.error(s.to_dict())
 	return s
 
@@ -351,8 +351,12 @@ def search200(request):
 	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
 
 	# set up pagination here
+	hitsperpage = request.GET.get('hitsperpage')
+	hitsperpagelist = [20, 50, 100, 200]
+	if hitsperpage == None:
+		hitsperpage = hitsperpagelist[1]
 	page_no = request.GET.get('page')
-	paginator = Paginator(s, 50)
+	paginator = Paginator(s, int(hitsperpage))
 	try:
 		page = paginator.page(page_no)
 	except PageNotAnInteger:
@@ -415,6 +419,8 @@ def search200(request):
 		'mimetypes': mimetypes,
 		'selected_mimetype': mimetype,
 		'pagekeys': pagekeys,
+		'hitsperpagelist': hitsperpagelist,
+		'selected_hitsperpage': hitsperpage,
 	}
 
 	return render(request, "search200.html", context=context)
@@ -593,8 +599,12 @@ def searchUSWDS(request):
 	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
 
 	# set up pagination here
+	hitsperpagelist = [20, 50, 100, 200]
+	hitsperpage = request.GET.get('hitsperpage')
+	if hitsperpage == None:
+		hitsperpage = hitsperpagelist[1]
 	page_no = request.GET.get('page')
-	paginator = Paginator(s, 50)
+	paginator = Paginator(s, int(hitsperpage))
 	try:
 		page = paginator.page(page_no)
 	except PageNotAnInteger:
@@ -615,6 +625,8 @@ def searchUSWDS(request):
 		'selected_domaintype': domaintype,
 		'versions': versions,
 		'selected_version': version,
+		'hitsperpagelist': hitsperpagelist,
+		'selected_hitsperpage': hitsperpage,
 	}
 
 	return render(request, "searchUSWDS.html", context=context)
