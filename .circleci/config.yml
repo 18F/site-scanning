@@ -59,7 +59,7 @@ jobs:
             cf api https://api.fr.cloud.gov
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
-            ./deploy-cloudgov.sh
+            ./deploy-cloudgov.sh zdt
 
   scan:
     docker:
