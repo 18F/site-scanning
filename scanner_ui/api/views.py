@@ -22,20 +22,6 @@ def getScanFromS3(path):
 	return {'body': response['Body'].read(), 'lastmodified': response['LastModified']}
 
 
-# This function pulls down the scan data and puts it inline.
-# If scantype is None, then we want all the scans.
-def getFullScantype(scantype=None):
-	scans = []
-	for f in getMetadatafromS3():
-		if not re.search('\.json$', f.key):
-			continue
-		s3scantype = os.path.dirname(f.key)
-		if scantype == None or s3scantype == scantype:
-			scandata = getScanFromS3(f.key)
-			json_data = json.loads(scandata['body'])
-			scans.append(json_data)
-	return scans
-
 # This function provides a reference to the domain scan data in it's s3 bucket
 # If scantype is None, then we want all the scans.
 def getScantype(scantype=None):
@@ -50,19 +36,23 @@ def getScantype(scantype=None):
 			scans.append({"domain": scandomain, "scantype": s3scantype, "lastmodified": f.last_modified, "scan_data_url": scan_data_url})
 	return scans
 
-# This function pulls down the domain scan data and puts it inline.
-# If domain is None, then we want all the domains.
-def getFullDomain(domain=None):
+# get all the scans of the type and domain specified.  If the type is
+# None, you get all of that scantype.  If the domain is None, you
+# get all domains.
+def getScans(scantype=None, domain=None):
 	scans = []
 	for f in getMetadatafromS3():
 		if not re.search('\.json$', f.key):
 			continue
+		s3scantype = os.path.dirname(f.key)
 		scandomain = os.path.basename(os.path.splitext(f.key)[0])
-		if domain == None or scandomain == domain:
-			scandata = getScanFromS3(f.key)
-			json_data = json.loads(scandata['body'])
-			scans.append(json_data)
+		if scantype == None or s3scantype == scantype:
+			if domain == None or scandomain == domain:
+				scandata = getScanFromS3(f.key)
+				json_data = json.loads(scandata['body'])
+				scans.append(json_data)
 	return scans
+
 
 # This function provides a reference to the scan data in it's s3 bucket
 # If domain is None, then we want all the domains.
@@ -85,8 +75,8 @@ class DomainsViewset(viewsets.ViewSet):
 		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
 
-	def retrieve(self, request, pk=None):
-		domains = getFullDomain(pk)
+	def retrieve(self, request, domain=None):
+		domains = getScans(domain=pk)
 		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
 
@@ -96,7 +86,14 @@ class ScansViewset(viewsets.ViewSet):
 		serializer = DomainsSerializer(domains, many=True)
 		return Response(serializer.data)
 
-	def retrieve(self, request, pk=None):
+	def retrieve(self, request, scantype=None):
 		domains = getScantype(pk)
 		serializer = DomainsSerializer(domains, many=True)
+		return Response(serializer.data)
+
+	def scan(self, request, scantype=None, domain=None):
+		scan = getScans(scantype=scantype, domain=domain)
+		if len(scan) != 1:
+			raise Exception('too many or too few scans', scan)
+		serializer = DomainsSerializer(scan[0])
 		return Response(serializer.data)

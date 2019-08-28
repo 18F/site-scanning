@@ -14,10 +14,15 @@ scans_list = ScansViewset.as_view({
 scans_detail = ScansViewset.as_view({
     'get': 'retrieve'
 })
+scan = ScansViewset.as_view({
+    'get': 'scan'
+})
 
 urlpatterns = [
     path('domains/', domains_list, name="domains-list"),
-    path('domains/<pk>/', domains_detail, name="domains-detail"),
+    path('domains/<domain>/', domains_detail, name="domains-detail"),
+    path('domains/<domain>/<scantype>/', scan, name="scan"),
     path('scans/', scans_list, name="scans-list"),
-    path('scans/<pk>/', scans_detail, name="scans-detail")
+    path('scans/<scantype>/', scans_detail, name="scans-detail"),
+    path('scans/<scantype>/<domain>/', scan, name="scan"),
 ]
