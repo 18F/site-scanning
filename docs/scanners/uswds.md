@@ -51,6 +51,7 @@ TBA
 ##### v 0.3
 
 * Added organization field
+* Implemented [2nd pass at scoring rubric](https://github.com/18F/domain-scan/pull/315)
 
 ##### v 0.2
 
