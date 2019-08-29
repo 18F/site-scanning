@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-class DomainsSerializer(serializers.Serializer):
+class ScanSerializer(serializers.Serializer):
 	domain = serializers.CharField(max_length=200)
 	scantype = serializers.CharField(max_length=200)
 	domaintype = serializers.CharField(max_length=200, required=False)

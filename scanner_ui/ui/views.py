@@ -15,8 +15,10 @@ from elasticsearch_dsl.query import Range, Bool, Q
 
 es = Elasticsearch([os.environ['ESURI']])
 
+
+# search in ES for the list of dates that are indexed
 def getdates():
-	# search in ES for dates we can search in
+	es = Elasticsearch([os.environ['ESURI']])
 	indexlist = es.indices.get_alias().keys()
 	datemap = {}
 	for i in indexlist:
@@ -532,6 +534,7 @@ def searchUSWDScsv(request):
 
 # search in ES for the unique values in a particular field
 def getListFromFields(index, field):
+	es = Elasticsearch([os.environ['ESURI']])
 	s = Search(using=es, index=index).query().source([field])
 	valuemap = {}
 	try:
