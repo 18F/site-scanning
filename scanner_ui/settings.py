@@ -145,7 +145,8 @@ STATICFILES_DIRS = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    )
+    ),
+    'PAGE_SIZE': 100
 }
 
 # AWS info
