@@ -13,21 +13,21 @@ import os
 
 # tests for views
 
-class GetAllScansTest(APITestCase):
-    client = APIClient()
+# class GetAllScansTest(APITestCase):
+#     client = APIClient()
 
-    def test_get_all_scans(self):
-        """
-        This test ensures that all domains
-        exist when we make a GET request to the domains/ endpoint.
-        """
-        # hit the API endpoint
-        response = self.client.get(
-            reverse("scans-list")
-        )
-        # fetch the data
-        expected = getScansFromES()
+#     def test_get_all_scans(self):
+#         """
+#         This test ensures that all domains
+#         exist when we make a GET request to the domains/ endpoint.
+#         """
+#         # hit the API endpoint
+#         response = self.client.get(
+#             reverse("scans-list")
+#         )
+#         # fetch the data
+#         expected = getScansFromES()
 
-        serialized = ScanSerializer(expected, many=True)
-        self.assertEqual(response.data, serialized.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         serialized = ScanSerializer(expected, many=True)
+#         self.assertEqual(response.data, serialized.data)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
