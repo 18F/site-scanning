@@ -3,6 +3,7 @@ from django.conf import settings
 import boto3
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework import pagination
 from rest_framework.response import Response
 from .serializers import ScanSerializer
 import os
@@ -49,20 +50,22 @@ def getScansFromES(scantype=None, domain=None, request=None):
 
 	return scans
 
-# class ElasticsearchPagination(pagination.PageNumberPagination):
-# 	def paginate_queryset(self, queryset, request, view=None):
-# 		page_size = self.get_page_size(request)
-# 		if not page_size:
-# 			return None
-# 		page_number = request.query_params.get(self.page_query_param, 1)
-# 		if not page_number:
-#         	return None
-# 		start = page_size * (page_number - 1)
-# 		finish = start + page_size
-# 		return queryset[start:finish]
+class ElasticsearchPagination(pagination.PageNumberPagination):
+	def paginate_queryset(self, queryset, request, view=None):
+		page_size = self.get_page_size(request)
+		if not page_size:
+			return None
+		page_number = request.query_params.get(self.page_query_param, 1)
+		if not page_number:
+			return None
+		start = page_size * (page_number - 1)
+		finish = start + page_size
+		return queryset[start:finish]
 
 
 class DomainsViewset(viewsets.ViewSet):
+	pagination_class = ElasticsearchPagination
+
 	def list(self, request):
 		scans = getScansFromES(request=request)
 		serializer = ScanSerializer(scans, many=True)
@@ -74,6 +77,8 @@ class DomainsViewset(viewsets.ViewSet):
 		return Response(serializer.data)
 
 class ScansViewset(viewsets.ViewSet):
+	pagination_class = ElasticsearchPagination
+
 	def list(self, request):
 		scans = getScansFromES(request=request)
 		serializer = ScanSerializer(scans, many=True)
