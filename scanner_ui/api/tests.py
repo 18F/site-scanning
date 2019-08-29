@@ -4,8 +4,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
-from .serializers import DomainsSerializer
-from .views import getScans
+from .serializers import ScanSerializer
+from .views import getScansFromES
 from django.conf import settings
 import boto3
 import os
@@ -26,8 +26,8 @@ class GetAllScansTest(APITestCase):
             reverse("scans-list")
         )
         # fetch the data
-        expected = getScans()
+        expected = getScansFromES()
 
-        serialized = DomainsSerializer(expected, many=True)
+        serialized = ScanSerializer(expected, many=True)
         self.assertEqual(response.data, serialized.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
