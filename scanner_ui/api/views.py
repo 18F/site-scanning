@@ -13,6 +13,7 @@ from collections import defaultdict
 from scanner_ui.ui.views import getdates
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import Q
 
 # Create your views here.
 
@@ -28,20 +29,29 @@ def getScansFromES(scantype=None, domain=None, request=None):
 	indices = list(es.indices.get_alias(latestindex).keys())
 	y, m, d, scantypes = zip(*(s.split("-") for s in indices))
 
-	if scantype in scantypes:
-		index = dates[1] + '-' + scantype
-		s = Search(using=es, index=index)
+	if scantype != None:
+		if scantype not in scantypes:
+			# If we requested a scantype that does not exist, then return an empty query
+			s = Search(using=es, index=latestindex)
+			s = s.query(~Q('match_all'))
+		else:
+			index = dates[1] + '-' + scantype
+			s = Search(using=es, index=index)
 	else:
+		# Fall through to a domain query across all indices
 		s = Search(using=es, index=latestindex)
 
 	s = s.sort('domain')
 
+	# filter by domain if we have one
 	if domain != None:
 		s = s.filter("term", domain=domain)
 
+	# Make the api url pretty
 	if request != None:
 		apiurl = request.scheme + '://' + request.get_host() + '/api/v1/scans/'
 
+	# generate the list of scans, make the API url pretty.
 	scans = []
 	for i in s.scan():
 		if request != None:
