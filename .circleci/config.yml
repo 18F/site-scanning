@@ -84,7 +84,7 @@ jobs:
             cf target -o "$CF_ORG" -s "$CF_SPACE"
 
             # this tells cloud.gov to run the scan
-            cf run-task scanner-ui /app/scan_engine.sh -m 2048M
+            cf run-task scanner-ui /app/scan_engine.sh -m 1024M
 
 
 workflows:
