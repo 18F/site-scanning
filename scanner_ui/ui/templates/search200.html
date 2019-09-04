@@ -116,23 +116,15 @@
 
   <table>
     <tr>
-      <td><strong>Domain:</strong></td>
-      <td><strong>Branch:</strong></td>
-      <td><strong>Agency:</strong></td>
-      {% for header in pagekeys %}
-      <td><strong>{{header}}:</strong></td>
+      {% for header in columns %}
+        <th>{{header}}</th>
       {% endfor %}
-      <td><strong>Other Scan Results:</strong></td>
     </tr>
   	{% for scan in search_results %}
     <tr>
-      <td><strong><a href="{{scan.url}}">{{scan.domain}}</a>:</strong></td>
-      <td>{{ scan.domaintype }}</td>
-      <td>{{ scan.agency }}</td>
-      {% for data in scan.pagedata %}
-      <td>{{data}}</td>
+      {% for k, data in scan.columns.items %}
+        <td>{{data}}</td>
       {% endfor %}
-      <td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td>
     </tr>
     {% endfor %}
   </table>
