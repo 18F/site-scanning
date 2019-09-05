@@ -115,21 +115,27 @@ def get200query(indexbase, my200page, agency, domaintype, org, mimetype, query):
 	index = indexbase + '-200scanner'
 	s = Search(using=es, index=index)
 	s = s.sort('domain')
+
 	if query == None:
 		# produce an empty query
 		s = s.query(~Q('match_all'))
 	else:
 		if my200page == 'All Scans':
-			s = s.query("simple_query_string", query=query)
+			s = s.query('simple_query_string', query=query)
 		else:
 			field = 'data.' + deperiodize(my200page)
-			s = s.query("query_string", query=query, fields=[field])
+			s = s.query('query_string', query=query, fields=[field])
+
+
 		if agency != 'All Agencies' and agency != None:
-			s = s.filter("term", agency=agency)
+			agencyquery = '"' + agency + '"'
+			s = s.query("query_string", query=agencyquery, fields=['agency'])
 		if domaintype != 'All Branches' and domaintype != None:
-			s = s.filter("term", domaintype=domaintype)
+			domaintypequery = '"' + domaintype + '"'
+			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
 		if org != 'All Organizations' and org != None:
-			s = s.filter("term", organization=org)
+			orgquery = '"' + org + '"'
+			s = s.query("query_string", query=orgquery, fields=['organization'])
 
 		# filter with data derived from the pagedata index (if needed)
 		pagedatadomains = []
@@ -553,9 +559,9 @@ def getListFromFields(index, field):
 		for i in s.scan():
 		        valuemap[i[field]] = 1
 		values = list(valuemap.keys())
-		values.sort()
 	except:
 		values = []
+	values.sort()
 	return values
 
 

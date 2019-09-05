@@ -119,6 +119,7 @@
       <td><strong>Domain:</strong></td>
       <td><strong>Branch:</strong></td>
       <td><strong>Agency:</strong></td>
+      <td><strong>Organization:</strong></td>
       {% for header in pagekeys %}
       <td><strong>{{header}}:</strong></td>
       {% endfor %}
@@ -129,6 +130,7 @@
       <td><strong><a href="{{scan.url}}">{{scan.domain}}</a>:</strong></td>
       <td>{{ scan.domaintype }}</td>
       <td>{{ scan.agency }}</td>
+      <td>{{ scan.organization }}</td>
       {% for data in scan.pagedata %}
       <td>{{data}}</td>
       {% endfor %}
