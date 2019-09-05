@@ -418,7 +418,7 @@ def search200(request, displaytype=None):
 				column['Response Code'] = ''
 			else:
 				column['Response Code'] = i.data[selectedpage]
-			if i.domain in pagedatastructure:
+			if i.domain in pagedatastructure and my200page != 'All Scans':
 				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
 				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
 				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
@@ -435,11 +435,12 @@ def search200(request, displaytype=None):
 			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
 			columns = list(column.keys())
 			i['column'] = list(column.values())
+			displaytypetitle = '200 Scans Search'
 
 		# 200-dev style display
 		elif displaytype == '200-developer':
 			column = {}
-			column['Domain'] = 'https://' + i.domain
+			column['Domain'] = i.domain
 			column['Agency'] = i.agency
 			column['Organization'] = i.organization
 			column['Branch'] = i.domaintype
@@ -449,12 +450,12 @@ def search200(request, displaytype=None):
 				column['Response Code'] = ''
 			else:
 				column['Target URL'] = 'https://' + i.domain + my200page
-				if i.data[selectedpage] != 200:
+				if i.data[selectedpage] != '200':
 					column['Status'] = 'Not Present'
 				else:
 					column['Status'] = 'Present'
 				column['Response Code'] = i.data[selectedpage]
-			if i.domain in pagedatastructure:
+			if i.domain in pagedatastructure and my200page != 'All Scans':
 				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
 				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
 				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
@@ -464,6 +465,7 @@ def search200(request, displaytype=None):
 				column['Content Length'] = ''
 			columns = list(column.keys())
 			i['column'] = list(column.values())
+			displaytypetitle = 'api.data.gov Search'
 
 
 	context = {
@@ -487,6 +489,8 @@ def search200(request, displaytype=None):
 		'selected_org': org,
 		'orglist': orgs,
 		'columns': columns,
+		'displaytype': displaytype,
+		'displaytypetitle': displaytypetitle,
 	}
 
 	return render(request, "search200.html", context=context)
