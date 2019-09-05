@@ -612,7 +612,7 @@ def search200(request, displaytype=None):
 	return render(request, "search200.html", context=context)
 
 
-def getUSWDSquery(indexbase, query, version, agency, domaintype):
+def getUSWDSquery(indexbase, query, version, agency, domaintype, sort):
 	index = indexbase + '-uswds2'
 	try:
 		query = int(query)
@@ -620,7 +620,10 @@ def getUSWDSquery(indexbase, query, version, agency, domaintype):
 		query = 0
 
 	s = Search(using=es, index=index)
-	s = s.sort('domain')
+	if sort == 'Domain':
+		s = s.sort('domain')
+	else:
+		s = s.sort('-data.total_score')
 	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
 	if version != 'all versions':
 		if version == 'detected versions':
@@ -757,6 +760,11 @@ def searchUSWDS(request):
 	if domaintype == None:
 		domaintype = 'All Branches'
 
+	sort = request.GET.get('sort')
+	if sort == None:
+		sort = 'Domain'
+	sortinglist = ['Domain', 'Score']
+
 	# search in ES for versions that have been detected
 	s = Search(using=es, index=index).query().source(['data.uswdsversion'])
 	versionmap = {}
@@ -768,6 +776,7 @@ def searchUSWDS(request):
 		versions.sort()
 	except:
 		versions = []
+	# versions = getListFromFields(index, 'data.uswdsversion')
 	versions.insert(0, 'detected versions')
 	versions.insert(0, 'all versions')
 
@@ -783,7 +792,7 @@ def searchUSWDS(request):
 		query = 0
 
 	# do the actual query here.
-	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
 
 	# set up pagination here
 	hitsperpagelist = ['20', '50', '100', '200']
@@ -814,6 +823,8 @@ def searchUSWDS(request):
 		'selected_version': version,
 		'hitsperpagelist': hitsperpagelist,
 		'selected_hitsperpage': hitsperpage,
+		'sortinglist': sortinglist,
+		'selected_sort': sort,
 	}
 
 	return render(request, "searchUSWDS.html", context=context)
