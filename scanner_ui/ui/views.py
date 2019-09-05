@@ -111,23 +111,31 @@ def domainsWith(page, key, value, index):
 
 
 # This function generates the actual 200 scanner query
-def get200query(indexbase, my200page, agency, domaintype, mimetype, query):
+def get200query(indexbase, my200page, agency, domaintype, org, mimetype, query):
 	index = indexbase + '-200scanner'
 	s = Search(using=es, index=index)
 	s = s.sort('domain')
+
 	if query == None:
 		# produce an empty query
 		s = s.query(~Q('match_all'))
 	else:
 		if my200page == 'All Scans':
-			s = s.query("simple_query_string", query=query)
+			s = s.query('simple_query_string', query=query)
 		else:
 			field = 'data.' + deperiodize(my200page)
-			s = s.query("query_string", query=query, fields=[field])
-		if agency != 'All Agencies':
-			s = s.filter("term", agency=agency)
-		if domaintype != 'All Branches':
-			s = s.filter("term", domaintype=domaintype)
+			s = s.query('query_string', query=query, fields=[field])
+
+
+		if agency != 'All Agencies' and agency != None:
+			agencyquery = '"' + agency + '"'
+			s = s.query("query_string", query=agencyquery, fields=['agency'])
+		if domaintype != 'All Branches' and domaintype != None:
+			domaintypequery = '"' + domaintype + '"'
+			s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
+		if org != 'All Organizations' and org != None:
+			orgquery = '"' + org + '"'
+			s = s.query("query_string", query=orgquery, fields=['organization'])
 
 		# filter with data derived from the pagedata index (if needed)
 		pagedatadomains = []
@@ -158,6 +166,7 @@ def search200json(request):
 	domaintype = request.GET.get('domaintype')
 	mimetype = request.GET.get('mimetype')
 	query = request.GET.get('q')
+	org = request.GET.get('org')
 
 	if my200page == None:
 		my200page = 'All Scans'
@@ -169,7 +178,7 @@ def search200json(request):
 	else:
 		indexbase = date
 
-	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
+	s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
 	response = HttpResponse(content_type='application/json')
 	response['Content-Disposition'] = 'attachment; filename="200scan.json"'
 
@@ -213,6 +222,7 @@ def search200csv(request):
 	domaintype = request.GET.get('domaintype')
 	mimetype = request.GET.get('mimetype')
 	query = request.GET.get('q')
+	org = request.GET.get('org')
 
 	if my200page == None:
 		my200page = 'All Scans'
@@ -224,7 +234,7 @@ def search200csv(request):
 	else:
 		indexbase = date
 
-	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
+	s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
 
@@ -296,11 +306,14 @@ def search200(request):
 		my200pages = []
 	my200pages.insert(0, 'All Scans')
 
-	# get the agencies/domaintypes
+	# get the agencies/domaintypes/orgs
 	agencies = getListFromFields(index, 'agency')
 	agencies.insert(0, 'All Agencies')
 	domaintypes = getListFromFields(index, 'domaintype')
 	domaintypes.insert(0, 'All Branches')
+	orgs = getListFromFields(index, 'organization')
+	orgs.insert(0, 'All Organizations')
+
 
 	agency = request.GET.get('agency')
 	if agency == None:
@@ -310,6 +323,9 @@ def search200(request):
 	if domaintype == None:
 		domaintype = 'All Branches'
 
+	org = request.GET.get('org')
+	if org == None:
+		org = 'All Organizations'
 
 	# Find list of mime types from the pagedata index
 	fielddata = [
@@ -348,7 +364,7 @@ def search200(request):
 		query = '-"200"'
 	else:
 		query = '*'
-	s = get200query(indexbase, my200page, agency, domaintype, mimetype, query)
+	s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
 
 	# set up pagination here
 	hitsperpagelist = ['20', '50', '100', '200']
@@ -421,6 +437,8 @@ def search200(request):
 		'pagekeys': pagekeys,
 		'hitsperpagelist': hitsperpagelist,
 		'selected_hitsperpage': hitsperpage,
+		'selected_org': org,
+		'orglist': orgs,
 	}
 
 	return render(request, "search200.html", context=context)
@@ -541,9 +559,9 @@ def getListFromFields(index, field):
 		for i in s.scan():
 		        valuemap[i[field]] = 1
 		values = list(valuemap.keys())
-		values.sort()
 	except:
 		values = []
+	values.sort()
 	return values
 
 

@@ -95,12 +95,14 @@ for i in ${SCANTYPES} ; do
 		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
 		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}' | tr -d \")
 		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}' | tr -d \")
+		ORG=$(echo "$CSVLINE" | awk -F, '{print $4}' | tr '\' '-' | tr -d \")
 
 		# add metadata
 		echo "{\"domain\":\"$DOMAIN\"," > /tmp/scan.json
 		echo " \"scantype\":\"$i\"," >> /tmp/scan.json
 		echo " \"domaintype\":\"$DOMAINTYPE\"," >> /tmp/scan.json
 		echo " \"agency\":\"$AGENCY\"," >> /tmp/scan.json
+		echo " \"organization\":\"$ORG\"," >> /tmp/scan.json
 		echo " \"scan_data_url\":\"https://s3-$AWS_DEFAULT_REGION.amazonaws.com/$BUCKET/$i/$DOMAIN.json\"," >> /tmp/scan.json
 		echo " \"lastmodified\":\"$DATE\"," >> /tmp/scan.json
 		echo " \"data\":" >> /tmp/scan.json
