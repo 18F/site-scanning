@@ -419,14 +419,14 @@ def search200(request, displaytype=None):
 			else:
 				column['Response Code'] = i.data[selectedpage]
 			if i.domain in pagedatastructure and my200page != 'All Scans':
-				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
 				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
 				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
 				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
 				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
 				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
 			else:
-				column['Content Length'] = ''
+				column['File Size (B)'] = ''
 				column['Content Type'] = ''
 				column['Final URL'] = ''
 				column['json Items'] = ''
@@ -458,11 +458,11 @@ def search200(request, displaytype=None):
 			if i.domain in pagedatastructure and my200page != 'All Scans':
 				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
 				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
 			else:
 				column['Final URL'] = ''
 				column['Content Type'] = ''
-				column['Content Length'] = ''
+				column['File Size (B)'] = ''
 			columns = list(column.keys())
 			i['column'] = list(column.values())
 			displaytypetitle = 'api.data.gov Search'
