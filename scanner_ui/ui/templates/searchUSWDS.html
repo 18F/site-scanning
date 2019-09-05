@@ -20,11 +20,21 @@
     </p>
 
   <form action="{% url 'searchUSWDS' %}" method="get">
+    Score Filter:
   	{% if query == None %}
     <input name="q" type="text" placeholder="Search Here">
     {% else %}
     <input name="q" type="text" value="{{ query }}">
     {% endif %}
+    <select name="sort" onchange="this.form.submit()">
+      {% for sort in sortinglist %}
+        {% if selected_sort == sort %}
+      <option value="{{ sort }}" selected>Sort by {{ sort }}</option>
+        {% else %}
+      <option value="{{ sort }}">Sort by {{ sort }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
     <select name="version" onchange="this.form.submit()">
       {% for version in versions %}
         {% if selected_version == version %}
@@ -97,9 +107,25 @@
   </form>
 
   <table>
-    <tr><td><strong>Domain:</strong></td><td><strong>Score:</strong></td><td><strong>USWDS Version:</strong></td><td><strong>Type/Branch:</strong></td><td><strong>Agency:</strong></td><td><strong>Other Scan Results:</strong></td></tr>
+    <tr>
+      <th>Domain</th>
+      <th>Score</th>
+      <th>USWDS Version</th>
+      <th>Agency</th>
+      <th>Organization</th>
+      <th>Branch</th>
+      <th>Score Details</th>
+    </tr>
   	{% for scan in search_results %}
-    <tr><td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td><td>{{scan.data.total_score}}</td><td>{{scan.data.uswdsversion}}</td><td>{{scan.domaintype}}</td><td>{{ scan.agency }}</td><td><a href="{% url 'domains-detail' scan.domain %}">{% url 'domains-detail' scan.domain %}</a></td></tr>
+    <tr>
+      <td><strong><a href="https://{{ scan.domain }}">{{ scan.domain }}</a>:</strong></td>
+      <td>{{scan.data.total_score}}</td>
+      <td>{{scan.data.uswdsversion}}</td>
+      <td>{{ scan.agency }}</td>
+      <td>{{ scan.organization }}</td>
+      <td>{{scan.domaintype}}</td>
+      <td><a href="{% url 'scan' scan.scantype scan.domain %}">{% url 'scan' scan.scantype scan.domain %}</a></td>
+    </tr>
     {% endfor %}
   </table>
 
