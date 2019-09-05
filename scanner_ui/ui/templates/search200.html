@@ -122,8 +122,8 @@
     </tr>
   	{% for scan in search_results %}
     <tr>
-      {% for k, data in scan.columns.items %}
-        <td>{{data}}</td>
+      {% for data in scan.column %}
+        <td>{{data | urlizetrunc:40}}</td>
       {% endfor %}
     </tr>
     {% endfor %}

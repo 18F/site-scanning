@@ -404,27 +404,27 @@ def search200(request, displaytype=None):
 	# create columns for us to render in the page
 	columns = []
 	for i in results:
-		encodeddomain = deperiodize(i.domain)
+		selectedpage = deperiodize(my200page)
 		# normal display
 		if displaytype == None:
 			column = {}
 			if my200page == 'All Scans':
-				column['Domain'] = 'https://' + i.domain + my200page
-			else:
 				column['Domain'] = 'https://' + i.domain
+			else:
+				column['Domain'] = 'https://' + i.domain + my200page
 			column['Branch'] = i.domaintype
 			column['Agency'] = i.agency
 			if my200page == 'All Scans':
 				column['Response Code'] = ''
 			else:
-				column['Response Code'] = i.data[encodeddomain]
-			if encodeddomain in pagedatastructure:
-				column['Content Length'] = pagedatastructure[encodeddomain]['content_length']
-				column['Content Type'] = pagedatastructure[encodeddomain]['content_type']
-				column['Final URL'] = pagedatastructure[encodeddomain]['final_url']
-				column['json Items'] = pagedatastructure[encodeddomain]['json_items']
-				column['Opendata Conformity'] = pagedatastructure[encodeddomain]['opendata_conforms_to']
-				column['Code.gov Measurement Type'] = pagedatastructure[encodeddomain]['codegov_measurementtype']
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure:
+				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
+				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
+				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
 			else:
 				column['Content Length'] = ''
 				column['Content Type'] = ''
@@ -433,8 +433,8 @@ def search200(request, displaytype=None):
 				column['Opendata Conformity'] = ''
 				column['Code.gov Measurement Type'] = ''
 			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
-			i['columns'] = column
 			columns = list(column.keys())
+			i['column'] = list(column.values())
 
 		# 200-dev style display
 		elif displaytype == '200-developer':
@@ -449,22 +449,21 @@ def search200(request, displaytype=None):
 				column['Response Code'] = ''
 			else:
 				column['Target URL'] = 'https://' + i.domain + my200page
-				if i.data[encodeddomain] != 200:
+				if i.data[selectedpage] != 200:
 					column['Status'] = 'Not Present'
 				else:
 					column['Status'] = 'Present'
-				column['Response Code'] = i.data[encodeddomain]
-			if encodeddomain in pagedatastructure:
-				column['Final URL'] = pagedatastructure[encodeddomain]['final_url']
-				column['Content Type'] = pagedatastructure[encodeddomain]['content_type']
-				column['Content Length'] = pagedatastructure[encodeddomain]['content_length']
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure:
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
 			else:
 				column['Final URL'] = ''
 				column['Content Type'] = ''
 				column['Content Length'] = ''
-			i['columns'] = column
 			columns = list(column.keys())
-	print(columns)
+			i['column'] = list(column.values())
 
 
 	context = {
