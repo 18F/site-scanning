@@ -405,7 +405,12 @@ def search200(request, displaytype=None):
 	columns = []
 	for i in results:
 		selectedpage = deperiodize(my200page)
-		# normal display
+		# Below here are where you can set up different types of pages.
+		# Just create another 'elif displaytype == "yourpagetype"' section below
+		# and do what the other displaytypes do:  create a column, add your data
+		# to it, store it in the results and set the columns and page title.
+
+		# default display
 		if displaytype == None:
 			column = {}
 			if my200page == 'All Scans':
@@ -433,6 +438,8 @@ def search200(request, displaytype=None):
 				column['Opendata Conformity'] = ''
 				column['Code.gov Measurement Type'] = ''
 			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
 			columns = list(column.keys())
 			i['column'] = list(column.values())
 			displaytypetitle = '200 Scans Search'
@@ -463,9 +470,48 @@ def search200(request, displaytype=None):
 				column['Final URL'] = ''
 				column['Content Type'] = ''
 				column['File Size (B)'] = ''
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
 			columns = list(column.keys())
 			i['column'] = list(column.values())
 			displaytypetitle = 'api.data.gov Search'
+
+		# 200-codejson style display
+		elif displaytype == '200-codejson':
+			column = {}
+			column['Domain'] = i.domain
+			column['Agency'] = i.agency
+			column['Organization'] = i.organization
+			column['Branch'] = i.domaintype
+			if my200page == 'All Scans':
+				column['Target URL'] = 'https://' + i.domain
+				column['Status'] = ''
+				column['Response Code'] = ''
+			else:
+				column['Target URL'] = 'https://' + i.domain + my200page
+				if i.data[selectedpage] != '200':
+					column['Status'] = 'Not Present'
+				else:
+					column['Status'] = 'Present'
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
+			else:
+				column['Final URL'] = ''
+				column['Content Type'] = ''
+				column['json Items'] = ''
+				column['File Size (B)'] = ''
+				column['Code.gov Measurement Type'] = ''
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			displaytypetitle = 'code.gov Scan Search'
+
 
 
 	context = {
