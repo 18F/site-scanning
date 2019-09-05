@@ -403,15 +403,15 @@ def search200(request, displaytype=None):
 
 	# create columns for us to render in the page
 	for i in results:
+		# normal display
 		if displaytype == None:
-			# normal display
 			encodeddomain = deperiodize(i.domain)
 			i['columns'] = {}
 			if my200page == 'All Scans':
 				i['columns']['Domain'] = 'https://' + i.domain + my200page
 			else:
 				i['columns']['Domain'] = 'https://' + i.domain
-			i['columns']['Branch'] = i.branch
+			i['columns']['Branch'] = i.domaintype
 			i['columns']['Agency'] = i.agency
 			if my200page == 'All Scans':
 				i['columns']['Response Code'] = ''
@@ -431,16 +431,16 @@ def search200(request, displaytype=None):
 				i['columns']['json Items'] = ''
 				i['columns']['Opendata Conformity'] = ''
 				i['columns']['Code.gov Measurement Type'] = ''
-			i['columns']['Other Scan Results'] = reverse('domains-detail', i.domain)
+			i['columns']['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
 
+		# 200-dev style display
 		elif displaytype == '200-developer':
-			# 200-dev style display
 			encodeddomain = deperiodize(i.domain)
 			i['columns'] = {}
 			i['columns']['Domain'] = 'https://' + i.domain
 			i['columns']['Agency'] = i.agency
 			i['columns']['Organization'] = i.organization
-			i['columns']['Branch'] = i.branch
+			i['columns']['Branch'] = i.domaintype
 			if my200page == 'All Scans':
 				i['columns']['Target URL'] = 'https://' + i.domain
 				i['columns']['Status'] = ''
@@ -460,7 +460,10 @@ def search200(request, displaytype=None):
 				i['columns']['Final URL'] = ''
 				i['columns']['Content Type'] = ''
 				i['columns']['Content Length'] = ''
-	columns = list(i['columns'].keys())
+	# get the list of columns for the headers
+	print(dict(i['columns']))
+	columns = list(dict(i['columns']).keys())
+	print(columns)
 
 
 	context = {
