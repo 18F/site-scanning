@@ -402,67 +402,68 @@ def search200(request, displaytype=None):
 		logging.error('could not find pagedata index to create the pagedatastructure')
 
 	# create columns for us to render in the page
+	columns = []
 	for i in results:
+		encodeddomain = deperiodize(i.domain)
 		# normal display
 		if displaytype == None:
-			encodeddomain = deperiodize(i.domain)
-			i['columns'] = {}
+			column = {}
 			if my200page == 'All Scans':
-				i['columns']['Domain'] = 'https://' + i.domain + my200page
+				column['Domain'] = 'https://' + i.domain + my200page
 			else:
-				i['columns']['Domain'] = 'https://' + i.domain
-			i['columns']['Branch'] = i.domaintype
-			i['columns']['Agency'] = i.agency
+				column['Domain'] = 'https://' + i.domain
+			column['Branch'] = i.domaintype
+			column['Agency'] = i.agency
 			if my200page == 'All Scans':
-				i['columns']['Response Code'] = ''
+				column['Response Code'] = ''
 			else:
-				i['columns']['Response Code'] = i.data[encodeddomain]
+				column['Response Code'] = i.data[encodeddomain]
 			if encodeddomain in pagedatastructure:
-				i['columns']['Content Length'] = pagedatastructure[encodeddomain]['content_length']
-				i['columns']['Content Type'] = pagedatastructure[encodeddomain]['content_type']
-				i['columns']['Final URL'] = pagedatastructure[encodeddomain]['final_url']
-				i['columns']['json Items'] = pagedatastructure[encodeddomain]['json_items']
-				i['columns']['Opendata Conformity'] = pagedatastructure[encodeddomain]['opendata_conforms_to']
-				i['columns']['Code.gov Measurement Type'] = pagedatastructure[encodeddomain]['codegov_measurementtype']
+				column['Content Length'] = pagedatastructure[encodeddomain]['content_length']
+				column['Content Type'] = pagedatastructure[encodeddomain]['content_type']
+				column['Final URL'] = pagedatastructure[encodeddomain]['final_url']
+				column['json Items'] = pagedatastructure[encodeddomain]['json_items']
+				column['Opendata Conformity'] = pagedatastructure[encodeddomain]['opendata_conforms_to']
+				column['Code.gov Measurement Type'] = pagedatastructure[encodeddomain]['codegov_measurementtype']
 			else:
-				i['columns']['Content Length'] = ''
-				i['columns']['Content Type'] = ''
-				i['columns']['Final URL'] = ''
-				i['columns']['json Items'] = ''
-				i['columns']['Opendata Conformity'] = ''
-				i['columns']['Code.gov Measurement Type'] = ''
-			i['columns']['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+				column['Content Length'] = ''
+				column['Content Type'] = ''
+				column['Final URL'] = ''
+				column['json Items'] = ''
+				column['Opendata Conformity'] = ''
+				column['Code.gov Measurement Type'] = ''
+			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+			i['columns'] = column
+			columns = list(column.keys())
 
 		# 200-dev style display
 		elif displaytype == '200-developer':
-			encodeddomain = deperiodize(i.domain)
-			i['columns'] = {}
-			i['columns']['Domain'] = 'https://' + i.domain
-			i['columns']['Agency'] = i.agency
-			i['columns']['Organization'] = i.organization
-			i['columns']['Branch'] = i.domaintype
+			column = {}
+			column['Domain'] = 'https://' + i.domain
+			column['Agency'] = i.agency
+			column['Organization'] = i.organization
+			column['Branch'] = i.domaintype
 			if my200page == 'All Scans':
-				i['columns']['Target URL'] = 'https://' + i.domain
-				i['columns']['Status'] = ''
-				i['columns']['Response Code'] = ''
+				column['Target URL'] = 'https://' + i.domain
+				column['Status'] = ''
+				column['Response Code'] = ''
 			else:
-				i['columns']['Target URL'] = 'https://' + i.domain + my200page
+				column['Target URL'] = 'https://' + i.domain + my200page
 				if i.data[encodeddomain] != 200:
-					i['columns']['Status'] = 'Not Present'
+					column['Status'] = 'Not Present'
 				else:
-					i['columns']['Status'] = 'Present'
-				i['columns']['Response Code'] = i.data[encodeddomain]
+					column['Status'] = 'Present'
+				column['Response Code'] = i.data[encodeddomain]
 			if encodeddomain in pagedatastructure:
-				i['columns']['Final URL'] = pagedatastructure[encodeddomain]['final_url']
-				i['columns']['Content Type'] = pagedatastructure[encodeddomain]['content_type']
-				i['columns']['Content Length'] = pagedatastructure[encodeddomain]['content_length']
+				column['Final URL'] = pagedatastructure[encodeddomain]['final_url']
+				column['Content Type'] = pagedatastructure[encodeddomain]['content_type']
+				column['Content Length'] = pagedatastructure[encodeddomain]['content_length']
 			else:
-				i['columns']['Final URL'] = ''
-				i['columns']['Content Type'] = ''
-				i['columns']['Content Length'] = ''
-	# get the list of columns for the headers
-	print(dict(i['columns']))
-	columns = list(dict(i['columns']).keys())
+				column['Final URL'] = ''
+				column['Content Type'] = ''
+				column['Content Length'] = ''
+			i['columns'] = column
+			columns = list(column.keys())
 	print(columns)
 
 
