@@ -20,6 +20,7 @@
           <li><a href="/api/v1/domains/">API</a></li>
           <li><strong>200 Scanner</strong></li>
           <li><a href="{% url 'search200' displaytype='200-developer' %}?200page={{'/data.json' | urlencode}}&mimetype={{'application/json' | urlencode}}">api.data.gov Page</a></li>
+          <li><a href="{% url 'search200' displaytype='200-data.json' %}?200page={{'/data.json' | urlencode}}&mimetype={{'application/json' | urlencode}}">data.gov Page</a></li>
           <li><a href="{% url 'search200' displaytype='200-codejson' %}?200page={{'/code.json' | urlencode}}&mimetype={{'application/json' | urlencode}}">code.gov Page</a></li>
           <li><a href="{% url 'search200' %}?200page={{'/code.json' | urlencode}}&q={{'200' | urlencode}}">/code.json scan results</a></li>
           <li><a href="{% url 'search200' %}?200page={{'/data' | urlencode}}&q={{'200' | urlencode}}">/data scan results</a></li>

@@ -409,6 +409,9 @@ def search200(request, displaytype=None):
 		# Just create another 'elif displaytype == "yourpagetype"' section below
 		# and do what the other displaytypes do:  create a column, add your data
 		# to it, store it in the results and set the columns and page title.
+		# 
+		# XXX seems like there ought to be a more clever way to do this.
+		#     I'm definitely not DRY here.
 
 		# default display
 		if displaytype == None:
@@ -511,6 +514,42 @@ def search200(request, displaytype=None):
 			columns = list(column.keys())
 			i['column'] = list(column.values())
 			displaytypetitle = 'code.gov Scan Search'
+
+		# 200-data.json style display
+		elif displaytype == '200-data.json':
+			column = {}
+			column['Domain'] = i.domain
+			column['Agency'] = i.agency
+			column['Organization'] = i.organization
+			column['Branch'] = i.domaintype
+			if my200page == 'All Scans':
+				column['Target URL'] = 'https://' + i.domain
+				column['Status'] = ''
+				column['Response Code'] = ''
+			else:
+				column['Target URL'] = 'https://' + i.domain + my200page
+				if i.data[selectedpage] != '200':
+					column['Status'] = 'Not Present'
+				else:
+					column['Status'] = 'Present'
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
+			else:
+				column['Final URL'] = ''
+				column['Content Type'] = ''
+				column['json Items'] = ''
+				column['File Size (B)'] = ''
+				column['Opendata Conformity'] = ''
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			displaytypetitle = 'data.gov Scan Search'
 
 
 
