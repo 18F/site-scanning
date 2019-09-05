@@ -551,6 +551,37 @@ def search200(request, displaytype=None):
 			i['column'] = list(column.values())
 			displaytypetitle = 'data.gov Scan Search'
 
+		# 200-robotstxt style display
+		elif displaytype == '200-robotstxt':
+			column = {}
+			column['Domain'] = i.domain
+			column['Agency'] = i.agency
+			column['Organization'] = i.organization
+			column['Branch'] = i.domaintype
+			if my200page == 'All Scans':
+				column['Target URL'] = 'https://' + i.domain
+				column['Status'] = ''
+				column['Response Code'] = ''
+			else:
+				column['Target URL'] = 'https://' + i.domain + my200page
+				if i.data[selectedpage] != '200':
+					column['Status'] = 'Not Present'
+				else:
+					column['Status'] = 'Present'
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+			else:
+				column['Final URL'] = ''
+				column['Content Type'] = ''
+				column['File Size (B)'] = ''
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			displaytypetitle = 'robots.txt Scan Search'
 
 
 	context = {
