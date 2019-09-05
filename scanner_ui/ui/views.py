@@ -10,6 +10,8 @@ import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool, Q
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -281,7 +283,7 @@ def search200csv(request):
 	return response
 
 
-def search200(request):
+def search200(request, displaytype=None):
 	dates = getdates()
 
 	date = request.GET.get('date')
@@ -314,7 +316,6 @@ def search200(request):
 	orgs = getListFromFields(index, 'organization')
 	orgs.insert(0, 'All Organizations')
 
-
 	agency = request.GET.get('agency')
 	if agency == None:
 		agency = 'All Agencies'
@@ -326,6 +327,7 @@ def search200(request):
 	org = request.GET.get('org')
 	if org == None:
 		org = 'All Organizations'
+
 
 	# Find list of mime types from the pagedata index
 	fielddata = [
@@ -347,6 +349,7 @@ def search200(request):
 	mimetypes.sort()
 	mimetypes.insert(0, 'all content_types')
 
+
 	# find whether we want to do present/notpresent/all
 	present = request.GET.get('present')
 	if present == None:
@@ -357,6 +360,7 @@ def search200(request):
 		"All"
 	]
 
+
 	# do the actual query here.
 	if present == 'Present':
 		query = '"200"'
@@ -365,6 +369,7 @@ def search200(request):
 	else:
 		query = '*'
 	s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
+
 
 	# set up pagination here
 	hitsperpagelist = ['20', '50', '100', '200']
@@ -381,6 +386,7 @@ def search200(request):
 		page = paginator.page(paginator.num_pages)
 	results = page.object_list.execute()
 
+
 	# mix in the pagedata scan into the page we are displaying.
 	pagedomainlist = []
 	# get list of domains to search for in the pagedata index
@@ -395,28 +401,72 @@ def search200(request):
 	except:
 		logging.error('could not find pagedata index to create the pagedatastructure')
 
-	# mix pagedata into results
-	pagekeys = []
-	if my200page != 'All Scans':
-		for i in results:
-			try:
-				keys = list(pagedatastructure[i.domain][deperiodize(my200page)].keys())
-				pagekeys = list(set().union(keys, pagekeys))
-			except:
-				logging.error('could not find pagedata to merge in for ' + i.domain)
-	pagekeys.sort()
+	# create columns for us to render in the page
+	columns = []
 	for i in results:
-		if my200page == 'All Scans':
-			i['url'] = 'https://' + i.domain
-			i['pagedata'] = []
-		else:
-			i['url'] = 'https://' + i.domain + my200page
-			i['pagedata'] = []
-			for k in pagekeys:
-				try:
-					i['pagedata'].append(pagedatastructure[i.domain][deperiodize(my200page)][k])
-				except:
-					i['pagedata'].append('')
+		selectedpage = deperiodize(my200page)
+		# normal display
+		if displaytype == None:
+			column = {}
+			if my200page == 'All Scans':
+				column['Domain'] = 'https://' + i.domain
+			else:
+				column['Domain'] = 'https://' + i.domain + my200page
+			column['Branch'] = i.domaintype
+			column['Agency'] = i.agency
+			if my200page == 'All Scans':
+				column['Response Code'] = ''
+			else:
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
+				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
+				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
+			else:
+				column['Content Length'] = ''
+				column['Content Type'] = ''
+				column['Final URL'] = ''
+				column['json Items'] = ''
+				column['Opendata Conformity'] = ''
+				column['Code.gov Measurement Type'] = ''
+			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			displaytypetitle = '200 Scans Search'
+
+		# 200-dev style display
+		elif displaytype == '200-developer':
+			column = {}
+			column['Domain'] = i.domain
+			column['Agency'] = i.agency
+			column['Organization'] = i.organization
+			column['Branch'] = i.domaintype
+			if my200page == 'All Scans':
+				column['Target URL'] = 'https://' + i.domain
+				column['Status'] = ''
+				column['Response Code'] = ''
+			else:
+				column['Target URL'] = 'https://' + i.domain + my200page
+				if i.data[selectedpage] != '200':
+					column['Status'] = 'Not Present'
+				else:
+					column['Status'] = 'Present'
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['Content Length'] = pagedatastructure[i.domain][selectedpage]['content_length']
+			else:
+				column['Final URL'] = ''
+				column['Content Type'] = ''
+				column['Content Length'] = ''
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			displaytypetitle = 'api.data.gov Search'
+
 
 	context = {
 		'search_results': results.hits,
@@ -434,11 +484,13 @@ def search200(request):
 		'selected_present': present,
 		'mimetypes': mimetypes,
 		'selected_mimetype': mimetype,
-		'pagekeys': pagekeys,
 		'hitsperpagelist': hitsperpagelist,
 		'selected_hitsperpage': hitsperpage,
 		'selected_org': org,
 		'orglist': orgs,
+		'columns': columns,
+		'displaytype': displaytype,
+		'displaytypetitle': displaytypetitle,
 	}
 
 	return render(request, "search200.html", context=context)
