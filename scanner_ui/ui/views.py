@@ -581,7 +581,7 @@ def search200(request, displaytype=None):
 				column['Opendata Conformity'] = ''
 				column['Code.gov Measurement Type'] = ''
 			detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
-			column['Other Scan Results'] = request.build_absolute_uri('/') + detailpath
+			column['Other Scan Results'] = request.build_absolute_uri(detailpath)
 			# store the column in the result, also populate the columns now, since
 			# the results seem to be a type of dictionary that doesn't respond to .keys()
 			columns = list(column.keys())
