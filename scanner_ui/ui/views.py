@@ -740,7 +740,7 @@ def searchUSWDS(request):
 	dates = getdates()
 
 	date = request.GET.get('date')
-	if date == None or date == 'Scan Date':
+	if date == 'None' or date == 'Scan Date' or date == None:
 		indexbase = dates[1]
 	else:
 		indexbase = date
