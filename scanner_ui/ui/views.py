@@ -580,12 +580,13 @@ def search200(request, displaytype=None):
 				column['json Items'] = ''
 				column['Opendata Conformity'] = ''
 				column['Code.gov Measurement Type'] = ''
-			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+			detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
+			column['Other Scan Results'] = request.build_absolute_uri('/') + detailpath
 			# store the column in the result, also populate the columns now, since
 			# the results seem to be a type of dictionary that doesn't respond to .keys()
 			columns = list(column.keys())
 			i['column'] = list(column.values())
-			if displaytype == None:
+			if displaytype == None or displaytype == 'None':
 				displaytypetitle = '200 Scans Search'
 			else:
 				# We should never hit this, but if we do, we will still display a page, and the displaytype will help us debug.
