@@ -620,10 +620,10 @@ def getUSWDSquery(indexbase, query, version, agency, domaintype, sort):
 		query = 0
 
 	s = Search(using=es, index=index)
-	if sort == 'Domain':
-		s = s.sort('domain')
-	else:
+	if sort == 'Score':
 		s = s.sort('-data.total_score')
+	else:
+		s = s.sort('domain')
 	s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
 	if version != 'all versions':
 		if version == 'detected versions':
@@ -647,6 +647,7 @@ def searchUSWDSjson(request):
 	query = request.GET.get('q')
 	agency = request.GET.get('agency')
 	domaintype = request.GET.get('domaintype')
+	sort = request.GET.get('sort')
 
 	dates = getdates()
 	indexbase = ''
@@ -655,7 +656,7 @@ def searchUSWDSjson(request):
 	else:
 		indexbase = date
 
-	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
 	response = HttpResponse(content_type='application/json')
 	response['Content-Disposition'] = 'attachment; filename="USWDSscan.json"'
 
@@ -679,6 +680,7 @@ def searchUSWDScsv(request):
 	query = request.GET.get('q')
 	agency = request.GET.get('agency')
 	domaintype = request.GET.get('domaintype')
+	sort = request.GET.get('sort')
 
 	dates = getdates()
 	indexbase = ''
@@ -687,7 +689,7 @@ def searchUSWDScsv(request):
 	else:
 		indexbase = date
 
-	s = getUSWDSquery(indexbase, query, version, agency, domaintype)
+	s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="USWDSscan.csv"'
 
