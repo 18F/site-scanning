@@ -403,8 +403,12 @@ def search200(request, displaytype=None):
 
 	# create columns for us to render in the page
 	columns = []
+
+	# set some defaults for use while looping
+	selectedpage = deperiodize(my200page)
+	displaytypetitle = '200 Scans Search'
+
 	for i in results:
-		selectedpage = deperiodize(my200page)
 		# Below here are where you can set up different types of pages.
 		# Just create another 'elif displaytype == "yourpagetype"' section below
 		# and do what the other displaytypes do:  create a column, add your data
@@ -413,42 +417,8 @@ def search200(request, displaytype=None):
 		# XXX seems like there ought to be a more clever way to do this.
 		#     I'm definitely not DRY here.
 
-		# default display
-		if displaytype == None:
-			column = {}
-			if my200page == 'All Scans':
-				column['Domain'] = 'https://' + i.domain
-			else:
-				column['Domain'] = 'https://' + i.domain + my200page
-			column['Branch'] = i.domaintype
-			column['Agency'] = i.agency
-			if my200page == 'All Scans':
-				column['Response Code'] = ''
-			else:
-				column['Response Code'] = i.data[selectedpage]
-			if i.domain in pagedatastructure and my200page != 'All Scans':
-				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
-				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
-				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
-				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
-			else:
-				column['File Size (B)'] = ''
-				column['Content Type'] = ''
-				column['Final URL'] = ''
-				column['json Items'] = ''
-				column['Opendata Conformity'] = ''
-				column['Code.gov Measurement Type'] = ''
-			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
-			# store the column in the result, also populate the columns now, since
-			# the results seem to be a type of dictionary that doesn't respond to .keys()
-			columns = list(column.keys())
-			i['column'] = list(column.values())
-			displaytypetitle = '200 Scans Search'
-
 		# 200-dev style display
-		elif displaytype == '200-developer':
+		if displaytype == '200-developer':
 			column = {}
 			column['Domain'] = i.domain
 			column['Agency'] = i.agency
@@ -582,6 +552,44 @@ def search200(request, displaytype=None):
 			columns = list(column.keys())
 			i['column'] = list(column.values())
 			displaytypetitle = 'robots.txt Scan Search'
+
+		# default to the basic 200 scans search
+		else:
+			column = {}
+			if my200page == 'All Scans':
+				column['Domain'] = 'https://' + i.domain
+			else:
+				column['Domain'] = 'https://' + i.domain + my200page
+			column['Branch'] = i.domaintype
+			column['Agency'] = i.agency
+			if my200page == 'All Scans':
+				column['Response Code'] = ''
+			else:
+				column['Response Code'] = i.data[selectedpage]
+			if i.domain in pagedatastructure and my200page != 'All Scans':
+				column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+				column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
+				column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
+				column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
+				column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
+				column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
+			else:
+				column['File Size (B)'] = ''
+				column['Content Type'] = ''
+				column['Final URL'] = ''
+				column['json Items'] = ''
+				column['Opendata Conformity'] = ''
+				column['Code.gov Measurement Type'] = ''
+			column['Other Scan Results'] = reverse('domains-detail', kwargs={'domain': i.domain})
+			# store the column in the result, also populate the columns now, since
+			# the results seem to be a type of dictionary that doesn't respond to .keys()
+			columns = list(column.keys())
+			i['column'] = list(column.values())
+			if displaytype == None:
+				displaytypetitle = '200 Scans Search'
+			else:
+				# We should never hit this, but if we do, we will still display a page, and the displaytype will help us debug.
+				displaytypetitle = '200 Scans Search: ' + displaytype
 
 
 	context = {
