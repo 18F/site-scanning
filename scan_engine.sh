@@ -64,6 +64,8 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
 # get the list of domains
+# XXX someday, we should restructure this so that it processes these domains
+# XXX in batches of 2000 or so:  trying to do 100k domains will run out of disk space
 wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 
 # execute the scans
