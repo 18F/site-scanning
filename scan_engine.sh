@@ -97,7 +97,7 @@ for i in ${SCANTYPES} ; do
 		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
 		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}' | tr -d \")
 		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}' | tr -d \")
-		ORG=$(echo "$CSVLINE" | awk -F, '{print $4}' | tr '\' '-' | tr -d \")
+		ORG=$(echo "$CSVLINE" | awk -F, '{print $4}' | tr '\\' '-' | tr -d \")
 
 		# add metadata
 		echo "{\"domain\":\"$DOMAIN\"," > /tmp/scan.json
