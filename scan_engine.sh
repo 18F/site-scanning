@@ -64,6 +64,8 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
 # get the list of domains
+# XXX someday, we should restructure this so that it processes these domains
+# XXX in batches of 2000 or so:  trying to do 100k domains will run out of disk space
 wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 
 # execute the scans
@@ -95,7 +97,7 @@ for i in ${SCANTYPES} ; do
 		CSVLINE=$(grep -Ei "^$DOMAIN," /tmp/domains.csv)
 		DOMAINTYPE=$(echo "$CSVLINE" | awk -F, '{print $2}' | tr -d \")
 		AGENCY=$(echo "$CSVLINE" | awk -F, '{print $3}' | tr -d \")
-		ORG=$(echo "$CSVLINE" | awk -F, '{print $4}' | tr '\' '-' | tr -d \")
+		ORG=$(echo "$CSVLINE" | awk -F, '{print $4}' | tr '\\' '-' | tr -d \")
 
 		# add metadata
 		echo "{\"domain\":\"$DOMAIN\"," > /tmp/scan.json
