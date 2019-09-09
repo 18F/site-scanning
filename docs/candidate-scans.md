@@ -17,6 +17,14 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * Detect the loading of 3rd party services. This could detect the replication of the same tools across government for market research and opportunities to create shared services, inform the public about the use of third-party services on a website for their own privacy considerations, and alert agencies to the use of third-party services on their sites so they can monitor usage and ensure there are no "bad actors."
 * May be a way to authenticate offical government social media accounts for the [U.S. Digital Registry](https://usdigitalregistry.digitalgov.gov/).
 
+### [dcoi json files](https://www.google.com/search?q=dcoi+json&oq=dcoi+json+&aqs=chrome..69i57j33.4450j0j7&sourceid=chrome&ie=UTF-8) - [two](https://datacenters.cio.gov/reporting/strategic-plan-generator)
+
+### [Other OMB json files](https://management.cio.gov/schema/)
+
+### /foia 
+
+### FOIA XML files 
+
 ### Presence of Forms
 * Analyze the source code of eage page that loads in order to detect forms and/or PRA numbers.  
 
