@@ -12,5 +12,5 @@ This section documents scans that are active in the Site Scanning program. Scans
 ### Program Documents 
 
 * [Statement of Work](https://drive.google.com/file/d/1vuw5fs-YMt_xnWPmvtntrJI8UcwAchV6/view)
-* Staffing Request [Phase II, Part I](https://github.com/18F/staffing/issues/613#issuecomment-500441720) [Phase II, Part II](https://github.com/18F/staffing/issues/652#issuecomment-525351221)
+* Staffing Request: [Phase II, Part I](https://github.com/18F/staffing/issues/613#issuecomment-500441720); [Phase II, Part II](https://github.com/18F/staffing/issues/652#issuecomment-525351221)
 * [Financial Tracker](https://docs.google.com/spreadsheets/d/1GsswntJosXMljNGJQC0AleUzeDcOdiDCqrkRXV121tc/edit)
