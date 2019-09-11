@@ -12,6 +12,7 @@ SCANTYPES="
 	pagedata
 	200scanner
 	uswds2
+	sitemap
 "
 
 # This is where you set the repo/branch
