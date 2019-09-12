@@ -9,6 +9,9 @@ urlpatterns = [
     path('searchUSWDS/json/', views.searchUSWDSjson, name='searchUSWDSjson'),
     path('searchUSWDS/csv/', views.searchUSWDScsv, name='searchUSWDScsv'),
     path('searchUSWDS/', views.searchUSWDS, name='searchUSWDS'),
+    path('privacy/json/', views.privacyjson, name='privacyjson'),
+    path('privacy/csv/', views.privacycsv, name='privacycsv'),
+    path('privacy/', views.privacy, name='privacy'),
     path('about/', views.about, name='about'),
     path('', views.index, name='index'),
 ]

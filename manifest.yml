@@ -8,7 +8,7 @@ applications:
   services:
     - scanner-storage
     - scanner-es
-  memory: 256M
+  memory: 128M
   instances: 1
   random-route: true
   command: python3 manage.py collectstatic --noinput ; gunicorn -b :8080 scanner_ui.wsgi
