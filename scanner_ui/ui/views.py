@@ -939,7 +939,7 @@ def privacy(request):
             column['Status'] = "Not Present"
         column['Response Code'] = i.data['status_code']
         column['Final URL'] = i.data['final_url']
-        column['Emails'] = i.data['emails']
+        column['Emails'] = ' '.join(i.data['emails'])
         column['H1 Headers'] = i.data['h1']
         column['H2 Headers'] = i.data['h2']
         column['H3 Headers'] = i.data['h3']
