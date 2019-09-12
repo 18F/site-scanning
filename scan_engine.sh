@@ -82,8 +82,10 @@ for i in ${SCANTYPES} ; do
 done
 
 # add metadata and put scan results into ES
+echo "Adding metadata and loading scan results into elasticsearch.  This can take a while..."
 ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
 for i in ${SCANTYPES} ; do
+	echo "loading scantype: $i"
 	# set the domain field to be a keyword rather than text so we can sort on it
 	DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
 	SHORTDATE=$(date +%Y-%m-%d)
@@ -144,7 +146,8 @@ done
 
 # put scan results into s3
 for i in ${SCANTYPES} ; do
-	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive ; then
+	echo "copying $i data to s3://$BUCKET/$i/"
+	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
 		echo "copy of $i to s3 bucket successful"
 	else
 		echo "copy of $i to s3 bucket errored out"
