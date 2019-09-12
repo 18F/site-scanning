@@ -1106,7 +1106,7 @@ def sitemap(request):
         column['Agency'] = i.agency
         column['Organization'] = i.organization
         column['Branch'] = i.domaintype
-        column['Target URL'] = 'https://' + i.domain + '/privacy'
+        column['Target URL'] = 'https://' + i.domain + '/sitemap.xml'
         if i.data['status_code'] == "200":
             column['Status'] = "Is Present"
         else:
