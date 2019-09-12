@@ -966,6 +966,9 @@ def privacy(request):
         'selected_present': present,
         'title': title,
         'blurb': blurb,
+        'mainurl': 'privacy',
+        'jsonurl': 'privacyjson',
+        'csvurl': 'privacycsv',
     }
     return render(request, "customsearchpage.html", context=context)
 
@@ -1135,6 +1138,9 @@ def sitemap(request):
         'selected_present': present,
         'title': title,
         'blurb': blurb,
+        'mainurl': 'sitemap',
+        'jsonurl': 'sitemapjson',
+        'csvurl': 'sitemapcsv',
     }
     return render(request, "customsearchpage.html", context=context)
 

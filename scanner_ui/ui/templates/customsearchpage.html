@@ -5,7 +5,7 @@
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
   <p>{{blurb}}</p>
 
-  <form action="{% url 'privacy' %}" method="get">
+  <form action="{% url mainurl %}" method="get">
     <select name="present" onchange="this.form.submit()">
       {% for present in presentlist %}
         {% if selected_present == present %}
@@ -47,9 +47,9 @@
     </select>
 
   <h2>Scan Results:</h2>
-    <a href="{% url 'privacyjson' %}?date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">JSON Export</a>
+    <a href="{% url jsonurl %}?date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">JSON Export</a>
 
-    <a href="{% url 'privacycsv' %}?date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">CSV Export</a>
+    <a href="{% url csvurl %}?date={{selected_date | urlencode}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">CSV Export</a>
 
     <div class="pagination">
     <p>Hits Per Page:
@@ -64,8 +64,8 @@
     </select></p>
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Previous</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -73,8 +73,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'privacy' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+            <a href="{% url mainurl %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
@@ -98,8 +98,8 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Previous</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page=1&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">&laquo; First</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -107,8 +107,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'privacy' %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
-            <a href="{% url 'privacy' %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
+            <a href="{% url mainurl %}?date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Next</a>
+            <a href="{% url mainurl %}?date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&q={{query | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
