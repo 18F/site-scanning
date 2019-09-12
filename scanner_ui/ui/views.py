@@ -924,6 +924,7 @@ def privacy(request):
         page = paginator.page(paginator.num_pages)
     results = page.object_list.execute()
 
+    # process the search results on the page so that we can format them properly
     columns = []
     for i in results:
         column = {}
@@ -942,12 +943,13 @@ def privacy(request):
         column['H1 Headers'] = i.data['h1']
         column['H2 Headers'] = i.data['h2']
         column['H3 Headers'] = i.data['h3']
-
         # store the column in the result, also populate the columns now, since
         # the results seem to be a type of dictionary that doesn't respond to .keys()
         columns = list(column.keys())
         i['column'] = list(column.values())
 
+    title = '/privacy Page'
+    blurb = 'This page will let you view information about the various /privacy pages out there'
     context = {
         'search_results': results.hits,
         'columns': columns,
@@ -962,9 +964,10 @@ def privacy(request):
         'selected_hitsperpage': hitsperpage,
         'presentlist': presentlist,
         'selected_present': present,
+        'title': title,
+        'blurb': blurb,
     }
-
-    return render(request, "searchprivacy.html", context=context)
+    return render(request, "customsearchpage.html", context=context)
 
 
 def privacyjson(request):
@@ -1013,6 +1016,175 @@ def privacycsv(request):
     s = getquery(index, present=present, agency=agency, domaintype=domaintype)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="PrivacyPageData.csv"'
+
+    r = s.execute()
+
+    # pull the scan data out into the top level to make it look better
+    firsthit = r.hits[0].to_dict()
+    fieldnames = list(firsthit.keys())
+    fieldnames.remove('data')
+    for k, v in firsthit['data'].items():
+        fieldnames.append(k)
+
+    writer = csv.DictWriter(response, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for i in s.scan():
+        scan = i.to_dict()
+
+        # pull the scan data out into the top level to make it look better
+        scandata = scan['data']
+        del scan['data']
+        for k, v in scandata.items():
+            scan[k] = v
+
+        writer.writerow(scan)
+
+    return response
+
+
+def sitemap(request):
+    dates = getdates()
+
+    date = request.GET.get('date')
+    if date == 'None' or date == 'Scan Date' or date is None:
+        indexbase = dates[1]
+    else:
+        indexbase = date
+    index = indexbase + '-sitemap'
+
+    # get the agencies/domaintypes
+    agencies = getListFromFields(index, 'agency')
+    agencies.insert(0, 'All Agencies')
+    domaintypes = getListFromFields(index, 'domaintype')
+    domaintypes.insert(0, 'All Branches')
+
+    agency = request.GET.get('agency')
+    if agency is None:
+        agency = 'All Agencies'
+
+    domaintype = request.GET.get('domaintype')
+    if domaintype is None:
+        domaintype = 'All Branches'
+
+    # find whether we want to do present/notpresent/all
+    present = request.GET.get('present')
+    if present is None:
+        present = "Present"
+    presentlist = [
+        "Present",
+        "Not Present",
+        "All"
+    ]
+
+    # do the actual query here.
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+
+    # set up pagination here
+    hitsperpagelist = ['20', '50', '100', '200']
+    hitsperpage = request.GET.get('hitsperpage')
+    if hitsperpage is None:
+        hitsperpage = hitsperpagelist[1]
+    page_no = request.GET.get('page')
+    paginator = Paginator(s, int(hitsperpage))
+    try:
+        page = paginator.page(page_no)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+    results = page.object_list.execute()
+
+    # process the search results on the page so that we can format them properly
+    columns = []
+    for i in results:
+        column = {}
+        column['Domain'] = i.domain
+        column['Agency'] = i.agency
+        column['Organization'] = i.organization
+        column['Branch'] = i.domaintype
+        column['Target URL'] = 'https://' + i.domain + '/privacy'
+        if i.data['status_code'] == "200":
+            column['Status'] = "Is Present"
+        else:
+            column['Status'] = "Not Present"
+        column['Response Code'] = i.data['status_code']
+        column['Final URL'] = i.data['final_url']
+        column['URL Count'] = i.data['url_tag_count']
+        column['Locations in robots.txt'] = ' '.join(i.data['sitemap_locations_from_robotstxt'])
+        # store the column in the result, also populate the columns now, since
+        # the results seem to be a type of dictionary that doesn't respond to .keys()
+        columns = list(column.keys())
+        i['column'] = list(column.values())
+
+    title = 'Sitemap Page'
+    blurb = 'This page will let you view information about the various /sitemap.xml pages out there'
+    context = {
+        'search_results': results.hits,
+        'columns': columns,
+        'dates': dates,
+        'selected_date': date,
+        'page_obj': page,
+        'agencies': agencies,
+        'selected_agency': agency,
+        'domaintypes': domaintypes,
+        'selected_domaintype': domaintype,
+        'hitsperpagelist': hitsperpagelist,
+        'selected_hitsperpage': hitsperpage,
+        'presentlist': presentlist,
+        'selected_present': present,
+        'title': title,
+        'blurb': blurb,
+    }
+    return render(request, "customsearchpage.html", context=context)
+
+
+def sitemapjson(request):
+    date = request.GET.get('date')
+    agency = request.GET.get('agency')
+    domaintype = request.GET.get('domaintype')
+    present = request.GET.get('present')
+
+    dates = getdates()
+    index = ''
+    if date == 'None' or date == 'Scan Date' or date is None:
+        index = dates[1] + '-sitemap'
+    else:
+        index = date + '-sitemap'
+
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="sitemapData.json"'
+
+    # write out a valid json array
+    response.write('[')
+    count = s.count()
+    for i in s.scan():
+        response.write(json.dumps(i.to_dict()))
+        if count > 1:
+            response.write(',')
+        count = count - 1
+    response.write(']')
+
+    return response
+
+
+def sitemapcsv(request):
+    date = request.GET.get('date')
+    agency = request.GET.get('agency')
+    domaintype = request.GET.get('domaintype')
+    present = request.GET.get('present')
+
+    dates = getdates()
+    index = ''
+    if date == 'None' or date == 'Scan Date' or date is None:
+        index = dates[1] + '-sitemap'
+    else:
+        index = date + '-sitemap'
+
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="sitemapData.csv"'
 
     r = s.execute()
 

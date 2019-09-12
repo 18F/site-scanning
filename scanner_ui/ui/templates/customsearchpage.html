@@ -1,9 +1,9 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Search /privacy Page</h1>
+  <h1>{{title}}</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
-  <p>This search will let you view information about the various /privacy pages out there.</p>
+  <p>{{blurb}}</p>
 
   <form action="{% url 'privacy' %}" method="get">
     <select name="present" onchange="this.form.submit()">

@@ -12,6 +12,9 @@ urlpatterns = [
     path('privacy/json/', views.privacyjson, name='privacyjson'),
     path('privacy/csv/', views.privacycsv, name='privacycsv'),
     path('privacy/', views.privacy, name='privacy'),
+    path('sitemap/json/', views.sitemapjson, name='sitemapjson'),
+    path('sitemap/csv/', views.sitemapcsv, name='sitemapcsv'),
+    path('sitemap/', views.sitemap, name='sitemap'),
     path('about/', views.about, name='about'),
     path('', views.index, name='index'),
 ]
