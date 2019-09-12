@@ -13,6 +13,7 @@ SCANTYPES="
 	200scanner
 	uswds2
 	sitemap
+	privacy
 "
 
 # This is where you set the repo/branch
