@@ -21,7 +21,7 @@
           <!--<li><a href="{% url 'about' %}">List of Scans</a></li>-->
           <!--<li><a href="{% url 'about' %}">Data Links</a></li>-->
           <!--<li><a href="{% url 'about' %}">Mashups</a></li>-->
-          <li><a href="/api/v1/domains/">API</a></li>
+          <li><a href="/api/v1/domains/?format=json">API</a></li>
           <li><a href="https://github.com/18F/site-scanning">Edit this Site</a></li>
           <li><strong>200 Scanner</strong></li>
           <li><a href="{% url 'search200' displaytype='200-developer' %}?200page={{'/data.json' | urlencode}}&mimetype={{'application/json' | urlencode}}">api.data.gov Page</a></li>
