@@ -44,6 +44,8 @@ jobs:
             echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
             sudo apt-get update
             sudo apt-get install cf-cli
+            cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
+            cf install-plugin blue-green-deploy -r CF-Community -f
       - run:
           name: deploy to cloud.gov
           command: |
@@ -59,7 +61,7 @@ jobs:
             cf api https://api.fr.cloud.gov
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
-            ./deploy-cloudgov.sh
+            ./deploy-cloudgov.sh zdt
 
   scan:
     docker:
