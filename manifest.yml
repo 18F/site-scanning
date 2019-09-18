@@ -1,8 +1,6 @@
 ---
 applications:
 - name: scanner-ui
-  buildpacks:
-    - python_buildpack
   disk_quota: 768M
   timeout: 180
   services:
