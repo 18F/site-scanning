@@ -16,5 +16,6 @@ urlpatterns = [
     path('sitemap/csv/', views.sitemapcsv, name='sitemapcsv'),
     path('sitemap/', views.sitemap, name='sitemap'),
     path('about/', views.about, name='about'),
+    path('list-of-scans/', views.list-of-scans, name='list-of-scans'),
     path('', views.index, name='index'),
 ]

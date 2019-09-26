@@ -43,6 +43,12 @@ def about(request):
     }
     return render(request, "about.html", context=context)
 
+def list-of-scans(request):
+    # This is just to show how to get data from python into the page.
+    # You could just edit the template directly to add this static text
+    # too.
+    
+    return render(request, "list-of-scans.html")
 
 def index(request):
     dates = getdates()
