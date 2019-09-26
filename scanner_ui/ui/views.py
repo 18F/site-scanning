@@ -48,7 +48,7 @@ def listofscans(request):
     # You could just edit the template directly to add this static text
     # too.
     
-    return render(request, "listofscans.html")
+    return render(request, "list-of-scans.html")
 
 def index(request):
     dates = getdates()
