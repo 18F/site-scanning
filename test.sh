@@ -5,16 +5,8 @@
 #
 
 # set env vars
-if [ -z "$MINIO_ACCESS_KEY" ] ; then
-	AWS_ACCESS_KEY_ID=$(date +%s | sha256sum | base64 | head -c 20)
-else
-	AWS_ACCESS_KEY_ID="$MINIO_ACCESS_KEY"
-fi
-if [ -z "$MINIO_SECRET_KEY" ] ; then
-	AWS_SECRET_ACCESS_KEY=$(date +%s | sha256sum | base64 | head -c 40)
-else
-	AWS_SECRET_ACCESS_KEY="$MINIO_SECRET_KEY"
-fi
+AWS_ACCESS_KEY_ID=$(date +%s | sha256sum | base64 | head -c 20)
+AWS_SECRET_ACCESS_KEY=$(date +%s | sha256sum | base64 | head -c 40)
 export AWS_ACCESS_KEY_ID
 export AWS_SECRET_ACCESS_KEY
 export AWS_DEFAULT_REGION="us-east-1"
@@ -23,35 +15,29 @@ export S3ENDPOINT="--endpoint-url=http://localhost:9000"
 export ESURL="http://localhost:9200"
 export DOMAINCSV="/tmp/testdomains.csv"
 
-# if we are in the CircleCI environment, then don't start everything up locally
-if [ "$CI" != "true" ] ; then
-	# start up elasticsearch
-	docker pull docker.elastic.co/elasticsearch/elasticsearch:5.6.16
-	docker run -d --name=scanner-es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" \
-		-e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+# start up elasticsearch
+docker pull docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+docker run -d --name=scanner-es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" \
+	-e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.6.16
 
-	# start up minio (s3)
-	docker pull minio/minio
-	docker run -d --name=scanner-storage -p 9000:9000 \
-		-e "MINIO_ACCESS_KEY=$AWS_ACCESS_KEY_ID" \
-		-e "MINIO_SECRET_KEY=$AWS_SECRET_ACCESS_KEY" \
-		minio/minio server /data
+# start up minio (s3)
+docker pull minio/minio
+docker run -d --name=scanner-storage -p 9000:9000 \
+	-e "MINIO_ACCESS_KEY=$AWS_ACCESS_KEY_ID" \
+	-e "MINIO_SECRET_KEY=$AWS_SECRET_ACCESS_KEY" \
+	minio/minio server /data
 
-	# make sure these services have a little time to get going
-	sleep 2
-fi
+# make sure these services have a little time to get going
+sleep 2
 
 # function to give us a way to exit early and clean up if need be.
 cleanup()
 {
-	# shut down docker stuff
-	if [ "$CI" != "true" ] ; then
-		echo stopping docker services
-		docker stop scanner-es
-		docker rm scanner-es
-		docker stop scanner-storage
-		docker rm scanner-storage
-	fi
+	echo stopping docker services
+	docker stop scanner-es
+	docker rm scanner-es
+	docker stop scanner-storage
+	docker rm scanner-storage
 
 	if [ -z "$1" ] ; then
 		exit 0
