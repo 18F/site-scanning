@@ -43,6 +43,7 @@ cleanup()
 		exit 0
 	else
 		echo "failed: $1"
+		docker ps
 		exit 1
 	fi
 }
