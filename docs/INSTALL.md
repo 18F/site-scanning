@@ -33,15 +33,12 @@ to see the API in action.
 If you want to get CI/CD going, you will want to fork the repo into your own github
 org or into your github account, make sure that CircleCI is operating on this fork,
 and then configure a few environment variables into the CircleCI repo config.
-- `AWS_ACCESS_KEY_ID`:  This is the key ID that can be used to access the S3 bucket.
-	It is needed so tests can be run in CircleCI.  You can get it with the following command:
-	`cf env scanner-ui | grep access_key_id`.
-- `AWS_DEFAULT_REGION`:  This is the region your S3 bucket is in.  You can get it with
-	`cf env scanner-ui | grep region`.
-- `AWS_SECRET_ACCESS_KEY`:  This is the secret key for the S3 bucket.  You can get it
-	with `cf env scanner-ui | grep secret_access_key`.
-- `BUCKETNAME`:  This is the name of the S3 bucket.  You can get it with
-	`cf env scanner-ui | grep bucket`.
+- `MINIO_ACCESS_KEY`: This needs to be a fake AWS access key ID that will be used for
+	setting up a test environment.  20 random uppercase characters, like the output
+	of `date +%s | sha256sum | base64 | head -c 20` in a shell would get you.
+- `MINIO_SECRET_KEY`: This needs to be a fake AWS access key that will be used for
+	setting up a test environment.  40 random uppercase characters, like the output
+	of `date +%s | sha256sum | base64 | head -c 40` in a shell would get you.
 - `CF_ORG`: This is your cf org.  You can get this with `cf target | grep org`.
 - `CF_SPACE`:  This is your cf space.  You can get this with `cf target | grep space`.
 - `CF_PASSWORD`:  This is the password that lets CircleCI deploy to your space.
