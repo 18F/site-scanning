@@ -149,20 +149,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 }
 
-# AWS info
+# service config
 if 'VCAP_SERVICES' not in os.environ:
-    print('VCAP_SERVICES not set, assuming you are testing and have set AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, ESURI, and BUCKETNAME')
-    if "BUCKETNAME" not in os.environ:
-        # XXX put a dummy in here for now
-        os.environ['BUCKETNAME'] = "dummybucket"
+    print('VCAP_SERVICES not set, assuming you are testing and have set ESURI')
     if "ESURI" not in os.environ:
-        # XXX put a dummy in here for now
-        os.environ['ESURI'] = "http://localhost:9300"
+        # default to an ES running on localhost
+        os.environ['ESURI'] = "http://localhost:9200"
 else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
-    os.environ['BUCKETNAME'] = services['s3'][0]['credentials']['bucket']
-    os.environ['AWS_DEFAULT_REGION'] = services['s3'][0]['credentials']['region']
-    os.environ['AWS_ACCESS_KEY_ID'] = services['s3'][0]['credentials']['access_key_id']
-    os.environ['AWS_SECRET_ACCESS_KEY'] = services['s3'][0]['credentials']['secret_access_key']
     os.environ['ESURI'] = services['elasticsearch56'][0]['credentials']['uri']
