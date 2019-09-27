@@ -30,6 +30,11 @@ docker run -d --name=scanner-storage -p 9000:9000 \
 # make sure these services have a little time to get going
 sleep 2
 
+# XXX temp for testing
+docker ps
+docker run --name=scanner-es -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" \
+	-e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+
 # function to give us a way to exit early and clean up if need be.
 cleanup()
 {
@@ -43,7 +48,6 @@ cleanup()
 		exit 0
 	else
 		echo "failed: $1"
-		docker ps
 		exit 1
 	fi
 }
