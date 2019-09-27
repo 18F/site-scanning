@@ -14,6 +14,8 @@ jobs:
     - run:
         name: install dependencies
         command: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
           python3 -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
@@ -21,13 +23,11 @@ jobs:
         paths:
           - ./venv
         key: v1-python37-dependencies-{{ checksum "requirements.txt" }}
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run:
         name: run tests
         command: |
-          export AWS_ACCESS_KEY_ID="$MINIO_ACCESS_KEY"
-          export AWS_SECRET_ACCESS_KEY="$MINIO_SECRET_KEY"
-          sudo apt-get update
-          sudo apt-get install -y awscli
           ./test.sh
     - store_artifacts:
         path: test-reports
