@@ -8,6 +8,7 @@ jobs:
           - xpack.security.enabled: false
           - discovery.type: single-node
       - image: minio/minio
+        command: server /data
     steps:
     - checkout
     # Download and cache dependencies
