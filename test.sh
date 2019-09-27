@@ -53,11 +53,21 @@ cleanup()
 		docker rm scanner-storage
 	fi
 
-	echo "failed: $1"
-	exit 1
+	if [ -z "$1" ] ; then
+		exit 0
+	else
+		echo "failed: $1"
+		exit 1
+	fi
 }
 
 # set up environment
+if [ ! -d venv ] ; then
+	python3 -m venv venv
+fi
+. venv/bin/activate
+pip install -r requirements.txt
+pip install awscli --upgrade --user
 aws $S3ENDPOINT s3 mb s3://"$BUCKETNAME" || cleanup "could not create s3 bucket"
 ./manage.py migrate || cleanup "could not do db migrations"
 
@@ -70,16 +80,11 @@ EOF
 ./scan_engine.sh "$BUCKETNAME"
 
 
-# make sure python is set up, then run app test suite
-if [ ! -d venv ] ; then
-	python3 -m venv venv
-fi
-. venv/bin/activate
-pip install -r requirements.txt
-./manage.py test || cleanup "python test suite"
+# run app test suite
+./manage.py test || cleanup "python test suite exited uncleanly"
 
 # do a test that checks if the s3 bucket contains data
-echo "checking what is in the s3 bucket:"
+echo "checking what is in the s3 bucket"
 aws $S3ENDPOINT s3 ls "s3://$BUCKETNAME/privacy/" | grep 18f.gov >/dev/null || cleanup "s3 bucket does not contain a selected scan"
 
 # test that there are indexes available
@@ -87,4 +92,4 @@ echo "checking whether indexes were created"
 curl -s "$ESURL"/_cat/indices?v | grep pagedata >/dev/null || cleanup "the pagedata index was not created"
 
 # everything must be great!
-exit 0
+cleanup
