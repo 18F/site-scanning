@@ -31,6 +31,8 @@ jobs:
         command: |
           export AWS_ACCESS_KEY_ID="$MINIO_ACCESS_KEY"
           export AWS_SECRET_ACCESS_KEY="$MINIO_SECRET_KEY"
+          apt-get update
+          apt-get install -y awscli
           ./test.sh
     - store_artifacts:
         path: test-reports

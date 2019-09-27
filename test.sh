@@ -67,7 +67,6 @@ if [ ! -d venv ] ; then
 fi
 . venv/bin/activate
 pip install -r requirements.txt
-pip install awscli --upgrade --user
 aws $S3ENDPOINT s3 mb s3://"$BUCKETNAME" || cleanup "could not create s3 bucket"
 ./manage.py migrate || cleanup "could not do db migrations"
 
