@@ -11,7 +11,7 @@ export MINIO_ACCESS_KEY=$(date +%s | sha256sum | base64 | head -c 20)
 
 # Start the docker stuff up with a fresh env
 docker-compose down
-docker-compose up -d
+docker-compose up -d --build
 
 # Make sure everything has time to awaken
 sleep 10
