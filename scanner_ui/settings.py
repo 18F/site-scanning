@@ -151,11 +151,11 @@ REST_FRAMEWORK = {
 
 # service config
 if 'VCAP_SERVICES' not in os.environ:
-    print('VCAP_SERVICES not set, assuming you are testing and have set ESURI')
-    if "ESURI" not in os.environ:
+    print('VCAP_SERVICES not set, assuming you are testing and have set ESURL')
+    if "ESURL" not in os.environ:
         # default to an ES running on localhost
-        os.environ['ESURI'] = "http://localhost:9200"
+        os.environ['ESURL'] = "http://localhost:9200"
 else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
-    os.environ['ESURI'] = services['elasticsearch56'][0]['credentials']['uri']
+    os.environ['ESURL'] = services['elasticsearch56'][0]['credentials']['uri']

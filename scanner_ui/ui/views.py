@@ -14,12 +14,12 @@ from django.urls import reverse
 
 # Create your views here.
 
-es = Elasticsearch([os.environ['ESURI']])
+es = Elasticsearch([os.environ['ESURL']])
 
 
 # search in ES for the list of dates that are indexed
 def getdates():
-    es = Elasticsearch([os.environ['ESURI']])
+    es = Elasticsearch([os.environ['ESURL']])
     indexlist = es.indices.get_alias().keys()
     datemap = {}
     for i in indexlist:
@@ -732,7 +732,7 @@ def searchUSWDScsv(request):
 
 # search in ES for the unique values in a particular field
 def getListFromFields(index, field):
-    es = Elasticsearch([os.environ['ESURI']])
+    es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source([field])
     valuemap = {}
     try:

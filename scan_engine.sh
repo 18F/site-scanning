@@ -64,19 +64,12 @@ fi
 cd /app
 
 # set up domain-scan
-if [ ! -d domain-scan ] ; then
-	echo installing domain-scan
-	git clone "$DOMAINSCANREPO"
-	cd domain-scan
-	git checkout "$BRANCH"
-else
-	# this is probably being run locally, so make sure venv is there, and use that
-	cd domain-scan
-	if [ ! -d venv ] ; then
-		python3 -m venv venv
-	fi
-	. venv/bin/activate
-fi
+echo installing domain-scan
+git clone "$DOMAINSCANREPO"
+cd domain-scan
+git checkout "$BRANCH"
+python3 -m venv venv
+. venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
@@ -175,7 +168,7 @@ done
 for i in ${SCANTYPES} ; do
 	echo "copying $i data to s3://$BUCKET/$i/"
 	# The S3ENDPOINT thing is so we can send this to a local minio instance for testing
-	if aws $S3ENDPOINT s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
+	if aws "$S3ENDPOINT" s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
 		echo "copy of $i to s3 bucket successful"
 	else
 		echo "copy of $i to s3 bucket errored out"
