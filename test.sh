@@ -18,8 +18,11 @@ sleep 10
 
 # Run the test!
 docker exec site-scanning_scanner-ui_1 ./composetest.sh
+SAVEDEXIT=$?
 
 # clean up (if desired)
 if [ "$1" != "nodelete" ] ; then
 	docker-compose down
 fi
+
+exit "$SAVEDEXIT"
