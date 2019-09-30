@@ -64,7 +64,7 @@ fi
 cd /app
 
 # set up domain-scan
-echo installing domain-scan
+echo "installing domain-scan:  this repo is big, so it can take a while"
 git clone --depth=1 --branch "$BRANCH" "$DOMAINSCANREPO"
 cd domain-scan
 python3 -m venv venv
@@ -73,7 +73,7 @@ pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
 # install aws cli
-pip3 install awscli --upgrade --user
+apt-get update && apt-get install -y awscli
 
 # get the list of domains
 if [ -f "$DOMAINCSV" ] ; then
@@ -152,8 +152,8 @@ for i in ${SCANTYPES} ; do
 done
 
 # delete old indexes in ES
-curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.*' | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
-curl -s "$ESURL/_cat/indices" | grep -vE '[0-9]{4}-[0-9]{2}-[0-9]{2}-.*' | awk '{print $3}' | while read line ; do
+curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
+curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | while read line ; do
 	if echo "$line" | grep -Ff /tmp/keepers >/dev/null ; then
 		echo keeping "$line" index
 	else
