@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# This script configures environment variables, starts up a local test environment,
+# This script configures environment variables, loads data into our environment,
 # and then runs tests.
 #
 
@@ -32,13 +32,25 @@ EOF
 # run app test suite
 ./manage.py test || cleanup "python test suite exited uncleanly"
 
+SCANTYPES="
+	pagedata
+	200scanner
+	uswds2
+	sitemap
+	privacy
+"
+
 # do a test that checks if the s3 bucket contains data
 echo "checking what is in the s3 bucket"
-aws "$S3ENDPOINT" s3 ls "s3://$BUCKETNAME/privacy/" | grep 18f.gov >/dev/null || cleanup "s3 bucket does not contain a selected scan"
+for i in $SCANTYPES ; do
+	aws "$S3ENDPOINT" s3 ls "s3://$BUCKETNAME/$i/" | grep 18f.gov >/dev/null || cleanup "$i s3 bucket does not contain a selected scan"
+done
 
 # test that there are indexes available
 echo "checking whether indexes were created"
-curl -s "$ESURL"/_cat/indices?v | grep pagedata >/dev/null || cleanup "the pagedata index was not created"
+for i in $SCANTYPES ; do
+	curl -s "$ESURL"/_cat/indices?v | grep $i >/dev/null || cleanup "the $i index was not created"
+done
 
 # everything must be great!
 cleanup

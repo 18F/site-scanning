@@ -18,8 +18,10 @@ docker-compose up -d --build
 CONTAINER=$(docker-compose images | awk '/scanner-ui/ {print $1}')
 
 # Wait until it is running
+echo waiting until "$CONTAINER" is running
 until docker ps -f name="$CONTAINER" -f status=running | grep scanner-ui ; do
-	sleep 1
+	date
+	sleep 2
 done
 
 # Run the test!

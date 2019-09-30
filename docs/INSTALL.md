@@ -59,7 +59,7 @@ virtual env for you to work in and make sure you have all the python libs:
 ```
 python3 -m venv venv
 . venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 #### Configure where S3 bucket lives
@@ -139,10 +139,10 @@ cd domain-scan
 git checkout tspencer/200scanner
 python3 -m venv venv
 . venv/bin/activate
-pip install -r requirements.txt
-pip install -r requirements-scanners.txt
-pip install -r requirements-gatherers.txt
-pip install -r requirements-dev.txt
+pip3 install -r requirements.txt
+pip3 install -r requirements-scanners.txt
+pip3 install -r requirements-gatherers.txt
+pip3 install -r requirements-dev.txt
 ```
 
 You should now be able to run scans by hand as per the documentation:

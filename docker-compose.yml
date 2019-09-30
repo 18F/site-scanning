@@ -27,7 +27,7 @@ services:
       S3ENDPOINT: "--endpoint-url=http://minio:9000"
       DEBUG: "true"
       ESURL: "http://es:9200"
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
