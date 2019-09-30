@@ -16,8 +16,11 @@ docker-compose up -d --build
 # Make sure everything has time to awaken
 sleep 10
 
+# find the container name:
+CONTAINER=$(docker-compose images | awk '/scanner-ui/ {print $1}')
+
 # Run the test!
-docker exec site-scanning_scanner-ui_1 ./composetest.sh
+docker exec "$CONTAINER" ./composetest.sh
 SAVEDEXIT=$?
 
 # clean up (if desired)
