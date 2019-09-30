@@ -9,14 +9,16 @@ import json
 import sys
 import re
 
+
 def deperiodkeys(mydict):
-	data = {}
-	for k,v in mydict.items():
-		data[re.sub(r'\.', '//', k)] = v
-	return data
+    data = {}
+    for k, v in mydict.items():
+        data[re.sub(r'\.', '//', k)] = v
+    return data
+
 
 with open(sys.argv[1], 'r') as f:
-	data = f.read()
+    data = f.read()
 
 jsondata = json.loads(data, object_hook=deperiodkeys)
 print(json.dumps(jsondata))

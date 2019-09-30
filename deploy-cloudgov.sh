@@ -35,7 +35,7 @@ if [ "$1" = "setup" ] ; then  echo
 	else
 	  cf create-service elasticsearch56 medium-ha scanner-es
 	  echo sleeping until ES is awake
-	  for i in a b c ; do
+	  for i in 1 2 3 ; do
 	  	sleep 60
 	  	echo $i minutes...
 	  done

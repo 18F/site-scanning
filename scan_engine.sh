@@ -30,12 +30,21 @@ export LD_LIBRARY_PATH=/home/vcap/deps/0/lib
 export LIBRARY_PATH=/home/vcap/deps/0/lib
 
 # make sure the credentials are set
-AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
-export AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
-export AWS_SECRET_ACCESS_KEY
-AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
-export AWS_DEFAULT_REGION
+if [ -z "$AWS_ACCESS_KEY_ID" ] ; then
+	AWS_ACCESS_KEY_ID=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.access_key_id')
+	export AWS_ACCESS_KEY_ID
+fi
+if [ -z "$AWS_SECRET_ACCESS_KEY" ] ; then
+	AWS_SECRET_ACCESS_KEY=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.secret_access_key')
+	export AWS_SECRET_ACCESS_KEY
+fi
+if [ -z "$AWS_DEFAULT_REGION" ] ; then
+	AWS_DEFAULT_REGION=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.region')
+	export AWS_DEFAULT_REGION
+fi
+if [ -z "$ESURL" ] ; then
+	ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
+fi
 
 # make sure we have all the arguments we need
 if [ -n "$1" ] ; then
@@ -52,27 +61,36 @@ fi
 
 cd /app
 
-# install aws cli
-pip3 install awscli --upgrade --user
-
 # set up domain-scan
-if [ ! -d domain-scan ] ; then
-	echo installing domain-scan
-	git clone "$DOMAINSCANREPO"
-fi
+echo "installing domain-scan:  this repo is big, so it can take a while"
+git clone --depth=1 --branch "$BRANCH" "$DOMAINSCANREPO"
 cd domain-scan
-git checkout "$BRANCH"
+python3 -m venv venv
+. venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
+# install aws cli
+apt-get update && apt-get install -y awscli
+
 # get the list of domains
-# XXX someday, we should restructure this so that it processes these domains
-# XXX in batches of 2000 or so:  trying to do 100k domains will run out of disk space
-wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
+if [ -f "$DOMAINCSV" ] ; then
+	# this is so we can supply our own file for testing
+	cp "$DOMAINCSV" /tmp/domains.csv
+else
+	wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
+fi
+
+# clean up old scans (if there are any)
+if [ -d ./cache ] ; then
+	rm -rf cache
+	mkdir cache
+fi
 
 # execute the scans
-echo -n "Scan start: "
-date
+# XXX someday, we should restructure this so that it processes these domains
+# XXX in batches of 2000 or so:  trying to do 100k domains will run out of disk space
+echo "Scan start: $(date)"
 for i in ${SCANTYPES} ; do
 	if ./scan /tmp/domains.csv --scan="$i" ; then
 		echo "scan of $i successful"
@@ -83,7 +101,6 @@ done
 
 # add metadata and put scan results into ES
 echo "Adding metadata and loading scan results into elasticsearch.  This can take a while..."
-ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')
 for i in ${SCANTYPES} ; do
 	echo "loading scantype: $i"
 	# set the domain field to be a keyword rather than text so we can sort on it
@@ -133,8 +150,8 @@ for i in ${SCANTYPES} ; do
 done
 
 # delete old indexes in ES
-curl -s "$ESURL/_cat/indices" | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
-curl -s "$ESURL/_cat/indices" | awk '{print $3}' | while read line ; do
+curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
+curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | while read line ; do
 	if echo "$line" | grep -Ff /tmp/keepers >/dev/null ; then
 		echo keeping "$line" index
 	else
@@ -147,12 +164,12 @@ done
 # put scan results into s3
 for i in ${SCANTYPES} ; do
 	echo "copying $i data to s3://$BUCKET/$i/"
-	if aws s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
+	# The S3ENDPOINT thing is so we can send this to a local minio instance for testing
+	if aws "$S3ENDPOINT" s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
 		echo "copy of $i to s3 bucket successful"
 	else
 		echo "copy of $i to s3 bucket errored out"
 	fi
 done
 
-echo -n "Scan end: "
-date
+echo "Scan end: $(date)"

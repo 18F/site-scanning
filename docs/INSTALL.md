@@ -33,15 +33,6 @@ to see the API in action.
 If you want to get CI/CD going, you will want to fork the repo into your own github
 org or into your github account, make sure that CircleCI is operating on this fork,
 and then configure a few environment variables into the CircleCI repo config.
-- `AWS_ACCESS_KEY_ID`:  This is the key ID that can be used to access the S3 bucket.
-	It is needed so tests can be run in CircleCI.  You can get it with the following command:
-	`cf env scanner-ui | grep access_key_id`.
-- `AWS_DEFAULT_REGION`:  This is the region your S3 bucket is in.  You can get it with
-	`cf env scanner-ui | grep region`.
-- `AWS_SECRET_ACCESS_KEY`:  This is the secret key for the S3 bucket.  You can get it
-	with `cf env scanner-ui | grep secret_access_key`.
-- `BUCKETNAME`:  This is the name of the S3 bucket.  You can get it with
-	`cf env scanner-ui | grep bucket`.
 - `CF_ORG`: This is your cf org.  You can get this with `cf target | grep org`.
 - `CF_SPACE`:  This is your cf space.  You can get this with `cf target | grep space`.
 - `CF_PASSWORD`:  This is the password that lets CircleCI deploy to your space.
@@ -68,7 +59,7 @@ virtual env for you to work in and make sure you have all the python libs:
 ```
 python3 -m venv venv
 . venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 #### Configure where S3 bucket lives
@@ -148,10 +139,10 @@ cd domain-scan
 git checkout tspencer/200scanner
 python3 -m venv venv
 . venv/bin/activate
-pip install -r requirements.txt
-pip install -r requirements-scanners.txt
-pip install -r requirements-gatherers.txt
-pip install -r requirements-dev.txt
+pip3 install -r requirements.txt
+pip3 install -r requirements-scanners.txt
+pip3 install -r requirements-gatherers.txt
+pip3 install -r requirements-dev.txt
 ```
 
 You should now be able to run scans by hand as per the documentation:

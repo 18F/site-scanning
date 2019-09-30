@@ -1,0 +1,4 @@
+**/venv
+*.sqlite3
+**/__pycache__
+domain-scan

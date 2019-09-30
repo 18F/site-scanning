@@ -14,18 +14,21 @@ jobs:
     - run:
         name: install dependencies
         command: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
           python3 -m venv venv
           . venv/bin/activate
-          pip install -r requirements.txt
+          pip3 install -r requirements.txt
     - save_cache:
         paths:
           - ./venv
         key: v1-python37-dependencies-{{ checksum "requirements.txt" }}
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run:
         name: run tests
         command: |
-          . venv/bin/activate
-          ./manage.py test
+          ./test.sh
     - store_artifacts:
         path: test-reports
         destination: test-reports
