@@ -13,11 +13,14 @@ export MINIO_ACCESS_KEY=$(date +%s | sha256sum | base64 | head -c 20)
 docker-compose down
 docker-compose up -d --build
 
-# Make sure everything has time to awaken
-sleep 10
 
 # find the container name:
 CONTAINER=$(docker-compose images | awk '/scanner-ui/ {print $1}')
+
+# Wait until it is running
+until docker ps -f name="$CONTAINER" -f status=running | grep scanner-ui ; do
+	sleep 1
+done
 
 # Run the test!
 docker exec "$CONTAINER" ./composetest.sh
