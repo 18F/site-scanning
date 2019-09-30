@@ -63,19 +63,17 @@ fi
 
 cd /app
 
-# install aws cli
-pip3 install awscli --upgrade --user
-
 # set up domain-scan
 echo installing domain-scan
-git clone "$DOMAINSCANREPO"
+git clone --depth=1 --branch "$BRANCH" "$DOMAINSCANREPO"
 cd domain-scan
-git checkout "$BRANCH"
 python3 -m venv venv
 . venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 
+# install aws cli
+pip3 install awscli --upgrade --user
 
 # get the list of domains
 if [ -f "$DOMAINCSV" ] ; then
@@ -155,7 +153,7 @@ done
 
 # delete old indexes in ES
 curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.*' | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
-curl -s "$ESURL/_cat/indices" | awk '{print $3}' | while read line ; do
+curl -s "$ESURL/_cat/indices" | grep -vE '[0-9]{4}-[0-9]{2}-[0-9]{2}-.*' | awk '{print $3}' | while read line ; do
 	if echo "$line" | grep -Ff /tmp/keepers >/dev/null ; then
 		echo keeping "$line" index
 	else

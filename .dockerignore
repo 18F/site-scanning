@@ -1,7 +1,4 @@
-venv
-domain-scan
-domain-scan/venv
+**/venv
 *.sqlite3
-__pycache__
-scanner_ui/api/__pycache__/
-scanner_ui/__pycache__/
+**/__pycache__
+domain-scan
