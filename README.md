@@ -46,7 +46,7 @@ The current scanning infrastructure is not actively maintained, and some prototy
 - Data visualization
 - Long-term product sustainability (i.e. ownership, funding, etc.)
 
-## Goals
+## Goals and Milestones
 
 | Rank          | Priority      | Goal          | Measure       |
 | ------------- | ------------- |-------------  | ------------- |
