@@ -65,3 +65,6 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * search for what CMS sites are using
 * Fetcher scan? - e.g. just consume the .gov database 
 * Which websites use which TTS services
+
+## Meta Idea
+* Run scans against second level domains, subdomains, and top 500 (or) 1000 pages in DAP.  
