@@ -3,34 +3,15 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 import os
 import logging
-import re
 import json
 import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Range, Bool, Q
 from django.urls import reverse
+from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize
 
 
 # Create your views here.
-
-es = Elasticsearch([os.environ['ESURL']])
-
-
-# search in ES for the list of dates that are indexed
-def getdates():
-    es = Elasticsearch([os.environ['ESURL']])
-    indexlist = es.indices.get_alias().keys()
-    datemap = {}
-    for i in indexlist:
-        a = i.split('-', maxsplit=3)
-        date = '-'.join(a[0:3])
-        datemap[date] = 1
-    dates = list(datemap.keys())
-    dates.sort(reverse=True)
-    dates.insert(0, 'Scan Date')
-    return dates
-
 
 def about(request):
     # This is just to show how to get data from python into the page.
@@ -43,16 +24,19 @@ def about(request):
     }
     return render(request, "about.html", context=context)
 
+
 def listofscans(request):
     # This is just to show how to get data from python into the page.
     # You could just edit the template directly to add this static text
     # too.
-    
+
     return render(request, "list-of-scans.html")
+
 
 def index(request):
     dates = getdates()
     latestindex = dates[1] + '-*'
+    es = Elasticsearch([os.environ['ESURL']])
 
     allscanscount = Search(using=es, index=latestindex).query().count()
 
@@ -70,99 +54,6 @@ def index(request):
         'num_scans': allscanscount,
     }
     return render(request, "index.html", context=context)
-
-
-# Periods in fields are now illegal, so we use this function to fix this.
-def deperiodize(mystring):
-    if mystring is None:
-        return None
-    else:
-        return re.sub(r'\.', '//', mystring)
-
-
-# Periods in fields are now illegal, so we use this function to get proper names back.
-def periodize(mystring):
-    if mystring is None:
-        return None
-    else:
-        return re.sub(r'\/\/', '.', mystring)
-
-
-# Slashes in values need to be escaped
-def deslash(mystring):
-    if mystring is None:
-        return None
-    else:
-        return re.sub(r'\/', '\/', mystring)
-
-
-# This function is meant to search the pagedata index for domains
-# which have page data that match the key/value supplied and return
-# the list to the caller.
-def domainsWith(page, key, value, index):
-    fielddata = [
-        'data.*.content_type',
-        'domain'
-    ]
-    searchfields = ['data.' + deperiodize(page) + '.' + key]
-    s = Search(using=es, index=index)
-    s = s.query("query_string", query=deslash(value), fields=searchfields)
-    s = s.source(fielddata)
-    domainmap = {}
-    try:
-        for i in s.scan():
-            domainmap[i.domain] = 1
-    except IndexError:
-        logging.error('error searching for domains in index: ' + index)
-    return list(domainmap.keys())
-
-
-# This function generates the actual 200 scanner query
-def get200query(indexbase, my200page, agency, domaintype, org, mimetype, query):
-    index = indexbase + '-200scanner'
-    s = Search(using=es, index=index)
-    s = s.sort('domain')
-
-    if query is None:
-        # produce an empty query
-        s = s.query(~Q('match_all'))
-    else:
-        if my200page == 'All Scans':
-            s = s.query('simple_query_string', query=query)
-        else:
-            field = 'data.' + deperiodize(my200page)
-            s = s.query('query_string', query=query, fields=[field])
-
-        if agency != 'All Agencies' and agency is not None:
-            agencyquery = '"' + agency + '"'
-            s = s.query("query_string", query=agencyquery, fields=['agency'])
-        if domaintype != 'All Branches' and domaintype is not None:
-            domaintypequery = '"' + domaintype + '"'
-            s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
-        if org != 'All Organizations' and org is not None:
-            orgquery = '"' + org + '"'
-            s = s.query("query_string", query=orgquery, fields=['organization'])
-
-        # filter with data derived from the pagedata index (if needed)
-        pagedatadomains = []
-        if mimetype != 'all content_types':
-            domains = domainsWith(my200page, 'content_type', mimetype, indexbase + '-pagedata')
-            pagedatadomains.extend(domains)
-        if len(pagedatadomains) > 0:
-            s = s.filter("terms", domain=pagedatadomains)
-
-    return s
-
-
-# mix in the pagedata scan in.
-def mixpagedatain(scan, indexbase):
-    s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=[scan['domain']])
-    try:
-        for i in s.scan():
-            scan['pagedata'] = i.data.to_dict()
-    except IndexError:
-        logging.error('could not find pagedata index for mixing pagedata in')
-    return scan
 
 
 def search200json(request):
@@ -183,8 +74,9 @@ def search200json(request):
         indexbase = dates[1]
     else:
         indexbase = date
+    index = indexbase + '-200scanner'
 
-    s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
+    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="200scan.json"'
 
@@ -239,8 +131,9 @@ def search200csv(request):
         indexbase = dates[1]
     else:
         indexbase = date
+    index = indexbase + '-200scanner'
 
-    s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
+    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
 
@@ -298,6 +191,7 @@ def search200(request, displaytype=None):
     index = indexbase + '-200scanner'
 
     # search in ES for 200 pages we can select
+    es = Elasticsearch([os.environ['ESURL']])
     my200page = request.GET.get('200page')
     if my200page is None:
         my200page = 'All Scans'
@@ -369,7 +263,7 @@ def search200(request, displaytype=None):
         query = '-"200"'
     else:
         query = '*'
-    s = get200query(indexbase, my200page, agency, domaintype, org, mimetype, query)
+    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -377,6 +271,8 @@ def search200(request, displaytype=None):
     if hitsperpage is None:
         hitsperpage = hitsperpagelist[1]
     page_no = request.GET.get('page')
+    if page_no is None:
+        page_no = 1
     paginator = Paginator(s, int(hitsperpage))
     try:
         page = paginator.page(page_no)
@@ -385,7 +281,6 @@ def search200(request, displaytype=None):
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
     results = page.object_list.execute()
-
 
     # mix in the pagedata scan into the page we are displaying.
     pagedomainlist = []
@@ -620,35 +515,6 @@ def search200(request, displaytype=None):
     return render(request, "search200.html", context=context)
 
 
-def getUSWDSquery(indexbase, query, version, agency, domaintype, sort):
-    index = indexbase + '-uswds2'
-    try:
-        query = int(query)
-    except:
-        query = 0
-
-    s = Search(using=es, index=index)
-    if sort == 'Score':
-        s = s.sort('-data.total_score')
-    else:
-        s = s.sort('domain')
-    s = s.query(Bool(should=[Range(data__total_score={'gte': query})]))
-    if version != 'all versions':
-        if version == 'detected versions':
-            s = s.query("query_string", query='v*', fields=['data.uswdsversion'])
-        else:
-            versionquery = '"' + version + '"'
-            s = s.query("query_string", query=versionquery, fields=['data.uswdsversion'])
-    if agency != 'All Agencies':
-        agencyquery = '"' + agency + '"'
-        s = s.query("query_string", query=agencyquery, fields=['agency'])
-    if domaintype != 'All Branches':
-        domaintypequery = '"' + domaintype + '"'
-        s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
-
-    return s
-
-
 def searchUSWDSjson(request):
     date = request.GET.get('date')
     version = request.GET.get('version')
@@ -663,8 +529,13 @@ def searchUSWDSjson(request):
         indexbase = dates[1]
     else:
         indexbase = date
+    index = indexbase + '-uswds2'
 
-    s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
+    sortstring = 'domain'
+    if sort == 'Score':
+        sortstring = '-data.total_score'
+
+    s = getquery(index, totalscorequery=query, version=version, agency=agency, domaintype=domaintype, sort=sortstring)
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="USWDSscan.json"'
 
@@ -695,8 +566,14 @@ def searchUSWDScsv(request):
         indexbase = dates[1]
     else:
         indexbase = date
+    index = indexbase + '-uswds2'
 
-    s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
+    sortstring = 'domain'
+    if sort == 'Score':
+        sortstring = '-data.total_score'
+
+    s = getquery(index, totalscorequery=query, version=version, agency=agency, domaintype=domaintype, sort=sortstring)
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="USWDSscan.csv"'
 
@@ -730,21 +607,6 @@ def searchUSWDScsv(request):
     return response
 
 
-# search in ES for the unique values in a particular field
-def getListFromFields(index, field):
-    es = Elasticsearch([os.environ['ESURL']])
-    s = Search(using=es, index=index).query().source([field])
-    valuemap = {}
-    try:
-        for i in s.scan():
-            valuemap[i[field]] = 1
-        values = list(valuemap.keys())
-    except:
-        values = []
-    values.sort()
-    return values
-
-
 def searchUSWDS(request):
     dates = getdates()
 
@@ -775,6 +637,7 @@ def searchUSWDS(request):
     sortinglist = ['Domain', 'Score']
 
     # search in ES for versions that have been detected
+    es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source(['data.uswdsversion'])
     versionmap = {}
     try:
@@ -800,8 +663,12 @@ def searchUSWDS(request):
     except:
         query = 0
 
+    sortstring = 'domain'
+    if sort == 'Score':
+        sortstring = '-data.total_score'
+
     # do the actual query here.
-    s = getUSWDSquery(indexbase, query, version, agency, domaintype, sort)
+    s = getquery(index, totalscorequery=query, version=version, agency=agency, domaintype=domaintype, sort=sortstring)
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -809,6 +676,8 @@ def searchUSWDS(request):
     if hitsperpage is None:
         hitsperpage = hitsperpagelist[1]
     page_no = request.GET.get('page')
+    if page_no is None:
+        page_no = 1
     paginator = Paginator(s, int(hitsperpage))
     try:
         page = paginator.page(page_no)
@@ -837,45 +706,6 @@ def searchUSWDS(request):
     }
 
     return render(request, "searchUSWDS.html", context=context)
-
-
-# This function generates the actual 200 scanner query
-def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None):
-    s = Search(using=es, index=index)
-
-    if present is not None:
-        if present == "Present":
-            presentquery = '"200"'
-        elif present == "Not Present":
-            presentquery = '-"200"'
-        else:
-            presentquery = '*'
-        s = s.query("query_string", query=presentquery, fields=['data.status_code'])
-
-    if agency != 'All Agencies' and agency is not None:
-        agencyquery = '"' + agency + '"'
-        s = s.query("query_string", query=agencyquery, fields=['agency'])
-
-    if domaintype != 'All Branches' and domaintype is not None:
-        domaintypequery = '"' + domaintype + '"'
-        s = s.query("query_string", query=domaintypequery, fields=['domaintype'])
-
-    if org != 'All Organizations' and org is not None:
-        orgquery = '"' + org + '"'
-        s = s.query("query_string", query=orgquery, fields=['organization'])
-
-    if query is None:
-        # find everything
-        s = s.query(Q('match_all'))
-    else:
-        s = s.query('simple_query_string', query=query)
-
-    if sort is None:
-        s = s.sort('domain')
-    else:
-        s = s.sort(sort)
-
-    return s
 
 
 def privacy(request):
@@ -921,6 +751,8 @@ def privacy(request):
     if hitsperpage is None:
         hitsperpage = hitsperpagelist[1]
     page_no = request.GET.get('page')
+    if page_no is None:
+        page_no = 1
     paginator = Paginator(s, int(hitsperpage))
     try:
         page = paginator.page(page_no)
@@ -1095,6 +927,8 @@ def sitemap(request):
     if hitsperpage is None:
         hitsperpage = hitsperpagelist[1]
     page_no = request.GET.get('page')
+    if page_no is None:
+        page_no = 1
     paginator = Paginator(s, int(hitsperpage))
     try:
         page = paginator.page(page_no)

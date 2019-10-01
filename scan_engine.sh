@@ -63,8 +63,13 @@ cd /app
 
 # set up domain-scan
 echo "installing domain-scan:  this repo is big, so it can take a while"
-git clone --depth=1 --branch "$BRANCH" "$DOMAINSCANREPO"
-cd domain-scan
+if [ -d domain-scan ] ; then
+	cd domain-scan
+	git checkout "$BRANCH"
+else
+	git clone --depth=1 --branch "$BRANCH" "$DOMAINSCANREPO"
+	cd domain-scan
+fi
 python3 -m venv venv
 . venv/bin/activate
 pip3 install -r requirements.txt

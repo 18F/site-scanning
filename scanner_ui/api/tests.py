@@ -1,33 +1,36 @@
-from django.test import TestCase
-
-# Create your tests here.
-from django.urls import reverse
-from rest_framework.test import APITestCase, APIClient
-from rest_framework.views import status
-from .serializers import ScanSerializer
-from .views import getScansFromES
-from django.conf import settings
-import boto3
-import os
-
+from django.test import SimpleTestCase
+from rest_framework.test import APIClient
+import json
 
 # tests for views
 
-# class GetAllScansTest(APITestCase):
-#     client = APIClient()
 
-#     def test_get_all_scans(self):
-#         """
-#         This test ensures that all domains
-#         exist when we make a GET request to the domains/ endpoint.
-#         """
-#         # hit the API endpoint
-#         response = self.client.get(
-#             reverse("scans-list")
-#         )
-#         # fetch the data
-#         expected = getScansFromES()
+class CheckAPI(SimpleTestCase):
+    client = APIClient()
+    domainsresponse = client.get("http://localhost:8000/api/v1/domains/")
+    domainsjsondata = json.loads(domainsresponse.content)
+    scansresponse = client.get("http://localhost:8000/api/v1/scans/")
+    scansjsondata = json.loads(scansresponse.content)
 
-#         serialized = ScanSerializer(expected, many=True)
-#         self.assertEqual(response.data, serialized.data)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_all_domains(self):
+        """All domains are returned from calls to domains and scans endpoints"""
+        self.assertGreaterEqual(len(self.domainsjsondata), 10)
+        self.assertGreaterEqual(len(self.scansjsondata), 10)
+
+    def test_domains_same_as_scans(self):
+        """domains endpoint returns the same as the scans endpoint"""
+        self.assertEqual(self.domainsjsondata, self.scansjsondata)
+
+    def test_individual_domain_works(self):
+        """domains/18f.gov endpoint works"""
+        response = self.client.get("http://localhost:8000/api/v1/domains/18f.gov/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 5)
+        self.assertEqual(jsondata[0]['domain'], '18f.gov')
+
+    def test_individual_scans_works(self):
+        """scans/uswds2 endpoint works"""
+        response = self.client.get("http://localhost:8000/api/v1/scans/uswds2/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(jsondata[0]['scantype'], 'uswds2')

@@ -1,4 +1,10 @@
 **/venv
 *.sqlite3
 **/__pycache__
-domain-scan
+
+# this is to copy most of the repo over, because it takes too long to clone
+domain-scan/node_modules
+domain-scan/lambda/envs
+domain-scan/lambda/headless
+domain-scan/cache
+domain-scan/results
