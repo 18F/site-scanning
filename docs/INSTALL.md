@@ -26,7 +26,7 @@ which has tools such as cf, jq, curl, bash, etc on them.
 - Run a scan to get some data with `cf run-task scanner-ui /app/scan_engine.sh`
 
 You should now be able to go to the URLs given to you at the end of the deploy script
-to see the API in action.
+to see the UI/API in action.
 
 ### CI/CD Config
 
@@ -48,65 +48,31 @@ The configuration for CircleCI can be found in `.circleci/config.yml`.
 
 ## Development Cycle
 
-
 ### Local Development
 
-Developing locally is a quick way to get up and going and test stuff out.  
-
-#### Set up venv
-Make sure you are in the site-scanning repo directory, then set up a python
-virtual env for you to work in and make sure you have all the python libs:
-```
-python3 -m venv venv
-. venv/bin/activate
-pip3 install -r requirements.txt
-```
-
-#### Configure where S3 bucket lives
-
-You will need to supply some infrastructure to make the app work.  You will either
-need to point the app at the S3 bucket that is in cloud.gov, or set up your own
-S3 bucket and fill it with scans for it to look at.
-
-##### Using cloud.gov S3 bucket
-If you want to point your API at the data that is in cloud.gov, you will need to
-set environment variables to point at it with `export VARIABLE=XXX` in your shell.
-These are the variables you must set:
-- `AWS_ACCESS_KEY_ID`:  This is the key ID that can be used to access the S3 bucket.
-	It is needed so tests can be run in CircleCI.  You can get it with the following command:
-	`cf env scanner-ui | grep access_key_id`.
-- `AWS_DEFAULT_REGION`:  This is the region your S3 bucket is in.  You can get it with
-	`cf env scanner-ui | grep region`.
-- `AWS_SECRET_ACCESS_KEY`:  This is the secret key for the S3 bucket.  You can get it
-	with `cf env scanner-ui | grep secret_access_key`.
-- `BUCKETNAME`:  This is the name of the S3 bucket.  You can get it with
-	`cf env scanner-ui | grep bucket`.
-
-##### Using your own S3 bucket
-You will need to create your own S3 bucket somewhere and either create a role account,
-or use your own credentials.  Again, use `export VARIABLE=XXX` in your shell to
-set these variables.
-- `AWS_ACCESS_KEY_ID`:  This is the key ID that can be used to access the S3 bucket.
-- `AWS_DEFAULT_REGION`:  This is the region your S3 bucket is in.
-- `AWS_SECRET_ACCESS_KEY`:  This is the secret key for the S3 bucket.
-- `BUCKETNAME`:  This is the name of the S3 bucket.
-
-If you have just created the bucket and need to fill it with data, download and follow
-the directions on https://github.com/18F/domain-scan to install the scanner and run
-a scan.  Once you have some scan data on a few domains, you can copy them to your s3
-bucket with something like `aws s3 cp cache/pshtt/ "s3://$BUCKETNAME/pshtt/" --recursive`,
-if you did a pshtt scan, for example.
+Developing locally is a quick way to get up and going and test stuff out.
 
 #### Run tests
 
-`./manage.py test`
+`./test.sh`
+
+This can take a while, since the domain-scan repo is really giant, but it fires up
+docker-compose so that it has all the required services and then runs all the python
+tests (`./manage.py test`) as well as checking that a scan of a few domains works.
 
 #### Run the app
 
-`./manage.py runserver`
+`docker-compose up --build` will create an empty site-scanning system.  If you want to
+populate it with some test data, you can do the same thing that the test script does:
+```
+# find the container name:
+CONTAINER=$(docker-compose images | awk '/scanner-ui/ {print $1}')
+# Run the test!
+docker exec "$CONTAINER" ./composetest.sh
+```
 
-You should then be able to go to http://127.0.0.1:8000/api/v1/scans/ and see the API
-working.
+You should then be able to go to http://localhost:8000/ and see the UI/API
+working with whatever code was there when you did the `docker-compose up --build`.
 
 
 ### CI/CD into cloud.gov
@@ -156,7 +122,7 @@ make sure the workers are bumped up to 50 or something like that.
 
 A good thing to do is to copy the `domain-scan/scanners/uswds2.py` scanner
 plugin and use that as a template for your new scan.
-Either that or the `domain-scan/scanners/200.py` scanner.
+Either that or the `domain-scan/scanners/200scanner.py` scanner.
 
 ### Testing
 
