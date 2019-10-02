@@ -6,42 +6,42 @@
 
 <h3>200 Scanner</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/200scanner/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/200scanner/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/200scanner/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/200scanner/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'scans-detail' scantype='200scanner' %}?format=json">JSON</a> - <a href="{% url 'scans-detail' scentype='200scanner'%}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'scans' scantype='200scanner' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'scans' scantype='200scanner' domain='18f.gov' %}">API</a></li>
 </ul>
 
 <h3>Sitemap Scanner</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/sitemap/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/sitemap/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/sitemap/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/sitemap/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'scans-detail' scantype='sitemap' %}format=json">JSON</a> - <a href="{% url 'scans-detail' scantype='sitemap' %}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'scans' scantype='sitemap' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'scans' scantype='sitemap' domain='18f.gov' %}">API</a></li>
 </ul>
 
 
 <h3>Pagedata Scanner</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/pagedata/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/pagedata/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/pagedata/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/pagedata/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'scans-detail' scantype='pagedata' %}/?format=json">JSON</a> - <a href="{% url 'scans-detail' scantype='pagedata' %}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'scans' scantype='pagedata' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'scans' scantype='pagedata' domain='18f.gov' %}">API</a></li>
 </ul>
 
 
 <h3>Privacy Scanner</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/privacy/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/privacy/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/privacy/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/privacy/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'scans-detail' scantype='privacy' %}?format=json">JSON</a> - <a href="{% url 'scans-detail' scantype='privacy' %}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'scans' scantype='privacy' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'scans' scantype='privacy' domain='18f.gov' %}">API</a></li>
 </ul>
 
 
 
 <h3>USWDS Scanner</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/uswds2/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/uswds2/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/uswds2/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/scans/uswds2/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'scans-detail' scantype='uswds2' %}?format=json">JSON</a> - <a href="{% url 'scans-detail' scantype='uswds2' %}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'scans' scantype='uswds2' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'scans' scantype='uswds2' domain='18f.gov' %}">API</a></li>
 </ul>
 
 <h3>All Scans Combined</h3>
 <ul>
-<li>For all domains - <a href="https://site-scanning.app.cloud.gov/api/v1/domains/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/domains/">API</a></li>
-<li>For an individual domain (e.g. 18f.gov) - <a href="https://site-scanning.app.cloud.gov/api/v1/domains/18f.gov/?format=json">JSON</a> - <a href="https://site-scanning.app.cloud.gov/api/v1/domains/18f.gov/">API</a></li>
+<li>For all domains - <a href="{% url 'domains' %}?format=json">JSON</a> - <a href="{% url 'domains' %}">API</a></li>
+<li>For an individual domain (e.g. 18f.gov) - <a href="{% url 'domains-detail' domain='18f.gov' %}?format=json">JSON</a> - <a href="{% url 'domains-detail' domain='18f.gov' %}">API</a></li>
 </ul>
 
 
