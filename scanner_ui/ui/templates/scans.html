@@ -3,10 +3,22 @@
 {% block content %}
   <h1>List of Scans</h1>
   <p>This page lists each of the active scans and provides more information about them. </p>
-  <p>
-  <ul>
-  <li><strong>200 Scanner</strong> - Documentation - Resulting Data - Presentation Layers</li>
-  <li><strong>USWDS Scanner</strong> - Documentation - Resulting Data - Presentation Layers</li>
-  </ul>
-  </p>
+
+<h3>200 Scanner</h3>
+
+<p>
+A scan to check each domain for the presence or absence of a file at a specific location, specifically by analyzing the server response code at that location. 
+  <br>
+Learn more about the scan <a href="https://github.com/18F/site-scanning/blob/master/docs/scanners/200.md">here</a>.  
+</p>
+
+
+<h3>USWDS Scanner</h3>
+
+<p>
+A scan to check each domain for the presence or absence of a US Web Design System (USWDS) component (i.e. font, style sheet) and the version in use of USWDS. 
+  <br>
+Learn more about the scan <a href="https://github.com/18F/site-scanning/blob/master/docs/scanners/uswds.md">here</a>.  
+</p>
+
 {% endblock %}
