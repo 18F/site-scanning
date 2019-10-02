@@ -245,7 +245,7 @@ def search200(request, displaytype=None):
 
     statuscodelocation = None
     if my200page != 'All Scans':
-        statuscodelocation = 'data.' + deperiodize(my200page) + '.status_code'
+        statuscodelocation = 'data.' + deperiodize(my200page)
 
     # do the actual query here.
     s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)

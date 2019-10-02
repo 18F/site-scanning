@@ -77,6 +77,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'You can contribute to the project', response.content)
 
     def test_json_pages(self):
+        """json export pages should emit proper json"""
         pages = [
             '/search200/json/',
             '/searchUSWDS/json/',
@@ -88,6 +89,7 @@ class CheckUI(SimpleTestCase):
             self.assertGreaterEqual(len(response.json()), 2, msg=i)
 
     def test_csv_pages(self):
+        """ csv pages should generate proper csv"""
         pages = [
             '/search200/csv/',
             '/searchUSWDS/csv/',

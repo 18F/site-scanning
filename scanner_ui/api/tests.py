@@ -7,9 +7,9 @@ import json
 
 class CheckAPI(SimpleTestCase):
     client = APIClient()
-    domainsresponse = client.get("http://localhost:8000/api/v1/domains/")
+    domainsresponse = client.get("/api/v1/domains/")
     domainsjsondata = json.loads(domainsresponse.content)
-    scansresponse = client.get("http://localhost:8000/api/v1/scans/")
+    scansresponse = client.get("/api/v1/scans/")
     scansjsondata = json.loads(scansresponse.content)
 
     def test_all_domains(self):
@@ -23,14 +23,14 @@ class CheckAPI(SimpleTestCase):
 
     def test_individual_domain_works(self):
         """domains/18f.gov endpoint works"""
-        response = self.client.get("http://localhost:8000/api/v1/domains/18f.gov/")
+        response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 5)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_individual_scans_works(self):
         """scans/uswds2 endpoint works"""
-        response = self.client.get("http://localhost:8000/api/v1/scans/uswds2/")
+        response = self.client.get("/api/v1/scans/uswds2/")
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 2)
         self.assertEqual(jsondata[0]['scantype'], 'uswds2')
