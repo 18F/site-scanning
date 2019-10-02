@@ -30,8 +30,28 @@ def listofscans(request):
     # You could just edit the template directly to add this static text
     # too.
 
-    return render(request, "list-of-scans.html")
+    return render(request, "scans.html")
 
+def listofscans(request):
+    # This is just to show how to get data from python into the page.
+    # You could just edit the template directly to add this static text
+    # too.
+
+    return render(request, "data.html")
+
+def listofscans(request):
+    # This is just to show how to get data from python into the page.
+    # You could just edit the template directly to add this static text
+    # too.
+
+    return render(request, "use-cases.html")
+
+def listofscans(request):
+    # This is just to show how to get data from python into the page.
+    # You could just edit the template directly to add this static text
+    # too.
+
+    return render(request, "presentation-layers.html")
 
 def index(request):
     dates = getdates()
