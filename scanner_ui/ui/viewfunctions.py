@@ -69,10 +69,10 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
     else:
         s = s.sort(sort)
 
-    # XXX debugging
-    print(s.to_dict())
-    print('count is', s.count())
-    print('index is', index)
+    # # XXX debugging
+    # print(s.to_dict())
+    # print('count is', s.count())
+    # print('index is', index)
     return s
 
 

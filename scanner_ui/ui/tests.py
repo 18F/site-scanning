@@ -135,7 +135,7 @@ class CheckUI(SimpleTestCase):
         response = self.client.get('/search200/', {'present': 'Not Present', '200page': '/privacy'})
         self.assertIn(b'200 Scans Search', response.content)
         self.assertIn(b'18f.gov', response.content)
-        self.assertNotIn(b'gsa.gov', response.content)
+        self.assertNotIn(b'https://gsa.gov', response.content)
         self.assertIn(b'<td>404</td>', response.content)
         self.assertNotIn(b'<td>200</td>', response.content)
 
