@@ -29,7 +29,7 @@ class checkviewfunctions(SimpleTestCase):
         index = dates[1] + '-pagedata'
         mylist = getListFromFields(index, 'data', subfield='content_type')
         self.assertTrue('application/json' in mylist)
-        self.assertTrue('text/plain' in mylist)
+        self.assertTrue('application/xml' in mylist)
         self.assertGreaterEqual(len(mylist), 4)
 
     def test_deperiodize(self):
