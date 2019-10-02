@@ -76,7 +76,7 @@ def search200json(request):
         indexbase = date
     index = indexbase + '-200scanner'
 
-    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
+    s = getquery(index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="200scan.json"'
 
@@ -133,7 +133,7 @@ def search200csv(request):
         indexbase = date
     index = indexbase + '-200scanner'
 
-    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
+    s = getquery(index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
 
@@ -227,24 +227,11 @@ def search200(request, displaytype=None):
         org = 'All Organizations'
 
     # Find list of mime types from the pagedata index
-    fielddata = [
-        'data.*.content_type',
-    ]
-    s = Search(using=es, index=indexbase + '-pagedata').query().source(fielddata)
-    mimetypemap = {}
-    try:
-        for i in s.scan():
-            for k, v in i.data.to_dict().items():
-                mimetypemap[v['content_type']] = 1
-    except:
-        logging.error('could not find pagedata index to generate the mimetypemap')
-
+    mimetypes = getListFromFields(indexbase + '-pagedata', 'data', subfield='content_type')
+    mimetypes.insert(0, 'all content_types')
     mimetype = request.GET.get('mimetype')
     if mimetype is None:
         mimetype = 'all content_types'
-    mimetypes = list(mimetypemap.keys())
-    mimetypes.sort()
-    mimetypes.insert(0, 'all content_types')
 
     # find whether we want to do present/notpresent/all
     present = request.GET.get('present')
@@ -256,14 +243,12 @@ def search200(request, displaytype=None):
         "All"
     ]
 
+    statuscodelocation = None
+    if my200page != 'All Scans':
+        statuscodelocation = 'data.' + deperiodize(my200page) + '.status_code'
+
     # do the actual query here.
-    if present == 'Present':
-        query = '"200"'
-    elif present == 'Not Present':
-        query = '-"200"'
-    else:
-        query = '*'
-    s = getquery(index=index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -490,7 +475,6 @@ def search200(request, displaytype=None):
     context = {
         'search_results': results.hits,
         'dates': dates,
-        'query': query,
         'selected_date': date,
         'selected_200page': periodize(my200page),
         'my200pages': my200pages,
@@ -743,7 +727,7 @@ def privacy(request):
     ]
 
     # do the actual query here.
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -824,7 +808,7 @@ def privacyjson(request):
     else:
         index = date + '-privacy'
 
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="PrivacyPageData.json"'
 
@@ -854,7 +838,7 @@ def privacycsv(request):
     else:
         index = date + '-privacy'
 
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="PrivacyPageData.csv"'
 
@@ -919,7 +903,7 @@ def sitemap(request):
     ]
 
     # do the actual query here.
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -998,7 +982,7 @@ def sitemapjson(request):
     else:
         index = date + '-sitemap'
 
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="sitemapData.json"'
 
@@ -1028,7 +1012,7 @@ def sitemapcsv(request):
     else:
         index = date + '-sitemap'
 
-    s = getquery(index, present=present, agency=agency, domaintype=domaintype)
+    s = getquery(index, present=present, agency=agency, domaintype=domaintype, statuscodelocation='data.status_code')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="sitemapData.csv"'
 

@@ -3,7 +3,7 @@ import logging
 import re
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Range, Bool
+from elasticsearch_dsl.query import Range, Bool, Q
 
 
 # This function generates an actual query given a kwarg set.
@@ -11,18 +11,25 @@ from elasticsearch_dsl.query import Range, Bool
 # give different parameters to search the specified index and
 # thus have a generalized query interface rather than having a harcdoded
 # query for each view.
-def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None):
+def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None, statuscodelocation=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index)
 
-    if present is not None:
+    # This is so that we can do general queries.  If we don't specify one,
+    # then find everything.
+    if query is not None:
+        s = s.query('simple_query_string', query=query)
+    else:
+        s = s.query(Q('match_all'))
+
+    if present is not None and statuscodelocation is not None:
         if present == "Present":
             presentquery = '"200"'
         elif present == "Not Present":
             presentquery = '-"200"'
         else:
             presentquery = '*'
-        s = s.query("query_string", query=presentquery, fields=['data.status_code'])
+        s = s.query("query_string", query=presentquery, fields=[statuscodelocation])
 
     if agency != 'All Agencies' and agency is not None:
         agencyquery = '"' + agency + '"'
@@ -57,18 +64,15 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
         if len(domains) > 0:
             s = s.filter("terms", domain=domains)
 
-    # XXX do we still need this?  Nobody is doing general queries anymore are they?
-    if query is not None:
-        s = s.query('simple_query_string', query=query)
-    # else:
-    #     # find everything
-    #     s = s.query(Q('match_all'))
-
     if sort is None:
         s = s.sort('domain')
     else:
         s = s.sort(sort)
 
+    # XXX debugging
+    print(s.to_dict())
+    print('count is', s.count())
+    print('index is', index)
     return s
 
 
@@ -80,7 +84,8 @@ def getdates():
     for i in indexlist:
         a = i.split('-', maxsplit=3)
         date = '-'.join(a[0:3])
-        datemap[date] = 1
+        if re.match(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}', date):
+            datemap[date] = 1
     dates = list(datemap.keys())
     dates.sort(reverse=True)
     dates.insert(0, 'Scan Date')
@@ -88,13 +93,17 @@ def getdates():
 
 
 # search in ES for the unique values in a particular field
-def getListFromFields(index, field):
+def getListFromFields(index, field, subfield=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source([field])
     valuemap = {}
     try:
         for i in s.scan():
-            valuemap[i[field]] = 1
+            if subfield is None:
+                valuemap[i[field]] = 1
+            else:
+                for k, v in i[field].to_dict().items():
+                    valuemap[v[subfield]] = 1
         values = list(valuemap.keys())
     except:
         values = []
