@@ -6,6 +6,8 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * Take the full subdomain list from Pulse's https scan (roughly put, the closest we have to a complete list of all federal websites).  
 * Take the full subdomain list of websites that have implemented DAP.  
 * Create a crossmatch file that shows which websites have and have not implemented DAP.  
+* Characteristics of the implementation (e.g. adding Agency and Sub-Agency parameters).  
+* Detect CORS policy.  
 
 ### DAP Configuration
 * Analyze the source code of each page that loads in order to detect the version of DAP code in use, as well as misconfigurations of the code.  
