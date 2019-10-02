@@ -82,8 +82,8 @@ def search200json(request):
     agency = request.GET.get('agency')
     domaintype = request.GET.get('domaintype')
     mimetype = request.GET.get('mimetype')
-    query = request.GET.get('q')
     org = request.GET.get('org')
+    present = request.GET.get('present')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -96,7 +96,16 @@ def search200json(request):
         indexbase = date
     index = indexbase + '-200scanner'
 
-    s = getquery(index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
+    statuscodelocation = None
+    if my200page != 'All Scans':
+        statuscodelocation = 'data.' + deperiodize(my200page)
+
+    if present is None:
+        present = "Present"
+
+    # do the actual query here.
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
+
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="200scan.json"'
 
@@ -139,8 +148,8 @@ def search200csv(request):
     agency = request.GET.get('agency')
     domaintype = request.GET.get('domaintype')
     mimetype = request.GET.get('mimetype')
-    query = request.GET.get('q')
     org = request.GET.get('org')
+    present = request.GET.get('present')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -153,7 +162,16 @@ def search200csv(request):
         indexbase = date
     index = indexbase + '-200scanner'
 
-    s = getquery(index, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, query=query)
+    statuscodelocation = None
+    if my200page != 'All Scans':
+        statuscodelocation = 'data.' + deperiodize(my200page)
+
+    if present is None:
+        present = "Present"
+
+    # do the actual query here.
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
 
@@ -521,8 +539,8 @@ def search200(request, displaytype=None):
 
 def searchUSWDSjson(request):
     date = request.GET.get('date')
-    version = request.GET.get('version')
     query = request.GET.get('q')
+    version = request.GET.get('version')
     agency = request.GET.get('agency')
     domaintype = request.GET.get('domaintype')
     sort = request.GET.get('sort')
@@ -558,8 +576,8 @@ def searchUSWDSjson(request):
 
 def searchUSWDScsv(request):
     date = request.GET.get('date')
-    version = request.GET.get('version')
     query = request.GET.get('q')
+    version = request.GET.get('version')
     agency = request.GET.get('agency')
     domaintype = request.GET.get('domaintype')
     sort = request.GET.get('sort')
