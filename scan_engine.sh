@@ -64,6 +64,7 @@ cd /app
 # set up domain-scan
 echo "installing domain-scan:  this repo is big, so it can take a while"
 if [ -d domain-scan ] ; then
+	echo "found existing domain-scan dir, syncing it as a shortcut"
 	cd domain-scan
 	git checkout "$BRANCH"
 else

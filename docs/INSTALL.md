@@ -54,6 +54,9 @@ Developing locally is a quick way to get up and going and test stuff out.
 
 #### Run tests
 
+You will need to have [docker installed](https://docs.docker.com/install/)
+for this to work.
+
 `./test.sh`
 
 This can take a while, since the domain-scan repo is really giant, but it fires up
@@ -62,17 +65,15 @@ tests (`./manage.py test`) as well as checking that a scan of a few domains work
 
 #### Run the app
 
-`docker-compose up --build` will create an empty site-scanning system.  If you want to
-populate it with some test data, you can do the same thing that the test script does:
-```
-# find the container name:
-CONTAINER=$(docker-compose images | awk '/scanner-ui/ {print $1}')
-# Run the test!
-docker exec "$CONTAINER" ./composetest.sh
-```
+`./test.sh nodelete` will run the app, populate it with data scanned from 18f.gov
+and gsa.gov, and run the test suite against it.
 
 You should then be able to go to http://localhost:8000/ and see the UI/API
 working with whatever code was there when you did the `docker-compose up --build`.
+
+If you'd like to see the logs from the system, then type `docker-compose logs -f`,
+and you will see the logs streamed from the app and the elasticsearch/minio
+services.
 
 
 ### CI/CD into cloud.gov
