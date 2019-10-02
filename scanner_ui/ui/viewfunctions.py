@@ -60,7 +60,8 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
     if mimetype is not None and page is not None and indexbase is not None:
         domains = []
         if mimetype != 'all content_types':
-            domains = domainsWith(page, 'content_type', mimetype, indexbase + '-pagedata')
+            mimetypequery = '"' + mimetype + '"'
+            domains = domainsWith(page, 'content_type', mimetypequery, indexbase + '-pagedata')
         if len(domains) > 0:
             s = s.filter("terms", domain=domains)
 
