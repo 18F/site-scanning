@@ -32,12 +32,14 @@ def scans(request):
 
     return render(request, "scans.html")
 
+
 def data(request):
     # This is just to show how to get data from python into the page.
     # You could just edit the template directly to add this static text
     # too.
 
     return render(request, "data.html")
+
 
 def usecases(request):
     # This is just to show how to get data from python into the page.
@@ -46,12 +48,14 @@ def usecases(request):
 
     return render(request, "use-cases.html")
 
+
 def presentationlayers(request):
     # This is just to show how to get data from python into the page.
     # You could just edit the template directly to add this static text
     # too.
 
     return render(request, "presentation-layers.html")
+
 
 def index(request):
     dates = getdates()
