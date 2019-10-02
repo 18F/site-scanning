@@ -81,17 +81,20 @@ class CheckUI(SimpleTestCase):
         pages = [
             '/search200/json/',
             '/searchUSWDS/json/',
+            '/searchUSWDS/json/?date=Scan%20Date&version=all%20versions&q=10&agency=All%20Agencies&domaintype=All%20Branches',
+            '/search200/json/?200page=/code.json&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=application/json',
             '/privacy/json/',
             '/sitemap/json/',
         ]
         for i in pages:
             response = self.client.get(i)
-            self.assertGreaterEqual(len(response.json()), 2, msg=i)
+            self.assertGreaterEqual(len(response.json()), 1, msg=i)
 
     def test_csv_pages(self):
         """ csv pages should generate proper csv"""
         pages = [
             '/search200/csv/',
+            '/search200/csv/?200page=/code.json&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present',
             '/searchUSWDS/csv/',
             '/privacy/csv/',
             '/sitemap/csv/',
