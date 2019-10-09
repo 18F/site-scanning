@@ -17,7 +17,7 @@ urlpatterns = [
     path('sitemap/', views.sitemap, name='sitemap'),
     path('about/', views.about, name='about'),
     path('scans/', views.scans, name='scans'),
-    path('data-links/', views.datalinks, name='datalinks'),
+    path('downloads/', views.downloads, name='downloads'),
     path('use-cases/', views.usecases, name='usecases'),
     path('presentation-layers/', views.presentationlayers, name='presentationlayers'),
 
