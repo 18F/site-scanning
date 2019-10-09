@@ -33,12 +33,12 @@ def scans(request):
     return render(request, "scans.html")
 
 
-def datalinks(request):
+def downloads(request):
     # This is just to show how to get data from python into the page.
     # You could just edit the template directly to add this static text
     # too.
 
-    return render(request, "data-links.html")
+    return render(request, "downloads.html")
 
 
 def usecases(request):
