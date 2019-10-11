@@ -14,7 +14,7 @@
 <h3>Code.json Dashboard</h3>
 <ul>
 <li><a href="https://cg-bbe64741-a601-484f-bc3b-e8eef3c28590.app.cloud.gov/site/18f/site-scanning-dashboard/codegov/">Known code.json locations</a> - A page that has hardcoded with the logic for identifying present enterprise code inventories.</li>
-<li><a href="https://site-scanning.app.cloud.gov/search200/200-codejson/?200page=/code.json&mimetype=application/json">Code.json Dashboard</a> - A browsable, filterable view of the scan data.</li>
+<li><a href="{% url 'search200' displaytype='200-codejson' %}?200page=/code.json&mimetype=application/json">Code.json Dashboard</a> - A browsable, filterable view of the scan data.</li>
 <!--<li><a href="https://site-scanning.app.cloud.gov/search200/?200page=/code.json&q=200">code.json Dashboard v1</a> - </li>-->
 </ul>
 
@@ -54,7 +54,7 @@
 
 <h3>USWDS Dashboard</h3>
 <ul>
-<li><a href="https://site-scanning.app.cloud.gov/searchUSWDS/">General USWDS Dashboard</a> - A browsable, filterable view of the scan data.</li>
+<li><a href="{% url 'searchUSWDS' %}">General USWDS Dashboard</a> - A browsable, filterable view of the scan data.</li>
 </ul>
 
 <!--<h3>OpenGov Hub Dashboards</h3>
@@ -72,7 +72,7 @@
 
 <h3>High Level Dashboards</h3>
 <ul>
-<li><a href="https://site-scanning.app.cloud.gov/search200/">General 200 Scanner Dashboard</a> - A browsable, filterable view of the scan data.</li>
+<li><a href="{% url 'search200' %}">General 200 Scanner Dashboard</a> - A browsable, filterable view of the scan data.</li>
 </ul>
 
 {% endblock %}

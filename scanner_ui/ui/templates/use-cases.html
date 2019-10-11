@@ -79,7 +79,7 @@
 <p><strong>Process:</strong> </p>
 <p>
 <ol>
-<li>Navigate to the <a href="https://site-scanning.app.cloud.gov/sitemap/">sitemap.xml dashboard</a></li>
+<li>Navigate to the <a href="{% url 'sitemap' %}">sitemap.xml dashboard</a></li>
 <li>Filter for relevant agency, branch, or organization</li>
 <li>Note the URL count and locations in the robots.txt fields to the far right of the chart</li>
 </ol>
@@ -88,7 +88,7 @@
 <p><strong>Process:</strong> </p>
 <p>
 <ol>
-<li>Navigate to the <a href="https://site-scanning.app.cloud.gov/search200/200-robotstxt/?200page=/robots.txt">robots.txt dashboard</a></li>
+<li>Navigate to the <a href="{% url 'search200' displaytype='200-robotstxt' %}?200page=/robots.txt">robots.txt dashboard</a></li>
 <li>Filter for relevant agency, branch, or organization</li>
 <li>Note the content type and file size fields to the far right of the chart</li>
 </ol>
@@ -101,7 +101,7 @@
 <p><strong>Process:</strong> </p>
 <p>
 <ol>
-<li>Navigate to the <a href="https://site-scanning.app.cloud.gov/searchUSWDS/">USWDS dashboard</a></li>
+<li>Navigate to the <a href="{% url 'searchUSWDS' %}">USWDS dashboard</a></li>
 <li>Choose a score such as `50` to input into the Score Filter so as to filter the results for domains that have implemented USWDS past a certain degree.</li>
 </ol>
 </p>
@@ -115,7 +115,6 @@
 </ol>
 </p>-->
 
-https://site-scanning.app.cloud.gov/privacy/
 
 
 <h3>Agency Privacy Officer</h3>
@@ -123,7 +122,7 @@ https://site-scanning.app.cloud.gov/privacy/
 <p><strong>Process:</strong> </p>
 <p>
 <ol>
-<li>Navigate to the <a href="https://site-scanning.app.cloud.gov/privacy/">Privacy Page dashboard</a></li>
+<li>Navigate to the <a href="{% url 'privacy' %}">Privacy Page dashboard</a></li>
 <li>Filter for relevant agency, branch, or organization</li>
 <li>Note the emails and H1, H2, H3 Headers columns to the far right of the chart</li></ol>
 </p>
