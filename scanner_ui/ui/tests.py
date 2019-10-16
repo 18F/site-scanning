@@ -100,6 +100,20 @@ class CheckUI(SimpleTestCase):
             response = self.client.get(i)
             self.assertGreaterEqual(len(response.json()), 1, msg=i)
 
+    def test_mimetypes(self):
+        """if we select a mimetype, we should not get other mimetypes"""
+        page = '/search200/200-codejson/?present=All&200page=%2Fcode.json&mimetype=application%2Fxml'
+        response = self.client.get(page)
+        self.assertNotIn(b'<td>text/html', response.content)
+        self.assertNotIn(b'<td>application/json', response.content)
+
+    def test_selected_mimetypes(self):
+        """if we select a mimetype, we should get that mimetype"""
+        page = '/search200/200-codejson/?present=All&200page=%2Fcode.json&mimetype=application%2Fjson'
+        response = self.client.get(page)
+        self.assertNotIn(b'<td>text/html', response.content)
+        self.assertIn(b'<td>application/json', response.content)
+
     def test_csv_pages(self):
         """ csv pages should generate proper csv"""
         pages = [
