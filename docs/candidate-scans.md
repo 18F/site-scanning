@@ -52,7 +52,12 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 ### [Search.gov](https://search.gov/) Adoption
 * Detect the use of Search.gov on goverment websites.
 
+
 ## Other Ideas
+
+
+### Privacy Officers 
+* more of the material from [these reports](https://www.dhs.gov/sites/default/files/publications/FY%202018%20SAOP%20FISMA%20Metrics-508c.pdf)
 
 * **404 pages** - Discover `404` pages to uncover broken government websites.
 * **Website Performance** - Monitor government website performance, possibly using [Lighthouse](https://developers.google.com/web/tools/lighthouse/).
