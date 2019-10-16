@@ -26,34 +26,18 @@ def about(request):
 
 
 def scans(request):
-    # This is just to show how to get data from python into the page.
-    # You could just edit the template directly to add this static text
-    # too.
-
     return render(request, "scans.html")
 
 
 def downloads(request):
-    # This is just to show how to get data from python into the page.
-    # You could just edit the template directly to add this static text
-    # too.
-
     return render(request, "downloads.html")
 
 
 def usecases(request):
-    # This is just to show how to get data from python into the page.
-    # You could just edit the template directly to add this static text
-    # too.
-
     return render(request, "use-cases.html")
 
 
 def presentationlayers(request):
-    # This is just to show how to get data from python into the page.
-    # You could just edit the template directly to add this static text
-    # too.
-
     return render(request, "presentation-layers.html")
 
 
