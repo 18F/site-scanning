@@ -2,10 +2,6 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 
 ## Office of Products and Programs (OPP) - [Data & Analytics Portfolio](https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services/office-of-products-and-programs#DSP)
 
-
-/Cj
-
-
 ### [Digital Analytics Program (DAP)](https://digital.gov/dap/) Adoption 
 * Take the full subdomain list from Pulse's https scan (roughly put, the closest we have to a complete list of all federal websites).  
 * Take the full subdomain list of websites that have implemented DAP.  
@@ -60,6 +56,7 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * more of the material from [these reports](https://www.dhs.gov/sites/default/files/publications/FY%202018%20SAOP%20FISMA%20Metrics-508c.pdf)
 
 * **404 pages** - Discover `404` pages to uncover broken government websites.
+* /Cj
 * **Website Performance** - Monitor government website performance, possibly using [Lighthouse](https://developers.google.com/web/tools/lighthouse/).
 * **Mobile Responsiveness** - Monitor government website mobile responsiveness, possibly using [Google's Mobile-Friendly Test](https://search.google.com/test/mobile-friendly).
 * **CDNs** - Monitor government's content distribution networks.
