@@ -100,10 +100,10 @@ to understand everything you can do.
 
 If, for some reason, there is a desire to re-run a scan or something like that, you will
 need to:
-	* Delete today's scan:  If you do a new scan, you will have two scans in the index, and you'll
-	  get double results.  Follow the "Direct queries to Elasticsearch" section above to get
-	  you in, then delete that day's index using a command like `curl -k -X DELETE $ESURL/2019-07-29-*`,
-	  except with today's date.
-	* Start the scan task:  Make sure you have the cf tools installed and you are authenticated
-	  and in the proper org/space, then run `cf run-task scanner-ui /app/scan_engine.sh -m 1024M`.
-	* You can monitor the scan progress by watching `cf logs scanner-ui`.
+* Delete today's scan:  If you do a new scan, you will have two scans in the index, and you'll
+  get double results.  Follow the "Direct queries to Elasticsearch" section above to get
+  you in, then delete that day's index using a command like `curl -k -X DELETE $ESURL/2019-07-29-*`,
+  except with today's date.
+* Start the scan task:  Make sure you have the cf tools installed and you are authenticated
+  and in the proper org/space, then run `cf run-task scanner-ui /app/scan_engine.sh -m 1024M`.
+* You can monitor the scan progress by watching `cf logs scanner-ui`.
