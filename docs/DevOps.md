@@ -22,7 +22,8 @@ or you can use the cloud.gov [Kibana instance](https://logs.fr.cloud.gov/).
 ### cf commandline tools
 
 You can stream the logs directly once authenticated to cloud.gov and in the proper org/space
-by saying `cf logs scanner-ui`.  As you do things, you will see log messages streaming by.
+by saying `cf logs scanner-ui`.  As you do things on the site, you will see log messages
+streaming by.
 
 ### cloud.gov Kibana
 
