@@ -127,9 +127,18 @@ Either that or the `domain-scan/scanners/200scanner.py` scanner.
 
 ### Testing
 
-The scanner will output it's scan data into `domain-scan/cache/<scantype>/*.json`.
-These json files will be copied into the s3 bucket by the scanning engine, so
-make sure they have good data.
+The primary test harness is the `./test.sh` script, which will fire
+up an elasticsearch and S3 infrastructure, run a scan, load the data
+into ES/S3, and then run the python `./manage.py test` command, as well
+as do some other tests to make sure that S3 got populated.
+
+The one downside to this is that there is an actual live scan done on
+18f.gov and gsa.gov, so if ever they are down/offline or change how
+they give data out, tests may start failing, and you may have to fix
+that.
+
+Every commit will trigger a test run by CircleCI, which you should
+be able to see the status of in Github.
 
 If you need further testing, there are a few scripts in this repo which
 you might be able to look at in the `utilities` directory, like the `checkscanscores.sh`
