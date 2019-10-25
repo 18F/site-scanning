@@ -35,9 +35,9 @@ class CheckAPI(SimpleTestCase):
         self.assertEqual(len(jsondata), 2)
         self.assertEqual(jsondata[0]['scantype'], 'uswds2')
 
-    def test_dap_scans_works(self):
+    def test_dap_scan_works(self):
         """scans/dap endpoint works"""
         response = self.client.get("/api/v1/scans/dap/gsa.gov/")
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'dap')
-        self.assertEqual(jsondata['data']['dap_parameters']['agency'], 'GSA')
+        self.assertIn('GSA', jsondata['data']['dap_parameters']['agency'])
