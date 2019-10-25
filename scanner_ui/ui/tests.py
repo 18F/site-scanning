@@ -69,7 +69,7 @@ class CheckUI(SimpleTestCase):
     def test_home(self):
         """home page has proper data"""
         response = self.client.get("/")
-        self.assertIn(b'Number of scans collected:</strong> 10', response.content)
+        self.assertIn(b'Number of scans collected:</strong> 12', response.content)
 
     def test_about(self):
         """about page has proper data"""
