@@ -14,6 +14,7 @@ SCANTYPES="
 	uswds2
 	sitemap
 	privacy
+	dap
 "
 
 # This is where you set the repo/branch
