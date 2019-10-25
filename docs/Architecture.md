@@ -7,8 +7,10 @@ There are three components to this project:
   types of scans.  They will be used by the scanning engine, or can be executed by hand.
   It is anticipated that over time, more plugins will be created to expand the functionality
   of the scanning engine.
-- *Scan Result UI:*  This is a web frontend that implements a REST API to download/search
+- *Scan Result UI:*  This is a web frontend that also implements a REST API to download/search
   scan results.
+
+![diagram of site-scanning architecture](scanner-ui.png)
 
 
 ## Continuous Deployment
