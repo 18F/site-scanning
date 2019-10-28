@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from django.test import Client
 import csv
+import re
 from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain
 
 # Create your tests here.
@@ -69,7 +70,9 @@ class CheckUI(SimpleTestCase):
     def test_home(self):
         """home page has proper data"""
         response = self.client.get("/")
-        self.assertIn(b'Number of scans collected:</strong> 12', response.content)
+        self.assertIn(b'Number of scans collected:</strong>', response.content)
+        res = re.findall(r'Number of scans collected:</strong> (.*)</li>', response.content.decode())
+        self.assertGreaterEqual(int(res[0]), 12)
 
     def test_about(self):
         """about page has proper data"""
