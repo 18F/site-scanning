@@ -139,7 +139,6 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "ui/static"),
 ]
 
-
 # REST config
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -156,6 +155,7 @@ if 'VCAP_SERVICES' not in os.environ:
         # default to an ES running on localhost
         os.environ['ESURL'] = "http://localhost:9200"
 else:
+    STATIC_ROOT = '/app/staticfiles'
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
     os.environ['ESURL'] = services['elasticsearch56'][0]['credentials']['uri']
