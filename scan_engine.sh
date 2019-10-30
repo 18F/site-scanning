@@ -24,19 +24,8 @@ BRANCH="tspencer/200scanner"
 
 # How many days to keep around in the index
 INDEXDAYS=30
-
-# set up variables that you need to get this to run as a task.
-export PYTHONPATH=/home/vcap/deps/2
-export PATH=/usr/local/bin:/usr/bin:/bin:/home/vcap/app/.local/bin:$PATH
-export PATH=/home/vcap/deps/0/bin:$PATH
-export PATH=/home/vcap/deps/1/bin:$PATH
-export PATH=/home/vcap/deps/2/bin:$PATH
-export LD_LIBRARY_PATH=/home/vcap/deps/0/lib
-export LD_LIBRARY_PATH=/home/vcap/deps/1/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/home/vcap/deps/2/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=/home/vcap/deps/0/lib
-export LIBRARY_PATH=/home/vcap/deps/1/lib:$LIBRARY_PATH
-export LIBRARY_PATH=/home/vcap/deps/2/lib:$LIBRARY_PATH
+NUMSCANS=$(echo "$SCANTYPES" | wc -l)
+let "INDEXLINES=$INDEXDAYS * ($NUMSCANS - 2)"
 
 # make sure the credentials are set
 if [ -z "$AWS_ACCESS_KEY_ID" ] ; then
@@ -81,13 +70,17 @@ else
 	cd domain-scan
 fi
 
-python3 -m venv venv
+# This is a little fragile in that if we ever change the order of the buildpacks or add more,
+# this will need to be updated.
+/home/vcap/deps/2/bin/python3 -m venv venv
 . venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
 pip3 install --upgrade --user awscli
 
 # install more packages for the chrome headless stuff
+# These _should_ be already installed by the apt buildpack, but this is here to ensure
+# that the test environment gets them too.
 apt-get update
 apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
@@ -175,7 +168,7 @@ for i in ${SCANTYPES} ; do
 done
 
 # delete old indexes in ES
-curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | sort -rn | head -"$INDEXDAYS" > /tmp/keepers
+curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | sort -rn | head -"$INDEXLINES" > /tmp/keepers
 curl -s "$ESURL/_cat/indices" | grep -E '[0-9]{4}-[0-9]{2}-[0-9]{2}-.+' | awk '{print $3}' | while read line ; do
 	if echo "$line" | grep -Ff /tmp/keepers >/dev/null ; then
 		echo keeping "$line" index
