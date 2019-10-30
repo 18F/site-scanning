@@ -57,7 +57,7 @@ fi
 curl -s "https://site-scanning.app.cloud.gov/searchUSWDS/json/?date=${TODAY}&q=${SCORE}" | jq -r '.[] | .domain' | sort > /tmp/todaydomains.$$
 curl -s "https://site-scanning.app.cloud.gov/searchUSWDS/json/?q=${SCORE}&date=${EARLIER}" | jq -r '.[] | .domain' | sort > /tmp/earlierdomains.$$
 
-echo "# Comparing $EARLIER with $TODAY:"
+echo "# Comparing sites with a score over $SCORE - $EARLIER with $TODAY:"
 diff /tmp/earlierdomains.$$ /tmp/todaydomains.$$
 
 rm -f /tmp/earlierdomains.$$ /tmp/todaydomains.$$
