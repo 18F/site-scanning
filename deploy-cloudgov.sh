@@ -48,7 +48,7 @@ if [ "$1" = "zdt" ] ; then
 	# two scanner-ui apps to exist in the org/space at one time.
 	cf blue-green-deploy scanner-ui -f manifest.yml --delete-old-apps || exit 1
 else
-	cf push || exit 1
+	cf push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack || exit 1
 fi
 
 # tell people where to go
