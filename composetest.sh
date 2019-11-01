@@ -43,7 +43,7 @@ SCANTYPES="
 # do a test that checks if the s3 bucket contains data
 echo "checking what is in the s3 bucket"
 for i in $SCANTYPES ; do
-	aws "$S3ENDPOINT" s3 ls "s3://$BUCKETNAME/$i/" | grep 18f.gov >/dev/null || cleanup "$i s3 bucket does not contain a selected scan"
+	aws "$S3ENDPOINT" s3 ls "s3://$BUCKETNAME/$i/" | grep 18f.gov >/dev/null || cleanup "$i s3 bucket does not contain the 18f.gov scan"
 done
 
 # test that there are indexes available

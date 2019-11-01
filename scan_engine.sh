@@ -72,17 +72,21 @@ fi
 
 # This is a little fragile in that if we ever change the order of the buildpacks or add more,
 # this will need to be updated.
-/home/vcap/deps/2/bin/python3 -m venv venv
+if [ -x /home/vcap/deps/2/bin/python3 ] ; then
+	/home/vcap/deps/2/bin/python3 -m venv venv
+else
+	python3 -m venv venv
+fi
 . venv/bin/activate
 pip3 install -r requirements.txt
 pip3 install -r requirements-scanners.txt
-pip3 install --upgrade --user awscli
+pip3 install --upgrade awscli
 
 # install more packages for the chrome headless stuff
 # These _should_ be already installed by the apt buildpack, but this is here to ensure
 # that the test environment gets them too.
 apt-get update
-apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+apt-get install -y awscli gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
 # install node stuff for third_parties plugin
 if [ -d ../node_modules ] ; then
@@ -183,7 +187,7 @@ done
 for i in ${SCANTYPES} ; do
 	echo "copying $i data to s3://$BUCKET/$i/"
 	# The S3ENDPOINT thing is so we can send this to a local minio instance for testing
-	if aws "$S3ENDPOINT" s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
+	if aws $S3ENDPOINT s3 cp "cache/$i/" "s3://$BUCKET/$i/" --recursive --only-show-errors ; then
 		echo "copy of $i to s3 bucket successful"
 	else
 		echo "copy of $i to s3 bucket errored out"
