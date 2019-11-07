@@ -57,6 +57,10 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 
 ### Privacy Officers 
 * more of the material from [these reports](https://www.dhs.gov/sites/default/files/publications/FY%202018%20SAOP%20FISMA%20Metrics-508c.pdf)
+* Presence of PII
+* Presence of forms 
+* Form fields (perhaps fed from a manually generated list of URLS)
+
 
 * **404 pages** - Discover `404` pages to uncover broken government websites.
 * /Cj
