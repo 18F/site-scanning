@@ -459,6 +459,26 @@ def search200(request, displaytype=None):
             i['column'] = list(column.values())
             displaytypetitle = 'robots.txt Scan Search'
 
+        # 200-dap style display
+        elif displaytype == '200-dap':
+            column = {}
+            column['Domain'] = i.domain
+            column['Agency'] = i.agency
+            column['Organization'] = i.organization
+            column['Branch'] = i.domaintype
+            try:
+                if i.data['dap_detected']:
+                    column['DAP Detected'] = "True"
+                    column['DAP Parameters'] = i.data['dap_parameters']
+            except Exception as e:
+                column['DAP Detected'] = "False"
+                column['DAP Parameters'] = i.data
+            # store the column in the result, also populate the columns now, since
+            # the results seem to be a type of dictionary that doesn't respond to .keys()
+            columns = list(column.keys())
+            i['column'] = list(column.values())
+            displaytypetitle = 'DAP Scan Search'
+
         # default to the basic 200 scans search
         else:
             column = {}

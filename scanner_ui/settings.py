@@ -155,6 +155,9 @@ if 'VCAP_SERVICES' not in os.environ:
         # default to an ES running on localhost
         os.environ['ESURL'] = "http://localhost:9200"
 else:
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
     STATIC_ROOT = '/app/staticfiles'
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)

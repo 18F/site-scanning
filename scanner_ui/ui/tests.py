@@ -210,6 +210,15 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'<td>200</td>', response.content)
 
+    def test_200dappage(self):
+        """search200/200-dap page responds properly"""
+        response = self.client.get('/search200/200-dap/')
+        self.assertIn(b'DAP Scan Search', response.content)
+        self.assertIn(b'18f.gov', response.content)
+        self.assertIn(b'gsa.gov', response.content)
+        self.assertIn(b'True', response.content)
+        self.assertNotIn(b'False', response.content)
+
     def test_200codejsonpage(self):
         """search200/200-codejson page responds properly"""
         response = self.client.get('/search200/200-codejson/', {'200page': '/code.json', 'mimetype': 'application/json'})
