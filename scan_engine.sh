@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This script is what gets the list of domains to scan, 
 # runs the scanners, collects the data, and puts it into s3.
@@ -102,6 +102,15 @@ if [ -f "$DOMAINCSV" ] ; then
 else
 	wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
 fi
+
+# uncomment this for doing quick testing on a small set of domains, but
+# BE CAREFUL NOT TO CHECK THIS IN IF YOU DO THAT!
+# cat <<EOF >/tmp/domains.csv
+# domain
+# gsa.gov
+# 18f.gov
+# cloud.gov
+# EOF
 
 # clean up old scans (if there are any)
 if [ -d ./cache ] ; then
