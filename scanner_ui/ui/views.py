@@ -72,6 +72,7 @@ def search200json(request):
     mimetype = request.GET.get('mimetype')
     org = request.GET.get('org')
     present = request.GET.get('present')
+    displaytype = request.GET.get('displaytype')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -113,13 +114,17 @@ def search200json(request):
         # mix in pagedata scan if we can
         if my200page != 'All Scans':
             scan = mixpagedatain(scan, indexbase)
-            pagedata = scan['pagedata']
+            extradata = scan['extradata']
 
             # keys cannot have . in them, so do this to make it look proper
-            del scan['pagedata']
-            scan['pagedata'] = {}
-            for k, v in pagedata.items():
-                scan['pagedata'][periodize(k)] = v
+            del scan['extradata']
+            scan['extradata'] = {}
+            for k, v in extradata.items():
+                scan['extradata'][periodize(k)] = v
+
+        # mix in DAP data if needed
+        if displaytype == 'dap':
+            scan = mixpagedatain(scan, indexbase, 'dap')
 
         response.write(json.dumps(scan))
         if count > 1:
@@ -172,9 +177,9 @@ def search200csv(request):
     fieldnames.remove('data')
     for k, v in firsthit['data'].items():
         fieldnames.append(periodize(k))
-    if 'pagedata' in fieldnames:
-        fieldnames.remove('pagedata')
-        for k, v in firsthit['pagedata'].items():
+    if 'extradata' in fieldnames:
+        fieldnames.remove('extradata')
+        for k, v in firsthit['extradata'].items():
             for field, value in v.items():
                 fieldnames.append(periodize(k) + ' ' + field)
 
@@ -189,9 +194,9 @@ def search200csv(request):
             scan = mixpagedatain(scan, indexbase)
 
             # pull the page data out into the top level to make it look better
-            pagedata = scan['pagedata']
-            del scan['pagedata']
-            for k, v in pagedata.items():
+            extradata = scan['extradata']
+            del scan['extradata']
+            for k, v in extradata.items():
                 for field, value in v.items():
                     scan[periodize(k) + ' ' + field] = value
 
@@ -228,7 +233,7 @@ def search200(request, displaytype=None):
             for z in i.data.to_dict().keys():
                 pagemap[periodize(z)] = 1
         my200pages = list(pagemap.keys())
-    except:
+    except Exception:
         my200pages = []
     my200pages.insert(0, 'All Scans')
 
@@ -298,14 +303,17 @@ def search200(request, displaytype=None):
     # get list of domains to search for in the pagedata index
     for i in results:
         pagedomainlist.insert(0, i.domain)
-    s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=pagedomainlist)
-    pagedatastructure = {}
-    # get data from pagedata index
+    if displaytype == 'dap':
+        s = Search(using=es, index=indexbase + '-dap').filter('terms', domain=pagedomainlist)
+    else:
+        s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=pagedomainlist)
+    extradata = {}
+    # get data from the other index
     try:
         for i in s.scan():
-            pagedatastructure[i.domain] = i.data.to_dict()
-    except:
-        logging.error('could not find pagedata index to create the pagedatastructure')
+            extradata[i.domain] = i.data.to_dict()
+    except Exception:
+        logging.error('could not find other index to create the extradata')
 
     # create columns for us to render in the page
     columns = []
@@ -341,10 +349,10 @@ def search200(request, displaytype=None):
                 else:
                     column['Status'] = 'Present'
                 column['Response Code'] = i.data[selectedpage]
-            if i.domain in pagedatastructure and my200page != 'All Scans':
-                column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-                column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-                column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+            if i.domain in extradata and my200page != 'All Scans':
+                column['Final URL'] = extradata[i.domain][selectedpage]['final_url']
+                column['Content Type'] = extradata[i.domain][selectedpage]['content_type']
+                column['File Size (B)'] = extradata[i.domain][selectedpage]['content_length']
             else:
                 column['Final URL'] = ''
                 column['Content Type'] = ''
@@ -373,12 +381,12 @@ def search200(request, displaytype=None):
                 else:
                     column['Status'] = 'Present'
                 column['Response Code'] = i.data[selectedpage]
-            if i.domain in pagedatastructure and my200page != 'All Scans':
-                column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-                column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-                column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
-                column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
-                column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
+            if i.domain in extradata and my200page != 'All Scans':
+                column['Final URL'] = extradata[i.domain][selectedpage]['final_url']
+                column['Content Type'] = extradata[i.domain][selectedpage]['content_type']
+                column['json Items'] = extradata[i.domain][selectedpage]['json_items']
+                column['File Size (B)'] = extradata[i.domain][selectedpage]['content_length']
+                column['Code.gov Measurement Type'] = extradata[i.domain][selectedpage]['codegov_measurementtype']
             else:
                 column['Final URL'] = ''
                 column['Content Type'] = ''
@@ -409,12 +417,12 @@ def search200(request, displaytype=None):
                 else:
                     column['Status'] = 'Present'
                 column['Response Code'] = i.data[selectedpage]
-            if i.domain in pagedatastructure and my200page != 'All Scans':
-                column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-                column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-                column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
-                column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
-                column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
+            if i.domain in extradata and my200page != 'All Scans':
+                column['Final URL'] = extradata[i.domain][selectedpage]['final_url']
+                column['Content Type'] = extradata[i.domain][selectedpage]['content_type']
+                column['json Items'] = extradata[i.domain][selectedpage]['json_items']
+                column['File Size (B)'] = extradata[i.domain][selectedpage]['content_length']
+                column['Opendata Conformity'] = extradata[i.domain][selectedpage]['opendata_conforms_to']
             else:
                 column['Final URL'] = ''
                 column['Content Type'] = ''
@@ -445,10 +453,10 @@ def search200(request, displaytype=None):
                 else:
                     column['Status'] = 'Present'
                 column['Response Code'] = i.data[selectedpage]
-            if i.domain in pagedatastructure and my200page != 'All Scans':
-                column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-                column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-                column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
+            if i.domain in extradata and my200page != 'All Scans':
+                column['Final URL'] = extradata[i.domain][selectedpage]['final_url']
+                column['Content Type'] = extradata[i.domain][selectedpage]['content_type']
+                column['File Size (B)'] = extradata[i.domain][selectedpage]['content_length']
             else:
                 column['Final URL'] = ''
                 column['Content Type'] = ''
@@ -459,20 +467,20 @@ def search200(request, displaytype=None):
             i['column'] = list(column.values())
             displaytypetitle = 'robots.txt Scan Search'
 
-        # 200-dap style display
-        elif displaytype == '200-dap':
+        # dap style display
+        elif displaytype == 'dap':
             column = {}
             column['Domain'] = i.domain
             column['Agency'] = i.agency
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                if i.data['dap_detected']:
+                if extradata[i.domain]['dap_detected']:
                     column['DAP Detected'] = "True"
-                    column['DAP Parameters'] = i.data['dap_parameters']
-            except Exception as e:
+                    column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
+            except Exception:
                 column['DAP Detected'] = "False"
-                column['DAP Parameters'] = i.data
+                column['DAP Parameters'] = extradata[i.domain]
             # store the column in the result, also populate the columns now, since
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
@@ -492,13 +500,13 @@ def search200(request, displaytype=None):
                 column['Response Code'] = ''
             else:
                 column['Response Code'] = i.data[selectedpage]
-            if i.domain in pagedatastructure and my200page != 'All Scans':
-                column['File Size (B)'] = pagedatastructure[i.domain][selectedpage]['content_length']
-                column['Content Type'] = pagedatastructure[i.domain][selectedpage]['content_type']
-                column['Final URL'] = pagedatastructure[i.domain][selectedpage]['final_url']
-                column['json Items'] = pagedatastructure[i.domain][selectedpage]['json_items']
-                column['Opendata Conformity'] = pagedatastructure[i.domain][selectedpage]['opendata_conforms_to']
-                column['Code.gov Measurement Type'] = pagedatastructure[i.domain][selectedpage]['codegov_measurementtype']
+            if i.domain in extradata and my200page != 'All Scans':
+                column['File Size (B)'] = extradata[i.domain][selectedpage]['content_length']
+                column['Content Type'] = extradata[i.domain][selectedpage]['content_type']
+                column['Final URL'] = extradata[i.domain][selectedpage]['final_url']
+                column['json Items'] = extradata[i.domain][selectedpage]['json_items']
+                column['Opendata Conformity'] = extradata[i.domain][selectedpage]['opendata_conforms_to']
+                column['Code.gov Measurement Type'] = extradata[i.domain][selectedpage]['codegov_measurementtype']
             else:
                 column['File Size (B)'] = ''
                 column['Content Type'] = ''
@@ -512,7 +520,7 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            if displaytype == None or displaytype == 'None':
+            if displaytype is None or displaytype == 'None':
                 displaytypetitle = '200 Scans Search'
             else:
                 # We should never hit this, but if we do, we will still display a page, and the displaytype will help us debug.

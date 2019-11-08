@@ -162,12 +162,13 @@ def domainsWith(page, key, value, index):
 
 
 # mix in the pagedata scan in.
-def mixpagedatain(scan, indexbase):
+def mixpagedatain(scan, indexbase, indextype='pagedata'):
     es = Elasticsearch([os.environ['ESURL']])
-    s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=[scan['domain']])
+    suffix = '-' + indextype
+    s = Search(using=es, index=indexbase + suffix).filter('terms', domain=[scan['domain']])
     try:
         for i in s.scan():
-            scan['pagedata'] = i.data.to_dict()
+            scan['extradata'] = i.data.to_dict()
     except IndexError:
         logging.error('could not find pagedata index for mixing pagedata in')
     return scan
