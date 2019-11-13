@@ -46,12 +46,7 @@ fi
 if [ "$1" = "zdt" ] ; then
 	# Do a zero downtime deploy.  This requires enough memory for
 	# two scanner-ui apps to exist in the org/space at one time.
-	# XXX This won't work because it can't handle multiple buildpacks
-	# cf blue-green-deploy scanner-ui -f manifest.yml --delete-old-apps || exit 1
-	# XXX these won't work because...  "Failed to stage build: No process types returned from stager"
-	# cf v3-zdt-push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack || exit 1
-	# cf7 push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack --strategy rolling || exit 1
-	cf push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack || exit 1
+	cf v3-zdt-push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack || exit 1
 else
 	cf push scanner-ui -b https://github.com/cloudfoundry/apt-buildpack -b nodejs_buildpack -b python_buildpack || exit 1
 fi

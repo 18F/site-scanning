@@ -143,6 +143,7 @@ def search200csv(request):
     mimetype = request.GET.get('mimetype')
     org = request.GET.get('org')
     present = request.GET.get('present')
+    displaytype = request.GET.get('displaytype')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -172,16 +173,22 @@ def search200csv(request):
 
     # pull the scan data out into the top level to make it look better
     firsthit = r.hits[0].to_dict()
-    firsthit = mixpagedatain(firsthit, indexbase)
+    if displaytype == 'dap':
+        firsthit = mixpagedatain(firsthit, indexbase, 'dap')
+    else:
+        firsthit = mixpagedatain(firsthit, indexbase)
     fieldnames = list(firsthit.keys())
     fieldnames.remove('data')
-    for k, v in firsthit['data'].items():
+    for k, _ in firsthit['data'].items():
         fieldnames.append(periodize(k))
     if 'extradata' in fieldnames:
         fieldnames.remove('extradata')
         for k, v in firsthit['extradata'].items():
-            for field, value in v.items():
-                fieldnames.append(periodize(k) + ' ' + field)
+            try:
+                for field, _ in v.items():
+                    fieldnames.append(periodize(k) + ' ' + field)
+            except Exception:
+                fieldnames.append(k)
 
     writer = csv.DictWriter(response, fieldnames=fieldnames)
     writer.writeheader()
@@ -191,7 +198,11 @@ def search200csv(request):
 
         # mix in pagedata scan if we can
         if my200page != 'All Scans':
-            scan = mixpagedatain(scan, indexbase)
+            # mix in DAP data if needed
+            if displaytype == 'dap':
+                scan = mixpagedatain(scan, indexbase, 'dap')
+            else:
+                scan = mixpagedatain(scan, indexbase)
 
             # pull the page data out into the top level to make it look better
             extradata = scan['extradata']

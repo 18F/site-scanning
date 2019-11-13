@@ -136,10 +136,11 @@ class CheckUI(SimpleTestCase):
         for i in pages:
             response = self.client.get(i)
             mycsv = csv.reader(str(response))
-            csvlines = 0
-            for z in mycsv:
-                csvlines = csvlines + 1
+            csvlines = len(list(mycsv))
             self.assertGreaterEqual(csvlines, 2, msg=i)
+
+        response = self.client.get('/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
+        self.assertIn(b'dap_detected', response.content)
 
     def test_200page_nopageselected(self):
         """200scanner page responds properly without a page selected"""
