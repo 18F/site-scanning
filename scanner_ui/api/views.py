@@ -96,7 +96,6 @@ class ScansViewset(viewsets.ViewSet):
 
     def scan(self, request, scantype=None, domain=None):
         scan = getScansFromES(scantype=scantype, domain=domain, request=request)
-        print('request is', request)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
         serializer = ScanSerializer(scan[0])
