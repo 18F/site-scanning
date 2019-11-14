@@ -10,11 +10,11 @@ Specifically, the scan [searches for](https://github.com/18F/domain-scan/blob/ts
 
 ## Details
 
-This scanner uses the presence of various elements as votes for or against a site employing USWDS. The use of USWDS is not binary — it's possible to employ limited aspects of the USWDS, since it amounts to a sort of a toolkit — so in practice we shouldn't say whether a site does or does not use USWDS, but instead how "USWDS-y" it is. The effect of this is that a score is returned, rather than a yes/no. The highest scores are around 150, and the floor is set at 0. The mode score is 0. Different elements are weighted differently, e.g. the appearance of the `Source Sans` or `Merriweather` fonts is worth less than the appearance of the `Public Sans` font, because the former two are commonplace, while the latter is bespoke for USWDS.
+This scanner uses the presence of various elements as votes for or against a site employing USWDS. The use of USWDS is not binary — it's possible to employ limited aspects of the USWDS, since it amounts to a sort of a toolkit — so in practice we shouldn't say whether a site does or does not use USWDS, but instead how "USWDS-y" it is. The effect of this is that a count is returned, rather than a yes/no. The highest counts are around 150, and the floor is set at 0. The mode count is 0. Different elements are weighted differently, e.g. the appearance of the `Source Sans` or `Merriweather` fonts is worth less than the appearance of the `Public Sans` font, because the former two are commonplace, while the latter is bespoke for USWDS.
 
-Scoring is performed slightly differently on the presence of `usa-*` CSS classes — those tags could reasonably appear as few as 10 times or as many as 100+, so those are tallied and the recorded score is based on the square root of the count, e.g. 36 becomes 6, 64 becomes 8, etc. (This is then multiplied by 5, weighting this metric highly.) The idea is to reduce score mobility as the count increases.
+Scoring is performed slightly differently on the presence of `usa-*` CSS classes — those tags could reasonably appear as few as 10 times or as many as 100+, so those are tallied and the recorded count is based on the square root of the count, e.g. 36 becomes 6, 64 becomes 8, etc. (This is then multiplied by 5, weighting this metric highly.) The idea is to reduce count mobility as the count increases.
 
-There is one scanned-for element that _reduces_ the scores — the presence of `<table>` in the HTML. Every table found on the home page is worth -10 points. At present, no sites using USWDS have a table on their home page.
+There is one scanned-for element that _reduces_ the counts — the presence of `<table>` in the HTML. Every table found on the home page is worth -10 points. At present, no sites using USWDS have a table on their home page.
 
 ### USWDS adoption
 
@@ -57,13 +57,13 @@ TBA
 ##### v 0.3
 
 * Added organization field
-* Implemented [2nd pass at scoring rubric](https://github.com/18F/domain-scan/pull/315)
+* Implemented [2nd pass at counting rubric](https://github.com/18F/domain-scan/pull/315)
 
 ##### v 0.2
 
 * Fixed bug that was wrongly associating 404 and 500 server codes with 200
 * Added domaintype and agency 
-* Refined the scoring model
+* Refined the counting model
 
 ##### v 0.1
 
