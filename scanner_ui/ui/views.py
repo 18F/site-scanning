@@ -496,9 +496,8 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                if extradata[i.domain]['dap_detected']:
-                    column['DAP Detected'] = "True"
-                    column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
+                column['DAP Detected'] = "True"
+                column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
             except Exception:
                 column['DAP Detected'] = "False"
                 column['DAP Parameters'] = extradata[i.domain]
@@ -518,9 +517,8 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                if extradata[i.domain]['known_services']:
-                    column['Known Services'] = extradata[i.domain]['known_services']
-                    column['Unknown Services'] = extradata[i.domain]['unknown_services']
+                column['Known Services'] = extradata[i.domain]['known_services']
+                column['Unknown Services'] = extradata[i.domain]['unknown_services']
             except Exception:
                 column['Known Services'] = []
                 column['Unknown Services'] = []
