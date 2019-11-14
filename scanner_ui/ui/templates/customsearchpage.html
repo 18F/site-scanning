@@ -47,9 +47,9 @@
     </select>
 
   <h2>Scan Results:</h2>
-    <a href="{% url jsonurl %}?date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">JSON Export</a>
+    <a href="{% url jsonurl %}?date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&displaytype={{displaytype | urlencode}}">JSON Export</a>
 
-    <a href="{% url csvurl %}?date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}">CSV Export</a>
+    <a href="{% url csvurl %}?date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&displaytype={{displaytype | urlencode}}">CSV Export</a>
 
     <div class="pagination">
     <p>Hits Per Page:

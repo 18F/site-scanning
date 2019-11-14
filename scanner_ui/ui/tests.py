@@ -58,10 +58,14 @@ class checkviewfunctions(SimpleTestCase):
         s = getquery(index)
         r = s.execute()
         myscan = r.hits[0].to_dict()
-        self.assertFalse('pagedata' in myscan)
+        self.assertFalse('extradata' in myscan)
         newscan = mixpagedatain(myscan, indexbase)
-        self.assertTrue('pagedata' in newscan)
-        self.assertTrue('/' in newscan['pagedata'])
+        self.assertTrue('extradata' in newscan)
+        self.assertTrue('/' in newscan['extradata'])
+
+        newscan = mixpagedatain(myscan, indexbase, 'dap')
+        self.assertTrue('extradata' in newscan)
+        self.assertTrue('dap_detected' in newscan['extradata'])
 
 
 class CheckUI(SimpleTestCase):
@@ -103,6 +107,9 @@ class CheckUI(SimpleTestCase):
             response = self.client.get(i)
             self.assertGreaterEqual(len(response.json()), 1, msg=i)
 
+        response = self.client.get('/search200/json/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
+        self.assertIn(b'dap_detected', response.content)
+
     def test_mimetypes(self):
         """if we select a mimetype, we should not get other mimetypes"""
         page = '/search200/200-codejson/?present=All&200page=%2Fcode.json&mimetype=application%2Fxml'
@@ -129,10 +136,11 @@ class CheckUI(SimpleTestCase):
         for i in pages:
             response = self.client.get(i)
             mycsv = csv.reader(str(response))
-            csvlines = 0
-            for z in mycsv:
-                csvlines = csvlines + 1
+            csvlines = len(list(mycsv))
             self.assertGreaterEqual(csvlines, 2, msg=i)
+
+        response = self.client.get('/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
+        self.assertIn(b'dap_detected', response.content)
 
     def test_200page_nopageselected(self):
         """200scanner page responds properly without a page selected"""
@@ -209,6 +217,24 @@ class CheckUI(SimpleTestCase):
         self.assertNotIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'<td>200</td>', response.content)
+
+    def test_200dappage(self):
+        """search200/dap/ page responds properly"""
+        response = self.client.get('/search200/dap/')
+        self.assertIn(b'DAP Scan Search', response.content)
+        self.assertIn(b'18f.gov', response.content)
+        self.assertIn(b'gsa.gov', response.content)
+        self.assertIn(b'True', response.content)
+        self.assertNotIn(b'False', response.content)
+
+    def test_200thirdpartyservicespage(self):
+        """search200/third_parties/ page responds properly"""
+        response = self.client.get('/search200/third_parties/')
+        self.assertIn(b'Third Party Services Search', response.content)
+        self.assertIn(b'18f.gov', response.content)
+        self.assertIn(b'gsa.gov', response.content)
+        self.assertIn(b'Known Services', response.content)
+        self.assertIn(b'Digital Analytics Program', response.content)
 
     def test_200codejsonpage(self):
         """search200/200-codejson page responds properly"""
