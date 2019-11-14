@@ -208,8 +208,11 @@ def search200csv(request):
             extradata = scan['extradata']
             del scan['extradata']
             for k, v in extradata.items():
-                for field, value in v.items():
-                    scan[periodize(k) + ' ' + field] = value
+                if displaytype == 'dap':
+                    scan[k] = v
+                else:
+                    for field, value in v.items():
+                        scan[periodize(k) + ' ' + field] = value
 
         # pull the scan data out into the top level to make it look better
         scandata = scan['data']
@@ -309,17 +312,24 @@ def search200(request, displaytype=None):
         page = paginator.page(paginator.num_pages)
     results = page.object_list.execute()
 
-    # mix in the pagedata scan into the page we are displaying.
+    # mix in the appropriate scan into the page we are displaying.
     pagedomainlist = []
-    # get list of domains to search for in the pagedata index
+    # get list of domains to search for in the proper index
     for i in results:
         pagedomainlist.insert(0, i.domain)
-    if displaytype == 'dap':
-        s = Search(using=es, index=indexbase + '-dap').filter('terms', domain=pagedomainlist)
+
+    # search the proper index
+    if displaytype is None:
+        displaytypeindex = indexbase + '-pagedata'
+    else:
+        displaytypeindex = indexbase + '-' + displaytype
+    if es.indices.exists(index=displaytypeindex):
+        s = Search(using=es, index=displaytypeindex).filter('terms', domain=pagedomainlist)
     else:
         s = Search(using=es, index=indexbase + '-pagedata').filter('terms', domain=pagedomainlist)
-    extradata = {}
+
     # get data from the other index
+    extradata = {}
     try:
         for i in s.scan():
             extradata[i.domain] = i.data.to_dict()
@@ -492,11 +502,35 @@ def search200(request, displaytype=None):
             except Exception:
                 column['DAP Detected'] = "False"
                 column['DAP Parameters'] = extradata[i.domain]
+            detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
+            column['Other Scan Results'] = request.build_absolute_uri(detailpath)
             # store the column in the result, also populate the columns now, since
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
             displaytypetitle = 'DAP Scan Search'
+
+        # third_parties style display
+        elif displaytype == 'third_parties':
+            column = {}
+            column['Domain'] = i.domain
+            column['Agency'] = i.agency
+            column['Organization'] = i.organization
+            column['Branch'] = i.domaintype
+            try:
+                if extradata[i.domain]['known_services']:
+                    column['Known Services'] = extradata[i.domain]['known_services']
+                    column['Unknown Services'] = extradata[i.domain]['unknown_services']
+            except Exception:
+                column['Known Services'] = []
+                column['Unknown Services'] = []
+            detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
+            column['Other Scan Results'] = request.build_absolute_uri(detailpath)
+            # store the column in the result, also populate the columns now, since
+            # the results seem to be a type of dictionary that doesn't respond to .keys()
+            columns = list(column.keys())
+            i['column'] = list(column.values())
+            displaytypetitle = 'Third Party Services Search'
 
         # default to the basic 200 scans search
         else:

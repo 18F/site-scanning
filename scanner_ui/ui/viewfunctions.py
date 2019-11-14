@@ -109,7 +109,7 @@ def getListFromFields(index, field, subfield=None):
                 for k, v in i[field].to_dict().items():
                     valuemap[v[subfield]] = 1
         values = list(valuemap.keys())
-    except:
+    except Exception:
         values = []
     values.sort()
     return values
@@ -161,7 +161,7 @@ def domainsWith(page, key, value, index):
     return list(domainmap.keys())
 
 
-# mix in the pagedata scan in.
+# mix in data from another scan in.
 def mixpagedatain(scan, indexbase, indextype='pagedata'):
     es = Elasticsearch([os.environ['ESURL']])
     suffix = '-' + indextype

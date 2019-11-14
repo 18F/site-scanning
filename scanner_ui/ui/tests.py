@@ -227,6 +227,15 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'True', response.content)
         self.assertNotIn(b'False', response.content)
 
+    def test_200thirdpartyservicespage(self):
+        """search200/third_parties/ page responds properly"""
+        response = self.client.get('/search200/third_parties/')
+        self.assertIn(b'Third Party Services Search', response.content)
+        self.assertIn(b'18f.gov', response.content)
+        self.assertIn(b'gsa.gov', response.content)
+        self.assertIn(b'Known Services', response.content)
+        self.assertIn(b'Digital Analytics Program', response.content)
+
     def test_200codejsonpage(self):
         """search200/200-codejson page responds properly"""
         response = self.client.get('/search200/200-codejson/', {'200page': '/code.json', 'mimetype': 'application/json'})
