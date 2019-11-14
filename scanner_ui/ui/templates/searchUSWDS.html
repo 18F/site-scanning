@@ -4,13 +4,13 @@
   <h1>USWDS Scans Search</h1>
   <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
   <p>This search will search the USWDS scanner results.  The query parameter
-    here will search for sites that have a score greater than or equal to the
+    here will search for sites that have an analysis count greater than or equal to the
     number you input.  
-    The USWDS score is an attempt to be able to autodetect USWDS sites
+    The USWDS analysis count is an attempt to be able to autodetect USWDS sites
     by searching for things that indicate that the people who created the site
-    used USWDS-related content.  The more things we find, the more the score
+    used USWDS-related content.  The more things we find, the more the count
     adds up.  It is not perfect, but we think it may be a useful indicator.
-    Details of how we make this score can be found in the
+    Details of how we make this count can be found in the
     <a href="https://github.com/18F/domain-scan/blob/tspencer/200scanner/scanners/uswds2.py#L35-L143">domain-scan codebase</a>.
     </p>
     <p>The best indicator if a site is an actual USWDS-compliant site is the
@@ -20,7 +20,7 @@
     </p>
 
   <form action="{% url 'searchUSWDS' %}" method="get">
-    Score Filter:
+    Analysis Count Filter:
   	{% if query == None %}
     <input name="q" type="text" placeholder="Search Here">
     {% else %}
@@ -109,12 +109,12 @@
   <table>
     <tr>
       <th>Domain</th>
-      <th>Score</th>
+      <th>Analysis</th>
       <th>USWDS Version</th>
       <th>Agency</th>
       <th>Organization</th>
       <th>Branch</th>
-      <th>Score Details</th>
+      <th>Analysis Details</th>
     </tr>
   	{% for scan in search_results %}
     <tr>
