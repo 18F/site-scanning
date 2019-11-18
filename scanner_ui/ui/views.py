@@ -496,11 +496,17 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
+                dapparams = ""
                 if extradata[i.domain]['dap_detected']:
                     column['DAP Detected'] = "True"
+                    for k, v in extradata[i.domain]['dap_parameters'].items():
+                        if dapparams == "":
+                            dapparams = k + ": " + ", ".join(v)
+                        else:
+                            dapparams = ", ".join([dapparams, k + ": " + ", ".join(v)])
                 else:
                     column['DAP Detected'] = "False"
-                column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
+                column['DAP Parameters'] = dapparams
             except Exception:
                 column['DAP Detected'] = "False"
                 column['DAP Parameters'] = ""

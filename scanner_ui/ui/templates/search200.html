@@ -123,7 +123,7 @@
   	{% for scan in search_results %}
     <tr>
       {% for data in scan.column %}
-        <td>{{data | safe | urlizetrunc:70}}</td>
+        <td>{{data | urlizetrunc:70}}</td>
       {% endfor %}
     </tr>
     {% endfor %}
