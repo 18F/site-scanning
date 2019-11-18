@@ -496,11 +496,14 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                column['DAP Detected'] = "True"
+                if extradata[i.domain]['dap_detected']:
+                    column['DAP Detected'] = "True"
+                else:
+                    column['DAP Detected'] = "False"
                 column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
             except Exception:
                 column['DAP Detected'] = "False"
-                column['DAP Parameters'] = extradata[i.domain]
+                column['DAP Parameters'] = ""
             detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
             column['Other Scan Results'] = request.build_absolute_uri(detailpath)
             # store the column in the result, also populate the columns now, since
@@ -517,8 +520,8 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                column['Known Services'] = extradata[i.domain]['known_services']
-                column['Unknown Services'] = extradata[i.domain]['unknown_services']
+                column['Known Services'] = ', '.join(extradata[i.domain]['known_services'])
+                column['Unknown Services'] = ', '.join(extradata[i.domain]['unknown_services'])
             except Exception:
                 column['Known Services'] = []
                 column['Unknown Services'] = []
