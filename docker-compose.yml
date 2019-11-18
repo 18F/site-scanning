@@ -33,3 +33,6 @@ services:
     depends_on:
       - es
       - minio
+  # zaproxy:
+  #   image: owasp/zap2docker-weekly
+  #   command: sleep 3600
