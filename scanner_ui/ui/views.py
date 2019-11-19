@@ -73,6 +73,7 @@ def search200json(request):
     org = request.GET.get('org')
     present = request.GET.get('present')
     displaytype = request.GET.get('displaytype')
+    domainsearch = request.GET.get('domainsearch')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -93,7 +94,7 @@ def search200json(request):
         present = "Present"
 
     # do the actual query here.
-    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
 
     response = HttpResponse(content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="200scan.json"'
@@ -144,6 +145,7 @@ def search200csv(request):
     org = request.GET.get('org')
     present = request.GET.get('present')
     displaytype = request.GET.get('displaytype')
+    domainsearch = request.GET.get('domainsearch')
 
     if my200page is None:
         my200page = 'All Scans'
@@ -164,7 +166,7 @@ def search200csv(request):
         present = "Present"
 
     # do the actual query here.
-    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
@@ -288,12 +290,15 @@ def search200(request, displaytype=None):
         "All"
     ]
 
+    # get domainsearch
+    domainsearch = request.GET.get('domainsearch')
+
     statuscodelocation = None
     if my200page != 'All Scans':
         statuscodelocation = 'data.' + deperiodize(my200page)
 
     # do the actual query here.
-    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation)
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
@@ -600,6 +605,7 @@ def search200(request, displaytype=None):
         'columns': columns,
         'displaytype': displaytype,
         'displaytypetitle': displaytypetitle,
+        'selected_domainsearch': domainsearch,
     }
 
     return render(request, "search200.html", context=context)

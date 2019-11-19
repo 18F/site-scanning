@@ -19,6 +19,12 @@ class checkviewfunctions(SimpleTestCase):
         s = getquery(index)
         self.assertEqual(s.count(), 2)
 
+    def test_getquerydomainsearch(self):
+        dates = getdates()
+        index = dates[1] + '-200scanner'
+        s = getquery(index, domainsearch='18f')
+        self.assertEqual(s.count(), 1)
+
     def test_getlistfromfields(self):
         dates = getdates()
         index = dates[1] + '-200scanner'

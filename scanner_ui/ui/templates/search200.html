@@ -6,6 +6,14 @@
   <p>This search will search the 200 scanner results.</p>
 
   <form action="{% url 'search200' displaytype=displaytype %}" method="get">
+    <b>Domain Search:</b>
+    {% if selected_domainsearch is None %}
+      <input type="text" name="domainsearch" placeholder="type an optional domain in here and hit return" size="80">
+    {% else %}
+      <input type="text" name="domainsearch" value="{{ selected_domainsearch }}" size="80">
+    {% endif %}
+    <br>
+
     <select name="present" onchange="this.form.submit()">
       {% for present in presentlist %}
         {% if selected_present == present %}
@@ -81,9 +89,9 @@
     </select>
 
   <h2>Scan Results:</h2>
-    <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}">JSON Export</a>
+    <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">JSON Export</a>
 
-    <a href="{% url 'search200csv' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}">CSV Export</a>
+    <a href="{% url 'search200csv' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">CSV Export</a>
 
     <div class="pagination">
     <p>Hits Per Page:
@@ -98,8 +106,8 @@
     </select></p>
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">&laquo; First</a>
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Previous</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -107,8 +115,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Next</a>
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Next</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
@@ -132,8 +140,8 @@
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">&laquo; First</a>
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Previous</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page=1&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">&laquo; First</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.previous_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -141,8 +149,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Next</a>
-            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}">Last &raquo;</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date| urlencode}}&page={{page_obj.next_page_number}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Next</a>
+            <a href="{% url 'search200' displaytype=displaytype %}?200page={{selected_200page | urlencode}}&date={{selected_date | urlencode}}&page={{page_obj.paginator.num_pages}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">Last &raquo;</a>
         {% endif %}
     </span>
   </div>
