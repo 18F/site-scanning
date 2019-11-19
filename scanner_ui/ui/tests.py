@@ -116,6 +116,12 @@ class CheckUI(SimpleTestCase):
         response = self.client.get('/search200/json/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
         self.assertIn(b'dap_detected', response.content)
 
+    def test_domain_filtered_json_page(self):
+        """json export pages filtered by domain should emit proper json"""
+        response = self.client.get('/search200/json/?200page=All%20Scans&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=gsa')
+        self.assertIn(b'gsa', response.content)
+        self.assertNotIn(b'18f', response.content)
+
     def test_mimetypes(self):
         """if we select a mimetype, we should not get other mimetypes"""
         page = '/search200/200-codejson/?present=All&200page=%2Fcode.json&mimetype=application%2Fxml'
@@ -146,7 +152,13 @@ class CheckUI(SimpleTestCase):
             self.assertGreaterEqual(csvlines, 2, msg=i)
 
         response = self.client.get('/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
-        self.assertIn(b'dap_detected', response.content)
+        self.assertIn(b'gsa', response.content)
+
+    def test_domain_filtered_csv_pages(self):
+        """ csv pages filtered by domain should generate proper csv"""
+        response = self.client.get('/search200/csv/?200page=All%20Scans&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=gsa')
+        self.assertIn(b'gsa', response.content)
+        self.assertNotIn(b'18f', response.content)
 
     def test_200page_nopageselected(self):
         """200scanner page responds properly without a page selected"""
