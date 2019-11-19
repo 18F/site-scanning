@@ -11,7 +11,7 @@ from elasticsearch_dsl.query import Range, Bool, Q
 # give different parameters to search the specified index and
 # thus have a generalized query interface rather than having a harcdoded
 # query for each view.
-def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None, statuscodelocation=None):
+def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None, statuscodelocation=None, domainsearch=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index)
 
@@ -68,6 +68,10 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
                 # no domains with the mimetype for this page found: reset to an empty query
                 s = s.query(~Q('match_all'))
 
+    if domainsearch is not None:
+        dquery = '*' + domainsearch + '*'
+        s = s.query("query_string", query=dquery, fields=['domain'])
+
     if sort is None:
         s = s.sort('domain')
     else:
@@ -106,7 +110,7 @@ def getListFromFields(index, field, subfield=None):
             if subfield is None:
                 valuemap[i[field]] = 1
             else:
-                for k, v in i[field].to_dict().items():
+                for _, v in i[field].to_dict().items():
                     valuemap[v[subfield]] = 1
         values = list(valuemap.keys())
     except Exception:
