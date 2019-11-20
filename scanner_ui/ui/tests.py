@@ -82,7 +82,7 @@ class CheckUI(SimpleTestCase):
     def test_scans(self):
         """scans page has proper data"""
         response = self.client.get("/scans/")
-        self.assertIn(b'This page lists each of the active scans and provides more information about them', response.content)
+        self.assertIn(b'This page describes each of the active scans and provides more information about them', response.content)
 
     def test_downloads(self):
         """downloads page has proper data"""
