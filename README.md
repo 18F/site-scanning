@@ -28,7 +28,7 @@ The prototype will return data that the stakeholder(s) identify as useful, and w
 ### Problem statement
 The current scanning infrastructure is not actively maintained, and some prototype scanners are sitting in a dev environment, un-deployed. There is no long-term solution for storing results (cloud.gov sandbox), and site scanning not architected to be either replicable (for interested parties to stand up their own copy of site scans) or extensible (for new, custom scans to be added to the suite). 
 
-### Scope of work and Milestones
+### Scope of work
 #### In scope
 - Rearchitecting existing code to make future scanners easier to deploy, more stable, and/or more accurate
 - Securing a place to house prototypes
