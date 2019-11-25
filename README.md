@@ -3,14 +3,13 @@
 Site scanning is the act of making simple queries to a defined list of government websites, to evaluate compliance with basic government standards and practices. They run automatically, and, with the use of serverless cloud infrastructure, cost about two dollars per daily scan.
 
 
-|  Project Links | Documentation  | Other  | 
+|  Project Links | Documentation  | Project Management  | 
 |---|---|---|
-|  [Homepage](https://site-scanning.app.cloud.gov/)  |  [Technical Overview]() | [Project Documents]()  | 
-| [Use Cases For Each Scan](https://site-scanning.app.cloud.gov/use-cases/)  | [Individual Scan Details]()  | [Past Scanning Efforts](https://github.com/18F/site-scanning/blob/documentation-update/docs/misc/history.md)  | 
-| [Dashboards And Other Presentation Layers](https://site-scanning.app.cloud.gov/presentation-layers/)  | [Project Milestones and Version History]() | []()  | 
-| [API And Direct Download Links](https://site-scanning.app.cloud.gov/downloads/)  | []()  | []()  | 
+|  [Homepage](https://site-scanning.app.cloud.gov/)  |  [Technical Notes](https://github.com/18F/site-scanning/tree/documentation-update/docs/technical-notes) | [Project Documents](https://github.com/18F/site-scanning/tree/documentation-update/docs/project-management)  | 
+| [Use Cases For Each Scan](https://site-scanning.app.cloud.gov/use-cases/)  | [Individual Scan Details](https://github.com/18F/site-scanning/tree/documentation-update/docs/scans)  | [Project Milestones and Version History](https://github.com/18F/site-scanning/blob/documentation-update/docs/project-management/project-milestones-version-history.md) |
+| [Dashboards And Other Presentation Layers](https://site-scanning.app.cloud.gov/presentation-layers/)  | [Individual Presentation Layer Details](https://github.com/18F/site-scanning/tree/documentation-update/docs/presentation-layers)  | [Past Scanning Efforts](https://github.com/18F/site-scanning/blob/documentation-update/docs/misc/history.md) |
+| [API And Direct Download Links](https://site-scanning.app.cloud.gov/downloads/)  | []()  | []()  |  
 | [Details Describing Each Scan](https://site-scanning.app.cloud.gov/scans/)  | []()  | []()  | 
-| []()  | []()  | []()  | 
 
 
 ## Overview
