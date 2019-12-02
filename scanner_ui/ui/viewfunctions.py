@@ -68,7 +68,7 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
                 # no domains with the mimetype for this page found: reset to an empty query
                 s = s.query(~Q('match_all'))
 
-    if domainsearch is not None:
+    if domainsearch is not None and domainsearch != 'None':
         dquery = '*' + domainsearch + '*'
         s = s.query("query_string", query=dquery, fields=['domain'])
 

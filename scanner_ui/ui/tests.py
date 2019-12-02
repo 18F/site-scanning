@@ -108,6 +108,7 @@ class CheckUI(SimpleTestCase):
             '/search200/json/?200page=/code.json&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=application/json',
             '/privacy/json/',
             '/sitemap/json/',
+            '/search200/json/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=None',
         ]
         for i in pages:
             response = self.client.get(i)
@@ -144,6 +145,7 @@ class CheckUI(SimpleTestCase):
             '/searchUSWDS/csv/',
             '/privacy/csv/',
             '/sitemap/csv/',
+            '/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap&domainsearch=None',
         ]
         for i in pages:
             response = self.client.get(i)

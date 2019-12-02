@@ -123,9 +123,11 @@ def search200json(request):
             for k, v in extradata.items():
                 scan['extradata'][periodize(k)] = v
 
-        # mix in DAP data if needed
+        # mix in extra data if needed
         if displaytype == 'dap':
             scan = mixpagedatain(scan, indexbase, 'dap')
+        if displaytype == 'third_parties':
+            scan = mixpagedatain(scan, indexbase, 'third_parties')
 
         response.write(json.dumps(scan))
         if count > 1:
@@ -177,6 +179,8 @@ def search200csv(request):
     firsthit = r.hits[0].to_dict()
     if displaytype == 'dap':
         firsthit = mixpagedatain(firsthit, indexbase, 'dap')
+    elif displaytype == 'third_parties':
+        firsthit = mixpagedatain(firsthit, indexbase, 'third_parties')
     else:
         firsthit = mixpagedatain(firsthit, indexbase)
     fieldnames = list(firsthit.keys())
@@ -203,6 +207,8 @@ def search200csv(request):
             # mix in DAP data if needed
             if displaytype == 'dap':
                 scan = mixpagedatain(scan, indexbase, 'dap')
+            elif displaytype == 'third_parties':
+                scan = mixpagedatain(scan, indexbase, 'third_parties')
             else:
                 scan = mixpagedatain(scan, indexbase)
 
@@ -544,10 +550,10 @@ def search200(request, displaytype=None):
             column['Branch'] = i.domaintype
             try:
                 column['Known Services'] = ', '.join(extradata[i.domain]['known_services'])
-                column['Unknown Services'] = ', '.join(extradata[i.domain]['unknown_services'])
+                column['Unknown Service Domains'] = ', '.join(extradata[i.domain]['unknown_services'])
             except Exception:
                 column['Known Services'] = []
-                column['Unknown Services'] = []
+                column['Unknown Service Domains'] = []
             detailpath = reverse('domains-detail', kwargs={'domain': i.domain})
             column['Other Scan Results'] = request.build_absolute_uri(detailpath)
             # store the column in the result, also populate the columns now, since
