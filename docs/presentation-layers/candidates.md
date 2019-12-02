@@ -1,7 +1,13 @@
 
 
+## General Agency Use
 
-## At a Program Level
+* A page that lists the domains owned by an agency.
+* A page that lists the domains owned by an organization within an agency.  
+* A page that lists the websites owned by an agency.  
+
+
+## At at TTS Program Level
 
 
 ### USWDS
