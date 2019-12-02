@@ -16,6 +16,7 @@ This is a list of individual scans that _could_ be hosted on the Site Scanning p
 * Analyze the source code of each page that loads in order to detect the version of DAP code in use, as well as misconfigurations of the code.  
 
 ### Feedback Analytics Adoption 
+* Priority - page load time, other performance data.  
 * Monitor the adoption of Touchpoints.
 
 ### Use of 3rd Party Services
