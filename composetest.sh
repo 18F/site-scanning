@@ -25,6 +25,7 @@ cat <<EOF > "$DOMAINCSV"
 Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
 18F.GOV,Federal Agency - Executive,General Services Administration,18F,Washington,DC,tts-vulnerability-reports@gsa.gov
 GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
+afrh.gov
 EOF
 ./scan_engine.sh "$BUCKETNAME"
 
@@ -38,6 +39,8 @@ SCANTYPES="
 	uswds2
 	sitemap
 	privacy
+	dap
+	third_parties
 "
 
 # do a test that checks if the s3 bucket contains data

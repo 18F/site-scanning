@@ -185,6 +185,7 @@ def search200csv(request):
     for k, _ in firsthit['data'].items():
         fieldnames.append(periodize(k))
     if 'extradata' in fieldnames:
+        extrafieldnames = list(firsthit['extradata'].keys())
         fieldnames.remove('extradata')
         for k, v in firsthit['extradata'].items():
             try:
@@ -212,6 +213,16 @@ def search200csv(request):
         else:
             if my200page != 'All Scans':
                 scan = mixpagedatain(scan, indexbase)
+
+        # the third_parties scan sometimes only contains invalid, which we need to handle.
+        if displaytype == 'third_parties':
+            if 'invalid' in scan['extradata']:
+                for f in extrafieldnames:
+                    # set up empty fields so that the csv writer doesn't get sad.
+                    scan['extradata'][f] = []
+                # url is the only thing in the third_party scan that is not a list
+                scan['extradata']['url'] = ""
+                del scan['extradata']['invalid']
 
         # pull the extradata out into the top level to make it look better
         if 'extradata' in scan:
