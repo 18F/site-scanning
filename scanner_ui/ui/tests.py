@@ -153,8 +153,16 @@ class CheckUI(SimpleTestCase):
             csvlines = len(list(mycsv))
             self.assertGreaterEqual(csvlines, 2, msg=i)
 
+    def test_dapcsv_pages(self):
+        """ DAP csv page should work"""
         response = self.client.get('/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=dap')
         self.assertIn(b'gsa', response.content)
+
+    def test_thirdpartycsv_pages(self):
+        """ third_party csv page should return correct data """
+        response = self.client.get('/search200/csv/?200page=All%20Scans&date=None&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=None')
+        self.assertIn(b'unknown_services', response.content)
+        self.assertIn(b'Digital Analytics Program', response.content)
 
     def test_domain_filtered_csv_pages(self):
         """ csv pages filtered by domain should generate proper csv"""

@@ -170,17 +170,14 @@ def search200csv(request):
     # do the actual query here.
     s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
-
     r = s.execute()
 
     # pull the scan data out into the top level to make it look better
     firsthit = r.hits[0].to_dict()
     if displaytype == 'dap':
-        firsthit = mixpagedatain(firsthit, indexbase, 'dap')
+        firsthit = mixpagedatain(firsthit, indexbase, indextype='dap')
     elif displaytype == 'third_parties':
-        firsthit = mixpagedatain(firsthit, indexbase, 'third_parties')
+        firsthit = mixpagedatain(firsthit, indexbase, indextype='third_parties')
     else:
         firsthit = mixpagedatain(firsthit, indexbase)
     fieldnames = list(firsthit.keys())
@@ -192,31 +189,36 @@ def search200csv(request):
         for k, v in firsthit['extradata'].items():
             try:
                 for field, _ in v.items():
-                    fieldnames.append(periodize(k) + ' ' + field)
+                    if displaytype == 'dap' or displaytype == 'third_parties':
+                        fieldnames.append(k)
+                    else:
+                        fieldnames.append(periodize(k) + ' ' + field)
             except Exception:
                 fieldnames.append(k)
 
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
     writer = csv.DictWriter(response, fieldnames=fieldnames)
     writer.writeheader()
 
     for i in s.scan():
         scan = i.to_dict()
 
-        # mix in pagedata scan if we can
-        if my200page != 'All Scans':
-            # mix in DAP data if needed
-            if displaytype == 'dap':
-                scan = mixpagedatain(scan, indexbase, 'dap')
-            elif displaytype == 'third_parties':
-                scan = mixpagedatain(scan, indexbase, 'third_parties')
-            else:
+        # mix in extradata
+        if displaytype == 'dap':
+            scan = mixpagedatain(scan, indexbase, indextype='dap')
+        elif displaytype == 'third_parties':
+            scan = mixpagedatain(scan, indexbase, indextype='third_parties')
+        else:
+            if my200page != 'All Scans':
                 scan = mixpagedatain(scan, indexbase)
 
-            # pull the page data out into the top level to make it look better
+        # pull the extradata out into the top level to make it look better
+        if 'extradata' in scan:
             extradata = scan['extradata']
             del scan['extradata']
             for k, v in extradata.items():
-                if displaytype == 'dap':
+                if displaytype == 'dap' or displaytype == 'third_parties':
                     scan[k] = v
                 else:
                     for field, value in v.items():
