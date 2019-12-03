@@ -32,7 +32,7 @@ class CheckAPI(SimpleTestCase):
         """scans/uswds2 endpoint works"""
         response = self.client.get("/api/v1/scans/uswds2/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 3)
         self.assertEqual(jsondata[0]['scantype'], 'uswds2')
 
     def test_dap_scan_works(self):

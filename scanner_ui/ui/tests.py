@@ -17,7 +17,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         s = getquery(index)
-        self.assertEqual(s.count(), 2)
+        self.assertEqual(s.count(), 3)
 
     def test_getquerydomainsearch(self):
         dates = getdates()
@@ -29,7 +29,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         mylist = getListFromFields(index, 'domain')
-        self.assertEqual(len(mylist), 2)
+        self.assertEqual(len(mylist), 3)
 
     def test_getlistfromfields_subfield(self):
         dates = getdates()
@@ -253,7 +253,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'True', response.content)
-        self.assertNotIn(b'False', response.content)
+        self.assertIn(b'False', response.content)
 
     def test_200thirdpartyservicespage(self):
         """search200/third_parties/ page responds properly"""
