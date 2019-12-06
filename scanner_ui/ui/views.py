@@ -170,40 +170,48 @@ def search200csv(request):
     # do the actual query here.
     s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
 
-    r = s.execute()
+    # pull the scan data fields out into the top level to make it look better
+    # Get the fields from the mapping.
+    es = Elasticsearch([os.environ['ESURL']])
+    m = es.indices.get_mapping(index)
 
-    # pull the scan data out into the top level to make it look better
-    firsthit = r.hits[0].to_dict()
+    # Searches pull data in from other scans, so add fields in from their mapping
     if displaytype == 'dap':
-        firsthit = mixpagedatain(firsthit, indexbase, indextype='dap')
+        extraindex = indexbase + '-dap'
     elif displaytype == 'third_parties':
-        firsthit = mixpagedatain(firsthit, indexbase, indextype='third_parties')
+        extraindex = indexbase + '-third_parties'
     else:
-        firsthit = mixpagedatain(firsthit, indexbase)
-    fieldnames = list(firsthit.keys())
+        extraindex = indexbase + '-pagedata'
+    extram = es.indices.get_mapping(extraindex)
+
+    fieldnames = list(m[index]['mappings']['scan']['properties'].keys())
     fieldnames.remove('data')
-    for k, _ in firsthit['data'].items():
-        fieldnames.append(periodize(k))
-    if 'extradata' in fieldnames:
-        extrafieldnames = list(firsthit['extradata'].keys())
-        fieldnames.remove('extradata')
-        for k, v in firsthit['extradata'].items():
-            try:
-                for field, _ in v.items():
-                    if displaytype == 'dap' or displaytype == 'third_parties':
-                        fieldnames.append(k)
-                    else:
-                        fieldnames.append(periodize(k) + ' ' + field)
-            except Exception:
-                fieldnames.append(k)
+    for i in m[index]['mappings']['scan']['properties']['data']['properties'].keys():
+        fieldnames.append(periodize(i))
+
+    for k, v in extram[extraindex]['mappings']['scan']['properties']['data']['properties'].items():
+        try:
+            for field in v.keys():
+                if displaytype == 'dap' or displaytype == 'third_parties':
+                    fieldnames.append(k)
+                else:
+                    # This is data from the pagedata scan
+                    fieldnames.append(periodize(k) + ' ' + field)
+        except Exception:
+            fieldnames.append(k)
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="200scan.csv"'
-    writer = csv.DictWriter(response, fieldnames=fieldnames)
+    writer = csv.DictWriter(response, fieldnames=fieldnames, extrasaction='ignore')
     writer.writeheader()
 
     for i in s.scan():
-        scan = i.to_dict()
+        # prepopulate all the fields so that if we are missing any, we don't throw an exception.
+        scan = {}
+        for f in fieldnames:
+            scan[periodize(f)] = ''
+        realscan = i.to_dict()
+        scan.update(realscan)
 
         # mix in extradata
         if displaytype == 'dap':
@@ -214,15 +222,11 @@ def search200csv(request):
             if my200page != 'All Scans':
                 scan = mixpagedatain(scan, indexbase)
 
-        # the third_parties scan sometimes only contains invalid, which we need to handle.
-        if displaytype == 'third_parties':
-            if 'invalid' in scan['extradata']:
-                for f in extrafieldnames:
-                    # set up empty fields so that the csv writer doesn't get sad.
-                    scan['extradata'][f] = []
-                # url is the only thing in the third_party scan that is not a list
-                scan['extradata']['url'] = ""
-                del scan['extradata']['invalid']
+        # pull the scan data out into the top level to make it look better
+        scandata = scan['data']
+        del scan['data']
+        for k, v in scandata.items():
+            scan[periodize(k)] = v
 
         # pull the extradata out into the top level to make it look better
         if 'extradata' in scan:
@@ -234,12 +238,6 @@ def search200csv(request):
                 else:
                     for field, value in v.items():
                         scan[periodize(k) + ' ' + field] = value
-
-        # pull the scan data out into the top level to make it look better
-        scandata = scan['data']
-        del scan['data']
-        for k, v in scandata.items():
-            scan[periodize(k)] = v
 
         writer.writerow(scan)
 

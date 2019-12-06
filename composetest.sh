@@ -25,7 +25,7 @@ cat <<EOF > "$DOMAINCSV"
 Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
 18F.GOV,Federal Agency - Executive,General Services Administration,18F,Washington,DC,tts-vulnerability-reports@gsa.gov
 GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
-afrh.gov
+AFRH.GOV,Federal Agency - Executive,Armed Forces Retirement Home,Armed Forces Retirement Home,Washington,DC,(blank)
 EOF
 ./scan_engine.sh "$BUCKETNAME"
 

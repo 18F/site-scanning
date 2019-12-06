@@ -43,7 +43,7 @@ class CheckAPI(SimpleTestCase):
         self.assertIn('GSA', jsondata['data']['dap_parameters']['agency'])
 
     def test_thirdparty_scan_works(self):
-        """scans/dap endpoint works"""
+        """scans/third_party endpoint works"""
         response = self.client.get("/api/v1/scans/third_parties/gsa.gov/")
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'third_parties')
