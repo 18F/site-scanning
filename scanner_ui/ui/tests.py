@@ -170,6 +170,11 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'gsa', response.content)
         self.assertNotIn(b'18f', response.content)
 
+    def test_agency_filtered_csv_pages(self):
+        """ csv pages filtered by agency should generate proper csv"""
+        response = self.client.get('/search200/csv/?200page=All%20Scans&date=Scan%20Date&agency=All%20Agencies&domaintype=Federal%20Agency%20-%20Executive&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=')
+        self.assertIn(b'gsa', response.content)
+
     def test_200page_nopageselected(self):
         """200scanner page responds properly without a page selected"""
         response = self.client.get('/search200/')
