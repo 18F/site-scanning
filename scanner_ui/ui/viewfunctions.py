@@ -176,3 +176,14 @@ def mixpagedatain(scan, indexbase, indextype='pagedata'):
     except IndexError:
         logging.error('could not find pagedata index for mixing pagedata in')
     return scan
+
+
+# build a popup item that we can pass on to the search200.html template
+def popupbuilder(name, valuelist, disabled='', selectedvalue=''):
+    popup = {'name': name, 'disabled': disabled, 'values': {}}
+    for i in valuelist:
+        if i == selectedvalue:
+            popup['values'][i] = 'selected'
+        else:
+            popup['values'][i] = ''
+    return popup

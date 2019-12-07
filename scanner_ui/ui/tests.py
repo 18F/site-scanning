@@ -2,7 +2,7 @@ from django.test import SimpleTestCase
 from django.test import Client
 import csv
 import re
-from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain
+from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
 # Create your tests here.
 
@@ -72,6 +72,17 @@ class checkviewfunctions(SimpleTestCase):
         newscan = mixpagedatain(myscan, indexbase, 'dap')
         self.assertTrue('extradata' in newscan)
         self.assertTrue('dap_detected' in newscan['extradata'])
+
+    def test_popupbuilder(self):
+        presentlist = ['Present', "Not Present", "All"]
+        present = "All"
+        p = popupbuilder('present', presentlist, selectedvalue=present)
+        popup = {'name': 'present', 'disabled': '', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
+        self.assertEqual(popup, p)
+
+        p = popupbuilder('present', presentlist, selectedvalue=present, disabled='disabled')
+        popup = {'name': 'present', 'disabled': 'disabled', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
+        self.assertEqual(popup, p)
 
 
 class CheckUI(SimpleTestCase):

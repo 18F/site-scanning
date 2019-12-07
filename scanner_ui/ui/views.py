@@ -8,7 +8,7 @@ import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from django.urls import reverse
-from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize
+from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize, popupbuilder
 
 
 # Create your views here.
@@ -361,6 +361,19 @@ def search200(request, displaytype=None):
     # create columns for us to render in the page
     columns = []
 
+    # create a default set of popups
+    popups = []
+    popups.append(popupbuilder('present', presentlist, selectedvalue=present))
+    popups.append(popupbuilder('my200page', my200pages, selectedvalue=periodize(my200page)))
+    popups.append(popupbuilder('date', dates, selectedvalue=date))
+    popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+    popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+    popups.append(popupbuilder('org', orgs, selectedvalue=org))
+    if periodize(my200page) == 'All Scans':
+        popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype))
+    else:
+        popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype, disabled='disabled'))
+
     # set some defaults for use while looping
     selectedpage = deperiodize(my200page)
     displaytypetitle = '200 Scans Search'
@@ -372,7 +385,6 @@ def search200(request, displaytype=None):
         # to it, store it in the results and set the columns and page title.
         #
         # XXX seems like there ought to be a more clever way to do this.
-        #     I'm definitely not DRY here.
 
         # 200-dev style display
         if displaytype == '200-developer':
@@ -512,6 +524,12 @@ def search200(request, displaytype=None):
 
         # dap style display
         elif displaytype == 'dap':
+            popups = []
+            popups.append(popupbuilder('date', dates, selectedvalue=date))
+            popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+            popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+            popups.append(popupbuilder('org', orgs, selectedvalue=org))
+
             column = {}
             column['Domain'] = i.domain
             column['Agency'] = i.agency
@@ -554,6 +572,12 @@ def search200(request, displaytype=None):
 
         # third_parties style display
         elif displaytype == 'third_parties':
+            popups = []
+            popups.append(popupbuilder('date', dates, selectedvalue=date))
+            popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+            popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+            popups.append(popupbuilder('org', orgs, selectedvalue=org))
+
             column = {}
             column['Domain'] = i.domain
             column['Agency'] = i.agency
@@ -614,27 +638,21 @@ def search200(request, displaytype=None):
 
     context = {
         'search_results': results.hits,
-        'dates': dates,
         'selected_date': date,
         'selected_200page': periodize(my200page),
-        'my200pages': my200pages,
         'page_obj': page,
-        'agencies': agencies,
         'selected_agency': agency,
-        'domaintypes': domaintypes,
         'selected_domaintype': domaintype,
-        'presentlist': presentlist,
         'selected_present': present,
-        'mimetypes': mimetypes,
         'selected_mimetype': mimetype,
         'hitsperpagelist': hitsperpagelist,
         'selected_hitsperpage': hitsperpage,
         'selected_org': org,
-        'orglist': orgs,
         'columns': columns,
         'displaytype': displaytype,
         'displaytypetitle': displaytypetitle,
         'selected_domainsearch': domainsearch,
+        'popups': popups,
     }
 
     return render(request, "search200.html", context=context)

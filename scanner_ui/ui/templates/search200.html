@@ -14,79 +14,13 @@
     {% endif %}
     <br>
 
-    <select name="present" onchange="this.form.submit()">
-      {% for present in presentlist %}
-        {% if selected_present == present %}
-      <option value="{{ present }}" selected>{{ present }}</option>
-        {% else %}
-      <option value="{{ present }}">{{ present }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-
-    <select name="200page" onchange="this.form.submit()">
-    	{% for my200page in my200pages %}
-    		{% if selected_200page == my200page %}
-    	<option value="{{ my200page }}" selected>{{ my200page }}</option>
-    		{% else %}
-    	<option value="{{ my200page }}">{{ my200page }}</option>
-    		{% endif %}
-    	{% endfor %}
-    </select>
-
-    <select name="date" onchange="this.form.submit()">
-    	{% for date in dates %}
-    		{% if selected_date == date %}
-    	<option value="{{ date }}" selected>{{ date }}</option>
-    		{% else %}
-    	<option value="{{ date }}">{{ date }}</option>
-    		{% endif %}
-    	{% endfor %}
-    </select>
-
-    <select name="agency" onchange="this.form.submit()">
-      {% for agency in agencies %}
-        {% if selected_agency == agency %}
-      <option value="{{ agency }}" selected>{{ agency }}</option>
-        {% else %}
-      <option value="{{ agency }}">{{ agency }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-
-    <select name="domaintype" onchange="this.form.submit()">
-      {% for domaintype in domaintypes %}
-        {% if selected_domaintype == domaintype %}
-      <option value="{{ domaintype }}" selected>{{ domaintype }}</option>
-        {% else %}
-      <option value="{{ domaintype }}">{{ domaintype }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-
-    <select name="org" onchange="this.form.submit()">
-      {% for org in orglist %}
-        {% if selected_org == org %}
-      <option value="{{ org }}" selected>{{ org }}</option>
-        {% else %}
-      <option value="{{ org }}">{{ org }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-
-    {% if selected_200page == 'All Scans' %}
-    <select name="mimetype" onchange="this.form.submit()" disabled>
-    {% else %}
-    <select name="mimetype" onchange="this.form.submit()">
-    {% endif %}
-      {% for mimetype in mimetypes %}
-        {% if selected_mimetype == mimetype %}
-      <option value="{{ mimetype }}" selected>{{ mimetype }}</option>
-        {% else %}
-      <option value="{{ mimetype }}">{{ mimetype }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
+    {% for popup in popups %}
+      <select name="{{popup.name}}" onchange="this.form.submit()" {{ popup.disabled }}>
+        {% for name, selected in popup.values.items %}
+        <option value="{{ name }}" {{ selected }}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    {% endfor %}
 
   <h2>Scan Results:</h2>
     <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">JSON Export</a>
