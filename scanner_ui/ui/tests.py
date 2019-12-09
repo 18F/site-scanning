@@ -25,6 +25,12 @@ class checkviewfunctions(SimpleTestCase):
         s = getquery(index, domainsearch='18f')
         self.assertEqual(s.count(), 1)
 
+    def test_getquerydapsearch(self):
+        dates = getdates()
+        index = dates[1] + '-dap'
+        s = getquery(index, present='Present', displaytype='dap')
+        self.assertEqual(s.count(), 2)
+
     def test_getlistfromfields(self):
         dates = getdates()
         index = dates[1] + '-200scanner'
@@ -80,7 +86,7 @@ class checkviewfunctions(SimpleTestCase):
         popup = {'name': 'present', 'disabled': '', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
         self.assertEqual(popup, p)
 
-        p = popupbuilder('present', presentlist, selectedvalue=present, disabled='disabled')
+        p = popupbuilder('present', presentlist, selectedvalue=present, disabled=True)
         popup = {'name': 'present', 'disabled': 'disabled', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
         self.assertEqual(popup, p)
 
@@ -269,7 +275,6 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'True', response.content)
-        self.assertIn(b'False', response.content)
 
     def test_200thirdpartyservicespage(self):
         """search200/third_parties/ page responds properly"""
