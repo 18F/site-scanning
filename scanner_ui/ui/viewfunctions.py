@@ -24,9 +24,9 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
 
     # This is getting complicated.  Present/not present may look different depending on the displaytype
     if displaytype == 'dap':
-        if present == "Present":
+        if present == "DAP Present":
             presentquery = True
-        elif present == "Not Present":
+        elif present == "DAP Not Present":
             presentquery = False
         else:
             presentquery = '*'
