@@ -18,7 +18,28 @@
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'usecases' %}">Use Cases</a></li>
-          <li><a href="{% url 'presentationlayers' %}">Presentation Layers</a></li>
+          <li><a href="{% url 'presentationlayers' %}">Presentation Layers</a>:
+            <script>
+              function presentationlayerredirect() {
+                const e = document.getElementById("presentationlayers");
+                window.location.replace(e.options[e.selectedIndex].value)
+              }
+            </script>
+            <select id="presentationlayers" onchange="presentationlayerredirect()">
+              <option value="/presentation-layers/">Select</option>
+              <option value="{% url 'search200' displaytype='200-codejson' %}?200page=/code.json&mimetype=application/json">Code.json</option>
+              <option value="{% url 'search200' displaytype='200-data.json' %}?200page=/data.json&mimetype=application/json">Data.json</option>
+              <option value="{% url 'search200' %}?200page=/data&q=200">Data Hub</option>
+              <option value="{% url 'search200' displaytype='200-developer' %}?200page=/data.json&mimetype=application/json">Developer Hub</option>
+              <option value="{% url 'search200' displaytype='200-robotstxt' %}?200page=/robots.txt">Robots.txt</option>
+              <option value="{% url 'sitemap' %}">Sitemaps.xml</option>
+              <option value="{% url 'privacy' %}">Privacy Dashboard</option>
+              <option value="{% url 'searchUSWDS' %}">USWDS Dashboard</option>
+              <option value="{% url 'search200' displaytype='dap' %}">DAP Dashboard</option>
+              <option value="{% url 'search200' displaytype='third_parties' %}">Third Party Services</option>
+              <option value="{% url 'search200' %}">200 Scanner</option>
+            </select>
+          </li>
           <li><a href="{% url 'downloads' %}">Data Links</a></li>
           <li><a href="{% url 'scans-ui' %}">About Each Scan</a></li>
           <li><a href="{% url 'about' %}">About</a></li>
