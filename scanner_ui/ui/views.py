@@ -306,7 +306,7 @@ def search200(request, displaytype=None):
 
     # find whether we want to do present/notpresent/all
     if present is None:
-        if displaytype == 'dap':
+        if displaytype == 'dap' or displaytype == 'third_parties':
             present = "All"
         else:
             present = "Present"
