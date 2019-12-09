@@ -2,7 +2,7 @@ from django.test import SimpleTestCase
 from django.test import Client
 import csv
 import re
-from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain
+from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
 # Create your tests here.
 
@@ -24,6 +24,12 @@ class checkviewfunctions(SimpleTestCase):
         index = dates[1] + '-200scanner'
         s = getquery(index, domainsearch='18f')
         self.assertEqual(s.count(), 1)
+
+    def test_getquerydapsearch(self):
+        dates = getdates()
+        index = dates[1] + '-dap'
+        s = getquery(index, present='Present', displaytype='dap')
+        self.assertEqual(s.count(), 2)
 
     def test_getlistfromfields(self):
         dates = getdates()
@@ -72,6 +78,17 @@ class checkviewfunctions(SimpleTestCase):
         newscan = mixpagedatain(myscan, indexbase, 'dap')
         self.assertTrue('extradata' in newscan)
         self.assertTrue('dap_detected' in newscan['extradata'])
+
+    def test_popupbuilder(self):
+        presentlist = ['Present', "Not Present", "All"]
+        present = "All"
+        p = popupbuilder('present', presentlist, selectedvalue=present)
+        popup = {'name': 'present', 'disabled': '', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
+        self.assertEqual(popup, p)
+
+        p = popupbuilder('present', presentlist, selectedvalue=present, disabled=True)
+        popup = {'name': 'present', 'disabled': 'disabled', 'values': {'Present': '', 'Not Present': '', 'All': 'selected'}}
+        self.assertEqual(popup, p)
 
 
 class CheckUI(SimpleTestCase):
@@ -258,7 +275,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'True', response.content)
-        self.assertIn(b'False', response.content)
+        self.assertNotIn(b'False', response.content)
 
     def test_200thirdpartyservicespage(self):
         """search200/third_parties/ page responds properly"""

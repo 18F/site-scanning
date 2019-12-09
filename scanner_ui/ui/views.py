@@ -8,7 +8,7 @@ import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from django.urls import reverse
-from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize
+from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize, popupbuilder, setdisplaytypetitle
 
 
 # Create your views here.
@@ -245,18 +245,29 @@ def search200csv(request):
 
 
 def search200(request, displaytype=None):
-    dates = getdates()
-
     date = request.GET.get('date')
+    my200page = request.GET.get('200page')
+    agency = request.GET.get('agency')
+    domaintype = request.GET.get('domaintype')
+    org = request.GET.get('org')
+    mimetype = request.GET.get('mimetype')
+    present = request.GET.get('present')
+    domainsearch = request.GET.get('domainsearch')
+    hitsperpage = request.GET.get('hitsperpage')
+    page_no = request.GET.get('page')
+
+    dates = getdates()
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
     else:
         indexbase = date
-    index = indexbase + '-200scanner'
+    if displaytype == 'dap':
+        index = indexbase + '-dap'
+    else:
+        index = indexbase + '-200scanner'
 
     # search in ES for 200 pages we can select
     es = Elasticsearch([os.environ['ESURL']])
-    my200page = request.GET.get('200page')
     if my200page is None:
         my200page = 'All Scans'
     s = Search(using=es, index=index).query().params(terminate_after=1)
@@ -278,27 +289,22 @@ def search200(request, displaytype=None):
     orgs = getListFromFields(index, 'organization')
     orgs.insert(0, 'All Organizations')
 
-    agency = request.GET.get('agency')
     if agency is None:
         agency = 'All Agencies'
 
-    domaintype = request.GET.get('domaintype')
     if domaintype is None:
         domaintype = 'All Branches'
 
-    org = request.GET.get('org')
     if org is None:
         org = 'All Organizations'
 
     # Find list of mime types from the pagedata index
     mimetypes = getListFromFields(indexbase + '-pagedata', 'data', subfield='content_type')
     mimetypes.insert(0, 'all content_types')
-    mimetype = request.GET.get('mimetype')
     if mimetype is None:
         mimetype = 'all content_types'
 
     # find whether we want to do present/notpresent/all
-    present = request.GET.get('present')
     if present is None:
         present = "Present"
     presentlist = [
@@ -307,22 +313,17 @@ def search200(request, displaytype=None):
         "All"
     ]
 
-    # get domainsearch
-    domainsearch = request.GET.get('domainsearch')
-
     statuscodelocation = None
     if my200page != 'All Scans':
         statuscodelocation = 'data.' + deperiodize(my200page)
 
     # do the actual query here.
-    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch)
+    s = getquery(index, present=present, indexbase=indexbase, page=my200page, agency=agency, domaintype=domaintype, org=org, mimetype=mimetype, statuscodelocation=statuscodelocation, domainsearch=domainsearch, displaytype=displaytype)
 
     # set up pagination here
     hitsperpagelist = ['20', '50', '100', '200']
-    hitsperpage = request.GET.get('hitsperpage')
     if hitsperpage is None:
         hitsperpage = hitsperpagelist[1]
-    page_no = request.GET.get('page')
     if page_no is None:
         page_no = 1
     paginator = Paginator(s, int(hitsperpage))
@@ -361,9 +362,25 @@ def search200(request, displaytype=None):
     # create columns for us to render in the page
     columns = []
 
+    # create a default set of popups
+    # popups are just a data structure that is iterated over to generate popups in
+    # the page template.
+    popups = []
+    popups.append(popupbuilder('present', presentlist, selectedvalue=present))
+    popups.append(popupbuilder('my200page', my200pages, selectedvalue=periodize(my200page)))
+    popups.append(popupbuilder('date', dates, selectedvalue=date))
+    popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+    popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+    popups.append(popupbuilder('org', orgs, selectedvalue=org))
+    if periodize(my200page) == 'All Scans':
+        popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype))
+    else:
+        popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype, disabled=True))
+
     # set some defaults for use while looping
     selectedpage = deperiodize(my200page)
-    displaytypetitle = '200 Scans Search'
+
+    displaytypetitle = setdisplaytypetitle(displaytype)
 
     for i in results:
         # Below here are where you can set up different types of pages.
@@ -372,7 +389,6 @@ def search200(request, displaytype=None):
         # to it, store it in the results and set the columns and page title.
         #
         # XXX seems like there ought to be a more clever way to do this.
-        #     I'm definitely not DRY here.
 
         # 200-dev style display
         if displaytype == '200-developer':
@@ -404,7 +420,6 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'api.data.gov Search'
 
         # 200-codejson style display
         elif displaytype == '200-codejson':
@@ -440,7 +455,6 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'code.gov Scan Search'
 
         # 200-data.json style display
         elif displaytype == '200-data.json':
@@ -476,7 +490,6 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'data.gov Scan Search'
 
         # 200-robotstxt style display
         elif displaytype == '200-robotstxt':
@@ -508,10 +521,16 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'robots.txt Scan Search'
 
         # dap style display
         elif displaytype == 'dap':
+            popups = []
+            popups.append(popupbuilder('present', presentlist, selectedvalue=present))
+            popups.append(popupbuilder('date', dates, selectedvalue=date))
+            popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+            popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+            popups.append(popupbuilder('org', orgs, selectedvalue=org))
+
             column = {}
             column['Domain'] = i.domain
             column['Agency'] = i.agency
@@ -550,10 +569,15 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'DAP Scan Search'
 
         # third_parties style display
         elif displaytype == 'third_parties':
+            popups = []
+            popups.append(popupbuilder('date', dates, selectedvalue=date))
+            popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
+            popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
+            popups.append(popupbuilder('org', orgs, selectedvalue=org))
+
             column = {}
             column['Domain'] = i.domain
             column['Agency'] = i.agency
@@ -571,7 +595,6 @@ def search200(request, displaytype=None):
             # the results seem to be a type of dictionary that doesn't respond to .keys()
             columns = list(column.keys())
             i['column'] = list(column.values())
-            displaytypetitle = 'Third Party Services Search'
 
         # default to the basic 200 scans search
         else:
@@ -614,27 +637,21 @@ def search200(request, displaytype=None):
 
     context = {
         'search_results': results.hits,
-        'dates': dates,
         'selected_date': date,
         'selected_200page': periodize(my200page),
-        'my200pages': my200pages,
         'page_obj': page,
-        'agencies': agencies,
         'selected_agency': agency,
-        'domaintypes': domaintypes,
         'selected_domaintype': domaintype,
-        'presentlist': presentlist,
         'selected_present': present,
-        'mimetypes': mimetypes,
         'selected_mimetype': mimetype,
         'hitsperpagelist': hitsperpagelist,
         'selected_hitsperpage': hitsperpage,
         'selected_org': org,
-        'orglist': orgs,
         'columns': columns,
         'displaytype': displaytype,
         'displaytypetitle': displaytypetitle,
         'selected_domainsearch': domainsearch,
+        'popups': popups,
     }
 
     return render(request, "search200.html", context=context)

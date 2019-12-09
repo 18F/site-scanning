@@ -11,7 +11,7 @@ from elasticsearch_dsl.query import Range, Bool, Q
 # give different parameters to search the specified index and
 # thus have a generalized query interface rather than having a harcdoded
 # query for each view.
-def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None, statuscodelocation=None, domainsearch=None):
+def getquery(index, present=None, agency=None, domaintype=None, query=None, org=None, sort=None, version=None, totalscorequery=None, mimetype=None, page=None, indexbase=None, statuscodelocation=None, domainsearch=None, displaytype=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index)
 
@@ -22,14 +22,24 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
     else:
         s = s.query(Q('match_all'))
 
-    if present is not None and statuscodelocation is not None:
+    # This is getting complicated.  Present/not present may look different depending on the displaytype
+    if displaytype == 'dap':
         if present == "Present":
-            presentquery = '"200"'
+            presentquery = True
         elif present == "Not Present":
-            presentquery = '-"200"'
+            presentquery = False
         else:
             presentquery = '*'
-        s = s.query("query_string", query=presentquery, fields=[statuscodelocation])
+        s = s.query("query_string", query=presentquery, fields=['data.dap_detected'])
+    else:
+        if present is not None and statuscodelocation is not None:
+            if present == "Present":
+                presentquery = '"200"'
+            elif present == "Not Present":
+                presentquery = '-"200"'
+            else:
+                presentquery = '*'
+            s = s.query("query_string", query=presentquery, fields=[statuscodelocation])
 
     if agency != 'All Agencies' and agency is not None:
         agencyquery = '"' + agency + '"'
@@ -176,3 +186,38 @@ def mixpagedatain(scan, indexbase, indextype='pagedata'):
     except IndexError:
         logging.error('could not find pagedata index for mixing pagedata in')
     return scan
+
+
+# build a popup item that we can pass on to the search200.html template
+def popupbuilder(name, valuelist, disabled=False, selectedvalue=''):
+    if disabled is True:
+        popup = {'name': name, 'disabled': 'disabled', 'values': {}}
+    else:
+        popup = {'name': name, 'disabled': '', 'values': {}}
+
+    for i in valuelist:
+        if i == selectedvalue:
+            popup['values'][i] = 'selected'
+        else:
+            popup['values'][i] = ''
+    return popup
+
+
+# function to set the displaytypetitle up.
+def setdisplaytypetitle(displaytype):
+    displaytypetitle = '200 Scans Search'
+
+    if displaytype == '200-developer':
+        displaytypetitle = 'api.data.gov Search'
+    elif displaytype == '200-codejson':
+        displaytypetitle = 'code.gov Scan Search'
+    elif displaytype == '200-data.json':
+        displaytypetitle = 'data.gov Scan Search'
+    elif displaytype == '200-robotstxt':
+        displaytypetitle = 'robots.txt Scan Search'
+    elif displaytype == 'dap':
+        displaytypetitle = 'DAP Scan Search'
+    elif displaytype == 'third_parties':
+        displaytypetitle = 'Third Party Services Search'
+
+    return displaytypetitle
