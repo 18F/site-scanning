@@ -306,7 +306,10 @@ def search200(request, displaytype=None):
 
     # find whether we want to do present/notpresent/all
     if present is None:
-        present = "Present"
+        if displaytype == 'dap':
+            present = "All"
+        else:
+            present = "Present"
     presentlist = [
         "Present",
         "Not Present",
@@ -525,8 +528,6 @@ def search200(request, displaytype=None):
         # dap style display
         elif displaytype == 'dap':
             popups = []
-            if present is None:
-                present = 'All'
             presentlist = [
                 "DAP Present",
                 "DAP Not Present",
