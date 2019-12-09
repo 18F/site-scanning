@@ -275,6 +275,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'True', response.content)
+        self.assertNotIn(b'False', response.content)
 
     def test_200thirdpartyservicespage(self):
         """search200/third_parties/ page responds properly"""
