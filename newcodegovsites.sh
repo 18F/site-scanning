@@ -4,7 +4,7 @@
 # code.json files and emit a list of new/removed domains.
 #
 # If you supply an argument, it will try to compare N days back.  If you do not
-# supply an argument, it will compare 7 days back.
+# supply an argument, it will compare 20 days back.
 #
 # usage examples:
 #    ./newcodegovsites.sh
@@ -26,7 +26,7 @@ else
 fi
 
 if [ -z "$1" ] ; then
-	DAYSAGO=7
+	DAYSAGO=20
 else
 	DAYSAGO="$1"
 fi

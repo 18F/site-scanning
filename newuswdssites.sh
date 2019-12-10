@@ -7,7 +7,7 @@
 # want to filter on.
 #
 # If you supply a second argument, it will try to compare N days back.  If you do not
-# supply a second argument, it will compare 5 days back.
+# supply a second argument, it will compare 20 days back.
 #
 # usage examples:
 #    ./newcodegovsites.sh 50
@@ -36,7 +36,7 @@ else
 fi
 
 if [ -z "$2" ] ; then
-	DAYSAGO=5
+	DAYSAGO=20
 else
 	DAYSAGO="$2"
 fi
