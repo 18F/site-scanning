@@ -83,7 +83,7 @@ class CheckAPI(SimpleTestCase):
         self.assertEqual(len(jsondata), 2)
 
     def test_api_queries_uswdslessthan(self):
-        """greaterthan queries work"""
+        """lessthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
