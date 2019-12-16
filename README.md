@@ -2,7 +2,9 @@
 
 Site scanning is the act of making simple queries to a defined list of government websites, to evaluate compliance with basic government standards and practices. They run automatically, and, with the use of serverless cloud infrastructure, cost about two dollars per daily scan.
 
-**This repository is for the project code.  For the project documentation, please see [https://github.com/18F/site-scanning-documentation](https://github.com/18F/site-scanning-documentation).**  For convenience, here are some commonly used links.  
+**This repository is for the project code.  For the project documentation, please see [https://github.com/18F/site-scanning-documentation](https://github.com/18F/site-scanning-documentation).**  
+
+For convenience, here are some commonly used links.  
 
 
 |  Project Links | Documentation  | Project Management  | 
