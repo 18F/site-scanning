@@ -50,15 +50,27 @@ class CheckAPI(SimpleTestCase):
         self.assertIn('Digital Analytics Program', jsondata['data']['known_services'])
 
     def test_api_queries_domain(self):
-        """queries works"""
+        """queries with wildcards work"""
         response = self.client.get("/api/v1/domains/?domain=gsa*")
         jsondata = json.loads(response.content)
         # There are currently 7 scans, so this should get all the gsa scans
         self.assertEqual(len(jsondata), 7)
 
     def test_api_queries_dapdetect(self):
-        """queries works"""
+        """queries for nested fields work"""
         response = self.client.get("/api/v1/domains/?data.dap_detected=true")
         jsondata = json.loads(response.content)
-        # There are currently 7 scans, so this should get the gsa and 18f scans
+        # this should get the gsa and 18f scans and not the afrh.gov scan
         self.assertEqual(len(jsondata), 2)
+
+    def test_api_queries_domainfromscan(self):
+        """queries from specific scan work"""
+        response = self.client.get("/api/v1/scans/third_parties/?domain=gsa*")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_dapdetectfromdomain(self):
+        """queries from specific domain work"""
+        response = self.client.get("/api/v1/domains/18f.gov/?data.dap_detected=true")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)

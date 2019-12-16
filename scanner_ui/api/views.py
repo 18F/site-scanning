@@ -38,8 +38,7 @@ def getScansFromES(scantype=None, domain=None, request=None):
     # arguments should be like ?domain=gsa*&data.foo=bar
     # XXX would like this to be better, handle greaterthan, maybe arrays
     for k, v in request.GET.items():
-        print('filtering field', k, 'by', v)
-        s = s.query('match', **{k: v})
+        s = s.query("query_string", query=v, fields=[k])
 
     s = s.sort('domain')
 
