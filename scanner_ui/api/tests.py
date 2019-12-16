@@ -74,3 +74,23 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/domains/18f.gov/?data.dap_detected=true")
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_uswdsgreaterthan(self):
+        """greaterthan queries work"""
+        response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
+        jsondata = json.loads(response.content)
+        # 18f and gsa should have scores greater than 50
+        self.assertEqual(len(jsondata), 2)
+
+    def test_api_queries_uswdslessthan(self):
+        """greaterthan queries work"""
+        response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
+        jsondata = json.loads(response.content)
+        # afrh.gov should have a score of 0
+        self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_multipleargs(self):
+        """multiple query arguments should be ANDed together"""
+        response = self.client.get("/api/v1/domains/?domain=18f*&data.status_code=200")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
