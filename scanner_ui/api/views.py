@@ -34,6 +34,13 @@ def getScansFromES(scantype=None, domain=None, request=None):
         # Fall through to a domain query across all indices
         s = Search(using=es, index=latestindex)
 
+    # This is to handle queries
+    # arguments should be like ?domain=gsa*&data.foo=bar
+    # XXX would like this to be better, handle greaterthan, maybe arrays
+    for k, v in request.GET.items():
+        print('filtering field', k, 'by', v)
+        s = s.query('match', **{k: v})
+
     s = s.sort('domain')
 
     # filter by domain if we have one

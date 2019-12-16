@@ -48,3 +48,17 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'third_parties')
         self.assertIn('Digital Analytics Program', jsondata['data']['known_services'])
+
+    def test_api_queries_domain(self):
+        """queries works"""
+        response = self.client.get("/api/v1/domains/?domain=gsa*")
+        jsondata = json.loads(response.content)
+        # There are currently 7 scans, so this should get all the gsa scans
+        self.assertEqual(len(jsondata), 7)
+
+    def test_api_queries_dapdetect(self):
+        """queries works"""
+        response = self.client.get("/api/v1/domains/?data.dap_detected=true")
+        jsondata = json.loads(response.content)
+        # There are currently 7 scans, so this should get the gsa and 18f scans
+        self.assertEqual(len(jsondata), 2)
