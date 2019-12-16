@@ -9,7 +9,7 @@ For convenience, here are some commonly used links.
 
 |  Project Links | Documentation  | Project Management  | 
 |---|---|---|
-|  [Homepage](https://site-scanning.app.cloud.gov/)  |  [Technical Notes](https://github.com/18F/site-scanning/tree/master/docs/technical-notes) | [Project Documents](https://github.com/18F/site-scanning-documentation/tree/master/project-management)  | 
+|  [Homepage](https://site-scanning.app.cloud.gov/)  |  [Technical Notes](https://github.com/18F/site-scanning/tree/master/docs) | [Project Documents](https://github.com/18F/site-scanning-documentation/tree/master/project-management)  | 
 | [Use Cases For Each Scan](https://site-scanning.app.cloud.gov/use-cases/)  | [Individual Scan Details](https://github.com/18F/site-scanning-documentation/tree/master/scans)  | [Project Milestones and Version History](https://github.com/18F/site-scanning-documentation/blob/master/project-management/project-milestones-version-history.md) |
 | [Dashboards And Other Presentation Layers](https://site-scanning.app.cloud.gov/presentation-layers/)  | [Individual Presentation Layer Details](https://github.com/18F/site-scanning-documentation/tree/master/presentation-layers)  | [Past Scanning Efforts](https://github.com/18F/site-scanning-documentation/blob/master/project-management/project-history.md) |
 | [API And Direct Download Links](https://site-scanning.app.cloud.gov/downloads/)  | []()  | []()  |  
