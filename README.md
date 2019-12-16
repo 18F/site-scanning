@@ -2,6 +2,8 @@
 
 Site scanning is the act of making simple queries to a defined list of government websites, to evaluate compliance with basic government standards and practices. They run automatically, and, with the use of serverless cloud infrastructure, cost about two dollars per daily scan.
 
+**This repository is for the project code.  For the project documentation, please see [https://github.com/18F/site-scanning-documentation](https://github.com/18F/site-scanning-documentation).**
+
 ## Overview
 ### Vision
 TTS offers a low-cost, automated scanning solution to determine which government websites are following best practices. The results are published as simple queries and open data files, allowing TTS to measure TTS product performance, and agencies to customize reporting and take action to improve outcomes for the public. 
