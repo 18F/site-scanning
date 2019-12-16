@@ -6,7 +6,8 @@ import os
 from scanner_ui.ui.views import getdates
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Q
+from elasticsearch_dsl.query import Range
+import re
 
 # Create your views here.
 
@@ -22,17 +23,27 @@ def getScansFromES(scantype=None, domain=None, request=None):
     indices = list(es.indices.get_alias(latestindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
 
-    if scantype is not None:
-        if scantype not in scantypes:
-            # If we requested a scantype that does not exist, then return an empty query
-            s = Search(using=es, index=latestindex)
-            s = s.query(~Q('match_all'))
-        else:
-            index = dates[1] + '-' + scantype
-            s = Search(using=es, index=index)
+    # if we have a valid scantype, then search that
+    if scantype in scantypes:
+        index = dates[1] + '-' + scantype
+        s = Search(using=es, index=index)
     else:
-        # Fall through to a domain query across all indices
         s = Search(using=es, index=latestindex)
+
+    # This is to handle queries
+    # arguments should be like ?domain=gsa*&data.foo=bar&numberfield=gt:50&numberfield=lt:20
+    # arguments are ANDed together
+    for k, v in request.GET.items():
+        if re.match(r'^gt:[0-9]+', v):
+            gt = v.split(':')[1]
+            q = Range(**{k: {'gt': gt}})
+            s = s.query(q)
+        elif re.match(r'^lt:[0-9]+', v):
+            lt = v.split(':')[1]
+            q = Range(**{k: {'lt': lt}})
+            s = s.query(q)
+        else:
+            s = s.query("query_string", query=v, fields=[k])
 
     s = s.sort('domain')
 
@@ -50,6 +61,9 @@ def getScansFromES(scantype=None, domain=None, request=None):
         if request is not None:
             i['scan_data_url'] = apiurl + i['scantype'] + '/' + i['domain'] + '/'
         scans.append(i.to_dict())
+
+    # # XXX
+    # print(s.to_dict())
 
     return scans
 

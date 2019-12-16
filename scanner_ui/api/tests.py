@@ -48,3 +48,49 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'third_parties')
         self.assertIn('Digital Analytics Program', jsondata['data']['known_services'])
+
+    def test_api_queries_domain(self):
+        """queries with wildcards work"""
+        response = self.client.get("/api/v1/domains/?domain=gsa*")
+        jsondata = json.loads(response.content)
+        # There are currently 7 scans, so this should get all the gsa scans
+        self.assertEqual(len(jsondata), 7)
+
+    def test_api_queries_dapdetect(self):
+        """queries for nested fields work"""
+        response = self.client.get("/api/v1/domains/?data.dap_detected=true")
+        jsondata = json.loads(response.content)
+        # this should get the gsa and 18f scans and not the afrh.gov scan
+        self.assertEqual(len(jsondata), 2)
+
+    def test_api_queries_domainfromscan(self):
+        """queries from specific scan work"""
+        response = self.client.get("/api/v1/scans/third_parties/?domain=gsa*")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_dapdetectfromdomain(self):
+        """queries from specific domain work"""
+        response = self.client.get("/api/v1/domains/18f.gov/?data.dap_detected=true")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_uswdsgreaterthan(self):
+        """greaterthan queries work"""
+        response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
+        jsondata = json.loads(response.content)
+        # 18f and gsa should have scores greater than 50
+        self.assertEqual(len(jsondata), 2)
+
+    def test_api_queries_uswdslessthan(self):
+        """lessthan queries work"""
+        response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
+        jsondata = json.loads(response.content)
+        # afrh.gov should have a score of 0
+        self.assertEqual(len(jsondata), 1)
+
+    def test_api_queries_multipleargs(self):
+        """multiple query arguments should be ANDed together"""
+        response = self.client.get("/api/v1/domains/?domain=18f*&data.status_code=200")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
