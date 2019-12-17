@@ -27,6 +27,13 @@ The scan API map is:
   - `/api/v1/domains/{domain}` pulls down all of the scan results for a particular domain.
   - `/api/v1/scans/` enumerates all of the scans for all scantypes.
   - `/api/v1/scans/{scantype}` enumerates all of the scans for all domains that have this scantype.
+  - All of the above can have search queries added to them like so:
+    - `/api/v1/domains/?domain=gsa*`
+    - `/api/v1/domains/?domain=gsa*&data.status_code=200`
+    - `/api/v1/domains/18f.gov/?data.status_code=200`
+    - `/api/v1/scans/?data.dap_detected=true`
+    - `/api/v1/scans/uswds/?data.total_score=gt:100`
+    - `/api/v1/scans/uswds/?data.total_score=lt:50`
 
 The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
 stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
