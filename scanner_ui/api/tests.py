@@ -13,13 +13,15 @@ class CheckAPI(SimpleTestCase):
     scansjsondata = json.loads(scansresponse.content)
 
     def test_all_domains(self):
-        """All domains are returned from calls to domains and scans endpoints"""
+        """All domains are returned from calls to domains endpoint"""
         self.assertGreaterEqual(len(self.domainsjsondata), 10)
-        self.assertGreaterEqual(len(self.scansjsondata), 10)
 
-    def test_domains_same_as_scans(self):
-        """domains endpoint returns the same as the scans endpoint"""
-        self.assertEqual(self.domainsjsondata, self.scansjsondata)
+    def test_scans_list(self):
+        """the scans endpoint gets you a list of scans"""
+        self.assertGreaterEqual(len(self.scansjsondata), 7)
+        self.assertIn('third_parties', self.scansjsondata)
+        self.assertIn('dap', self.scansjsondata)
+        self.assertIn('200scanner', self.scansjsondata)
 
     def test_individual_domain_works(self):
         """domains/18f.gov endpoint works"""
@@ -94,3 +96,10 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/domains/?domain=18f*&data.status_code=200")
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 3)
+
+    # XXX this is broken??
+    # def test_api_pagination(self):
+    #     """pagination should work"""
+    #     response = self.client.get("/api/v1/domains/?page=1")
+    #     jsondata = json.loads(response.content)
+    #     self.assertEqual(jsondata['count'], len(jsondata['results']))

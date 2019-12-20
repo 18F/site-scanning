@@ -25,7 +25,7 @@ it's json files into S3.  The UI then can be used to find and download the scan 
 The scan API map is:
   - `/api/v1/domains/` enumerates all of the scans for all domains.
   - `/api/v1/domains/{domain}` pulls down all of the scan results for a particular domain.
-  - `/api/v1/scans/` enumerates all of the scans for all scantypes.
+  - `/api/v1/scans/` enumerates all of the scantypes.
   - `/api/v1/scans/{scantype}` enumerates all of the scans for all domains that have this scantype.
   - All of the above can have search queries added to them.
     You can query on any field that you can see in the API.  Subfields are accessed
@@ -34,7 +34,6 @@ The scan API map is:
     - `/api/v1/domains/?domain=gsa*`
     - `/api/v1/domains/?domain=gsa*&data.status_code=200`
     - `/api/v1/domains/18f.gov/?data.status_code=200`
-    - `/api/v1/scans/?data.dap_detected=true`
     - `/api/v1/scans/uswds/?data.total_score=gt:100`
     - `/api/v1/scans/uswds/?data.total_score=lt:50`
 
