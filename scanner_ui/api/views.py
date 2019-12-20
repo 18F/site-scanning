@@ -89,10 +89,15 @@ def getscantypes():
 class DomainsViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
 
-    def list(self, request):
+    def get_queryset(self, domain=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        # don't search on pagination params
-        scans = getScansFromES(request=request, excludeparams=pageparams)
+        if self.pagination_class.page_query_param in self.request.GET:
+            return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams)
+        else:
+            return getScansFromES(request=self.request, domain=domain)
+
+    def list(self, request):
+        scans = self.get_queryset()
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
@@ -106,7 +111,7 @@ class DomainsViewset(viewsets.GenericViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, domain=None):
-        scans = getScansFromES(domain=domain, request=request)
+        scans = self.get_queryset(domain=domain)
         serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
@@ -114,14 +119,19 @@ class DomainsViewset(viewsets.GenericViewSet):
 class ScansViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
 
+    def get_queryset(self, scantype=None, domain=None):
+        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
+        if self.pagination_class.page_query_param in self.request.GET:
+            return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams)
+        else:
+            return getScansFromES(request=self.request, domain=domain, scantype=scantype)
+
     def list(self, request):
         scans = getscantypes()
         return Response(scans)
 
     def retrieve(self, request, scantype=None):
-        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        # don't search on pagination params
-        scans = getScansFromES(scantype=scantype, request=request, excludeparams=pageparams)
+        scans = self.get_queryset(scantype=scantype)
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
@@ -134,7 +144,7 @@ class ScansViewset(viewsets.GenericViewSet):
         return Response(serializer.data)
 
     def scan(self, request, scantype=None, domain=None):
-        scan = getScansFromES(scantype=scantype, domain=domain, request=request)
+        scan = self.get_queryset(scantype=scantype, domain=domain)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
         serializer = self.get_serializer(scan[0])
