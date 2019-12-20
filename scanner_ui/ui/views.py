@@ -370,12 +370,12 @@ def search200(request, displaytype=None):
     # the page template.
     popups = []
     popups.append(popupbuilder('present', presentlist, selectedvalue=present))
-    popups.append(popupbuilder('my200page', my200pages, selectedvalue=periodize(my200page)))
+    popups.append(popupbuilder('200page', my200pages, selectedvalue=periodize(my200page)))
     popups.append(popupbuilder('date', dates, selectedvalue=date))
     popups.append(popupbuilder('agency', agencies, selectedvalue=agency))
     popups.append(popupbuilder('domaintype', domaintypes, selectedvalue=domaintype))
     popups.append(popupbuilder('org', orgs, selectedvalue=org))
-    if periodize(my200page) == 'All Scans':
+    if my200page != 'All Scans':
         popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype))
     else:
         popups.append(popupbuilder('mimetype', mimetypes, selectedvalue=mimetype, disabled=True))
@@ -390,6 +390,9 @@ def search200(request, displaytype=None):
         # Just create another 'elif displaytype == "yourpagetype"' section below
         # and do what the other displaytypes do:  create a column, add your data
         # to it, store it in the results and set the columns and page title.
+        #
+        # You can also customize the popups using the popupbuilder.
+        # See the DAP scan for an example of this.
         #
         # XXX seems like there ought to be a more clever way to do this.
 
