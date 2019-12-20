@@ -34,7 +34,13 @@ def getScansFromES(scantype=None, domain=None, request=None):
     # arguments should be like ?domain=gsa*&data.foo=bar&numberfield=gt:50&numberfield=lt:20
     # arguments are ANDed together
     for k, v in request.GET.items():
-        if re.match(r'^gt:[0-9]+', v):
+        # don't try to search on the pagination parameters
+        paginationparams = [ElasticsearchPagination.page_query_param, ElasticsearchPagination.page_size_query_param]
+        if k in paginationparams:
+            next
+
+        # find greater/lesserthan queries
+        elif re.match(r'^gt:[0-9]+', v):
             gt = v.split(':')[1]
             q = Range(**{k: {'gt': gt}})
             s = s.query(q)
@@ -42,6 +48,8 @@ def getScansFromES(scantype=None, domain=None, request=None):
             lt = v.split(':')[1]
             q = Range(**{k: {'lt': lt}})
             s = s.query(q)
+
+        # everything else, just try searching for!
         else:
             s = s.query("query_string", query=v, fields=[k])
 
@@ -68,7 +76,19 @@ def getScansFromES(scantype=None, domain=None, request=None):
     return scans
 
 
+# get the list of scantypes by scraping the indexes
+def getscantypes():
+    es = Elasticsearch([os.environ['ESURL']])
+    dates = getdates()
+    latestindex = dates[1] + '-*'
+    indices = list(es.indices.get_alias(latestindex).keys())
+    y, m, d, scantypes = zip(*(s.split("-") for s in indices))
+    return scantypes
+
+
 class ElasticsearchPagination(pagination.PageNumberPagination):
+    page_size = 100
+
     def paginate_queryset(self, queryset, request, view=None):
         page_size = self.get_page_size(request)
         if not page_size:
@@ -81,7 +101,7 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
         return queryset[start:finish]
 
 
-class DomainsViewset(viewsets.ViewSet):
+class DomainsViewset(viewsets.GenericViewSet):
     pagination_class = ElasticsearchPagination
 
     def list(self, request):
@@ -95,13 +115,12 @@ class DomainsViewset(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class ScansViewset(viewsets.ViewSet):
+class ScansViewset(viewsets.GenericViewSet):
     pagination_class = ElasticsearchPagination
 
     def list(self, request):
-        scans = getScansFromES(request=request)
-        serializer = ScanSerializer(scans, many=True)
-        return Response(serializer.data)
+        scans = getscantypes()
+        return Response(scans)
 
     def retrieve(self, request, scantype=None):
         scans = getScansFromES(scantype=scantype, request=request)
