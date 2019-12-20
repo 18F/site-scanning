@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework import pagination
 from rest_framework.response import Response
 from .serializers import ScanSerializer
 import os
@@ -16,14 +15,14 @@ import re
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def getScansFromES(scantype=None, domain=None, request=None, paginationparams=None):
+def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None):
     es = Elasticsearch([os.environ['ESURL']])
     dates = getdates()
     latestindex = dates[1] + '-*'
     indices = list(es.indices.get_alias(latestindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
-    if paginationparams is None:
-        paginationparams = []
+    if excludeparams is None:
+        excludeparams = []
 
     # if we have a valid scantype, then search that
     if scantype in scantypes:
@@ -36,8 +35,8 @@ def getScansFromES(scantype=None, domain=None, request=None, paginationparams=No
     # arguments should be like ?domain=gsa*&data.foo=bar&numberfield=gt:50&numberfield=lt:20
     # arguments are ANDed together
     for k, v in request.GET.items():
-        # don't try to search on the pagination parameters
-        if k in paginationparams:
+        # don't try to search on excluded parameters
+        if k in excludeparams:
             next
 
         # find greater/lesserthan queries
@@ -92,7 +91,8 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def list(self, request):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        scans = getScansFromES(request=request, paginationparams=pageparams)
+        # don't search on pagination params
+        scans = getScansFromES(request=request, excludeparams=pageparams)
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
@@ -120,7 +120,8 @@ class ScansViewset(viewsets.GenericViewSet):
 
     def retrieve(self, request, scantype=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        scans = getScansFromES(scantype=scantype, request=request, paginationparams=pageparams)
+        # don't search on pagination params
+        scans = getScansFromES(scantype=scantype, request=request, excludeparams=pageparams)
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
