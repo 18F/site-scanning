@@ -16,12 +16,14 @@ import re
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def getScansFromES(scantype=None, domain=None, request=None):
+def getScansFromES(scantype=None, domain=None, request=None, paginationparams=None):
     es = Elasticsearch([os.environ['ESURL']])
     dates = getdates()
     latestindex = dates[1] + '-*'
     indices = list(es.indices.get_alias(latestindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
+    if paginationparams is None:
+        paginationparams = []
 
     # if we have a valid scantype, then search that
     if scantype in scantypes:
@@ -35,7 +37,6 @@ def getScansFromES(scantype=None, domain=None, request=None):
     # arguments are ANDed together
     for k, v in request.GET.items():
         # don't try to search on the pagination parameters
-        paginationparams = [ElasticsearchPagination.page_query_param, ElasticsearchPagination.page_size_query_param]
         if k in paginationparams:
             next
 
@@ -86,50 +87,54 @@ def getscantypes():
     return scantypes
 
 
-class ElasticsearchPagination(pagination.PageNumberPagination):
-    page_size = 100
-
-    def paginate_queryset(self, queryset, request, view=None):
-        page_size = self.get_page_size(request)
-        if not page_size:
-            return None
-        page_number = request.query_params.get(self.page_query_param, 1)
-        if not page_number:
-            return None
-        start = page_size * (page_number - 1)
-        finish = start + page_size
-        return queryset[start:finish]
-
-
 class DomainsViewset(viewsets.GenericViewSet):
-    pagination_class = ElasticsearchPagination
+    serializer_class = ScanSerializer
 
     def list(self, request):
-        scans = getScansFromES(request=request)
-        serializer = ScanSerializer(scans, many=True)
+        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
+        scans = getScansFromES(request=request, paginationparams=pageparams)
+
+        # if we are requesting pagination, then give it
+        if self.pagination_class.page_query_param in request.GET:
+            page = self.paginate_queryset(scans)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+        # otherwise, return the full dataset
+        serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, domain=None):
         scans = getScansFromES(domain=domain, request=request)
-        serializer = ScanSerializer(scans, many=True)
+        serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
 
 class ScansViewset(viewsets.GenericViewSet):
-    pagination_class = ElasticsearchPagination
+    serializer_class = ScanSerializer
 
     def list(self, request):
         scans = getscantypes()
         return Response(scans)
 
     def retrieve(self, request, scantype=None):
-        scans = getScansFromES(scantype=scantype, request=request)
-        serializer = ScanSerializer(scans, many=True)
+        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
+        scans = getScansFromES(scantype=scantype, request=request, paginationparams=pageparams)
+
+        # if we are requesting pagination, then give it
+        if self.pagination_class.page_query_param in request.GET:
+            page = self.paginate_queryset(scans)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
     def scan(self, request, scantype=None, domain=None):
         scan = getScansFromES(scantype=scantype, domain=domain, request=request)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
-        serializer = ScanSerializer(scan[0])
+        serializer = self.get_serializer(scan[0])
         return Response(serializer.data)

@@ -97,9 +97,8 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 3)
 
-    # XXX this is broken??
-    # def test_api_pagination(self):
-    #     """pagination should work"""
-    #     response = self.client.get("/api/v1/domains/?page=1")
-    #     jsondata = json.loads(response.content)
-    #     self.assertEqual(jsondata['count'], len(jsondata['results']))
+    def test_api_pagination(self):
+        """pagination should work"""
+        response = self.client.get("/api/v1/domains/?page=1")
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata['count'], len(jsondata['results']))
