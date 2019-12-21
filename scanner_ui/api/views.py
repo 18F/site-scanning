@@ -97,6 +97,7 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
 
         paginator = self.django_paginator_class(queryset, page_size)
         self.page = paginator.page(page_number)
+        self.request = request
 
         start = page_size * (page_number - 1)
         finish = start + page_size
