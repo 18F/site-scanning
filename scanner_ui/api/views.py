@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, pagination
 from rest_framework.response import Response
 from .serializers import ScanSerializer
 import os
@@ -86,8 +86,26 @@ def getscantypes():
     return scantypes
 
 
+class ElasticsearchPagination(pagination.PageNumberPagination):
+    def paginate_queryset(self, queryset, request, view=None):
+        page_size = self.get_page_size(request)
+        if not page_size:
+            return None
+        page_number = int(request.query_params.get(self.page_query_param, 1))
+        if not page_number:
+            return None
+
+        paginator = self.django_paginator_class(queryset, page_size)
+        self.page = paginator.page(page_number)
+
+        start = page_size * (page_number - 1)
+        finish = start + page_size
+        return queryset[start:finish]
+
+
 class DomainsViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
+    pagination_class = ElasticsearchPagination
 
     def get_queryset(self, domain=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
@@ -118,6 +136,7 @@ class DomainsViewset(viewsets.GenericViewSet):
 
 class ScansViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
+    pagination_class = ElasticsearchPagination
 
     def get_queryset(self, scantype=None, domain=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
