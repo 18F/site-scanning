@@ -36,6 +36,10 @@ The scan API map is:
     - `/api/v1/domains/18f.gov/?data.status_code=200`
     - `/api/v1/scans/uswds/?data.total_score=gt:100`
     - `/api/v1/scans/uswds/?data.total_score=lt:50`
+  - You can also request pagination by adding a `page=1` parameter to any query, which will
+    give you a request back that has next/previous links and a page number count.  So
+    `/api/v1/domains/?page=1` will give you the first 100 entries and `/api/v1/domains/?page=2`
+    will give you the next 100, for example.
 
 The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
 stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
