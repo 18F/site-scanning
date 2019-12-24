@@ -108,3 +108,9 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds2/?page=1")
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['count'], len(jsondata['results']))
+
+    # def test_api_cors(self):
+    #     """CORS should be enabled on the API"""
+    #     response = self.client.get("/api/v1/domains/18f.gov/")
+    #     # self.assertIn('Access-Control-Allow-Origin', response)
+    #     self.assertEqual(response['Access-Control-Allow-Origin'], '*')

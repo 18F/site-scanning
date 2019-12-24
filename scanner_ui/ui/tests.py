@@ -346,3 +346,8 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
         self.assertIn(b'<td>200</td>', response.content)
+
+    def test_ui_cors(self):
+        """CORS should not be enabled on the UI"""
+        response = self.client.get("/about/")
+        self.assertNotIn('Access-Control-Allow-Origin', response)
