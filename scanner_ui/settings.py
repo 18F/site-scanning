@@ -49,13 +49,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'rest_framework',
+    'corsheaders',
+    'scanner_ui',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,7 +145,7 @@ STATICFILES_DIRS = [
 # to allow CORS for the API
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
-# CORS_ALLOW_METHODS = ('GET', 'OPTIONS', 'POST',)  # only allow read-only methods
+CORS_ALLOW_METHODS = ('GET')
 
 # REST config
 REST_FRAMEWORK = {
