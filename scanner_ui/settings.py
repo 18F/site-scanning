@@ -142,10 +142,10 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "ui/static"),
 ]
 
-# to allow CORS for the API
+# to allow CORS for the site
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
-CORS_ALLOW_METHODS = ('GET')  # only allow read-only methods
+CORS_ALLOW_METHODS = ('GET', 'OPTIONS', 'POST',)  # only allow read-only methods
 
 # REST config
 REST_FRAMEWORK = {
