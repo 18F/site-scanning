@@ -349,5 +349,5 @@ class CheckUI(SimpleTestCase):
 
     def test_ui_cors(self):
         """CORS should not be enabled on the UI"""
-        response = self.client.get("/about/")
+        response = self.client.get("/about/", HTTP_ORIGIN='localhost')
         self.assertNotIn('Access-Control-Allow-Origin', response)
