@@ -111,6 +111,8 @@ def getdates():
 
 
 # search in ES for the unique values in a particular field
+# The subfield parameter is so that we can search for things like
+# data.dap_detected.  This may be doable in a clever ES query.
 def getListFromFields(index, field, subfield=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source([field])
@@ -121,9 +123,11 @@ def getListFromFields(index, field, subfield=None):
                 valuemap[i[field]] = 1
             else:
                 for _, v in i[field].to_dict().items():
+                    print('trying:', v, valuemap)
                     valuemap[v[subfield]] = 1
         values = list(valuemap.keys())
-    except Exception:
+    except Exception as err:
+        print('trying to get list from fields: ', field, subfield, err)
         values = []
     values.sort()
     return values
