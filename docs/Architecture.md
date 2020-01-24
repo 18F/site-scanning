@@ -36,10 +36,16 @@ The scan API map is:
     - `/api/v1/domains/18f.gov/?data.status_code=200`
     - `/api/v1/scans/uswds/?data.total_score=gt:100`
     - `/api/v1/scans/uswds/?data.total_score=lt:50`
-  - You can also request pagination by adding a `page=1` parameter to any query, which will
-    give you a request back that has next/previous links and a page number count.  So
+  - You can also request pagination by adding a `page=1` parameter to any of the above queries,
+    which will give you a request back that has next/previous links and a page number count.  So
     `/api/v1/domains/?page=1` will give you the first 100 entries and `/api/v1/domains/?page=2`
     will give you the next 100, for example.
+
+  - `/api/v1/lists/dates/` enumerates all of the snapshots of scan data that we have.
+  - `/api/v1/lists/{scantype}/agencies/` enumerates all of the agencies that are in the scantype.
+  - `/api/v1/lists/{scantype}/domaintypes/` enumerates all of the domaintypes that are in the scantype.
+  - `/api/v1/lists/{scantype}/values/{field}/` enumerates the unique values contained in the specified field in the given scantype.  The field can be specified with nested fields, like `data.dap_detected` if need be.
+    - `/api/v1/lists/{scantype}/values/{field}/{subfield}/` enumerates the unique values in the subfield field in all of the dictionaries under the specified field.  This is so you can query things like `/api/v1/lists/pagedata/values/data/responsecode` to get all the response codes for all of the pages under the data field in the pagedata scantype.
 
 The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
 stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
