@@ -137,18 +137,32 @@ class CheckAPI(SimpleTestCase):
         self.assertEqual(len(jsondata), 1)
         self.assertIn('Federal Agency - Executive', jsondata)
 
-    def test_fieldvalues_endpoint(self):
+    def test_fieldvalues_domain_endpoint(self):
         """fieldvalues endpoint works"""
         response = self.client.get("/api/v1/lists/privacy/values/domain/")
         jsondata = json.loads(response.content)
         self.assertGreaterEqual(len(jsondata), 3)
         self.assertIn('18f.gov', jsondata)
 
+    def test_fieldvalues_data_endpoint(self):
+        """fieldvalues endpoint works"""
+        response = self.client.get("/api/v1/lists/privacy/values/data/")
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 3)
+
     def test_fieldvalues_nested_endpoint(self):
         """fieldvalues endpoint works with nested fields"""
-        response = self.client.get("/api/v1/lists/dap/values/data/dap_detected/")
+        response = self.client.get("/api/v1/lists/dap/values/data.dap_detected/")
         jsondata = json.loads(response.content)
-        print(jsondata)
         self.assertEqual(len(jsondata), 2)
         self.assertIn(True, jsondata)
         self.assertIn(False, jsondata)
+
+    def test_fieldvalues_subfield(self):
+        """fieldvalues endpoint works with subfields"""
+        response = self.client.get("/api/v1/lists/pagedata/values/data/responsecode/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
+        self.assertIn('200', jsondata)
+        self.assertIn('404', jsondata)
+        self.assertIn('-1', jsondata)

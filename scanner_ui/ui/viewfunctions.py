@@ -111,24 +111,33 @@ def getdates():
 
 
 # search in ES for the unique values in a particular field
-# The subfield parameter is so that we can search for things like
-# data.dap_detected.  This may be doable in a clever ES query.
+# If you call this on a field which is iterable, it will
+# just give you the list, or the keys of the dictionary.
+#
+# If you call this with a subfield, it expects the field to
+# be a dict and will get all the values from the specified
+# subfield under every item.  This is so you can do things
+# like find all mime_types under all the different pages.
+#
+# XXX seems like there ought to be a way to do this with aggregates in ES.
 def getListFromFields(index, field, subfield=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source([field])
-    valuemap = {}
-    try:
-        for i in s.scan():
-            if subfield is None:
-                valuemap[i[field]] = 1
-            else:
-                for _, v in i[field].to_dict().items():
-                    print('trying:', v, valuemap)
-                    valuemap[v[subfield]] = 1
-        values = list(valuemap.keys())
-    except Exception as err:
-        print('trying to get list from fields: ', field, subfield, err)
-        values = []
+    fieldlist = field.split('.')
+    valueset = set()
+    for i in s.scan():
+        v = i.to_dict()
+        for f in fieldlist:
+            v = v[f]
+        if isinstance(v, str) or not hasattr(v, '__iter__'):
+            valueset.add(v)
+        else:
+            for z in list(v):
+                if subfield is None:
+                    valueset.add(z)
+                else:
+                    valueset.add(v[z][subfield])
+    values = list(valueset)
     values.sort()
     return values
 
