@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from rest_framework.test import APIClient
 import json
+import datetime
 
 # tests for views
 
@@ -113,3 +114,55 @@ class CheckAPI(SimpleTestCase):
         """CORS should be enabled on the API"""
         response = self.client.get("/api/v1/domains/18f.gov/", HTTP_ORIGIN='localhost')
         self.assertEqual(response['Access-Control-Allow-Origin'], '*')
+
+    def test_dates_endpoint(self):
+        """dates endpoint works"""
+        response = self.client.get("/api/v1/lists/dates/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+        d = datetime.datetime.now()
+        self.assertEqual(jsondata[0], d.strftime("%Y-%m-%d"))
+
+    def test_agencies_endpoint(self):
+        """agencies endpoint works"""
+        response = self.client.get("/api/v1/lists/dap/agencies/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 2)
+        self.assertIn('General Services Administration', jsondata)
+
+    def test_domaintypes_endpoint(self):
+        """domaintypes endpoint works"""
+        response = self.client.get("/api/v1/lists/dap/domaintypes/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+        self.assertIn('Federal Agency - Executive', jsondata)
+
+    def test_fieldvalues_domain_endpoint(self):
+        """fieldvalues endpoint works"""
+        response = self.client.get("/api/v1/lists/privacy/values/domain/")
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 3)
+        self.assertIn('18f.gov', jsondata)
+
+    def test_fieldvalues_data_endpoint(self):
+        """fieldvalues endpoint works"""
+        response = self.client.get("/api/v1/lists/privacy/values/data/")
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 3)
+
+    def test_fieldvalues_nested_endpoint(self):
+        """fieldvalues endpoint works with nested fields"""
+        response = self.client.get("/api/v1/lists/dap/values/data.dap_detected/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 2)
+        self.assertIn(True, jsondata)
+        self.assertIn(False, jsondata)
+
+    def test_fieldvalues_subfield(self):
+        """fieldvalues endpoint works with subfields"""
+        response = self.client.get("/api/v1/lists/pagedata/values/data/responsecode/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
+        self.assertIn('200', jsondata)
+        self.assertIn('404', jsondata)
+        self.assertIn('-1', jsondata)

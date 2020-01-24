@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import DomainsViewset
 from .views import ScansViewset
+from .views import ListsViewset
 
 domains_list = DomainsViewset.as_view({
     'get': 'list'
@@ -17,6 +18,18 @@ scans_detail = ScansViewset.as_view({
 scan = ScansViewset.as_view({
     'get': 'scan'
 })
+agencies = ListsViewset.as_view({
+    'get': 'agencies'
+})
+domaintypes = ListsViewset.as_view({
+    'get': 'domaintypes'
+})
+fieldvalues = ListsViewset.as_view({
+    'get': 'fieldvalues'
+})
+dates = ListsViewset.as_view({
+    'get': 'dates'
+})
 
 urlpatterns = [
     path('domains/', domains_list, name="domains-list"),
@@ -25,4 +38,9 @@ urlpatterns = [
     path('scans/', scans_list, name="scans-list"),
     path('scans/<scantype>/', scans_detail, name="scans-detail"),
     path('scans/<scantype>/<domain>/', scan, name="scan"),
+    path('lists/<scantype>/agencies/', agencies, name="agencies"),
+    path('lists/<scantype>/domaintypes/', domaintypes, name="domaintypes"),
+    path('lists/<scantype>/values/<field>/', fieldvalues, name="fieldvalues"),
+    path('lists/<scantype>/values/<field>/<subfield>/', fieldvalues, name="fieldvalues"),
+    path('lists/dates/', dates, name="dates"),
 ]

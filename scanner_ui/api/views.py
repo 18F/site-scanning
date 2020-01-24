@@ -2,7 +2,7 @@ from rest_framework import viewsets, pagination
 from rest_framework.response import Response
 from .serializers import ScanSerializer
 import os
-from scanner_ui.ui.views import getdates
+from scanner_ui.ui.views import getdates, getListFromFields
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range
@@ -169,3 +169,37 @@ class ScansViewset(viewsets.GenericViewSet):
             raise Exception('too many or too few scans', scan)
         serializer = self.get_serializer(scan[0])
         return Response(serializer.data)
+
+
+# This gets all the unique values for a field
+def uniquevalues(date=None, scantype=None, field=None, subfield=None):
+    if date is None:
+        # default to most recent date
+        date = getdates()[1]
+
+    if scantype is None:
+        raise Exception('no scantype specified')
+
+    index = date + '-' + scantype
+    things = getListFromFields(index, field, subfield=subfield)
+    return things
+
+
+class ListsViewset(viewsets.GenericViewSet):
+    def dates(self, request):
+        dates = getdates()[1:]
+        return Response(dates)
+
+    def agencies(self, request, scantype=None, date=None):
+        agencies = uniquevalues(date=date, scantype=scantype, field='agency')
+        return Response(agencies)
+
+    def domaintypes(self, request, scantype=None, date=None):
+        domaintypes = uniquevalues(date=date, scantype=scantype, field='domaintype')
+        return Response(domaintypes)
+
+    def fieldvalues(self, request, date=None, scantype=None, field=None, subfield=None):
+        if field is None:
+            raise Exception('no field specified')
+        things = uniquevalues(date=date, scantype=scantype, field=field, subfield=subfield)
+        return Response(things)
