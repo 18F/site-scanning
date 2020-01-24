@@ -186,6 +186,8 @@ def uniquevalues(date=None, scantype=None, field=None, subfield=None):
 
 
 class ListsViewset(viewsets.GenericViewSet):
+    queryset = ''
+
     def dates(self, request):
         dates = getdates()[1:]
         return Response(dates)
