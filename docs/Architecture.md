@@ -49,7 +49,8 @@ The scan API map is:
   - `/api/v1/date/{date}/...` will let you query the index for the specified date.  The `{date}`
     can be found with the `/api/v1/lists/dates/` API endpoint, and after that, you can append on the
     normal domains, scans, and list endpoint queries, like
-    `/api/v1/date/2020-01-27/domains/18f.gov/`.
+    `/api/v1/date/2020-01-27/domains/18f.gov/`.  If you give a bad date, it will use the latest
+    scans rather than returning an error.
 
 The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
 stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
