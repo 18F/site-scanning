@@ -15,21 +15,23 @@ import re
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None):
+def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None, date=None):
     es = Elasticsearch([os.environ['ESURL']])
     dates = getdates()
-    latestindex = dates[1] + '-*'
-    indices = list(es.indices.get_alias(latestindex).keys())
+    if date is None or date not in dates:
+        date = dates[1]
+    selectedindex = date + '-*'
+    indices = list(es.indices.get_alias(selectedindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
     if excludeparams is None:
         excludeparams = []
 
     # if we have a valid scantype, then search that
     if scantype in scantypes:
-        index = dates[1] + '-' + scantype
+        index = date + '-' + scantype
         s = Search(using=es, index=index)
     else:
-        s = Search(using=es, index=latestindex)
+        s = Search(using=es, index=selectedindex)
 
     # This is to handle queries
     # arguments should be like ?domain=gsa*&data.foo=bar&numberfield=gt:50&numberfield=lt:20
@@ -77,11 +79,13 @@ def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None)
 
 
 # get the list of scantypes by scraping the indexes
-def getscantypes():
+def getscantypes(date=None):
     es = Elasticsearch([os.environ['ESURL']])
     dates = getdates()
-    latestindex = dates[1] + '-*'
-    indices = list(es.indices.get_alias(latestindex).keys())
+    if date is None:
+        date = dates[1]
+    selectedindex = date + '-*'
+    indices = list(es.indices.get_alias(selectedindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
     return scantypes
 
@@ -108,15 +112,15 @@ class DomainsViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
     pagination_class = ElasticsearchPagination
 
-    def get_queryset(self, domain=None):
+    def get_queryset(self, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
         if self.pagination_class.page_query_param in self.request.GET:
-            return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams)
+            return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
         else:
-            return getScansFromES(request=self.request, domain=domain)
+            return getScansFromES(request=self.request, domain=domain, date=date)
 
-    def list(self, request):
-        scans = self.get_queryset()
+    def list(self, request, date=None):
+        scans = self.get_queryset(date=date)
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
@@ -129,8 +133,8 @@ class DomainsViewset(viewsets.GenericViewSet):
         serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, domain=None):
-        scans = self.get_queryset(domain=domain)
+    def retrieve(self, request, domain=None, date=None):
+        scans = self.get_queryset(domain=domain, date=date)
         serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
@@ -139,19 +143,19 @@ class ScansViewset(viewsets.GenericViewSet):
     serializer_class = ScanSerializer
     pagination_class = ElasticsearchPagination
 
-    def get_queryset(self, scantype=None, domain=None):
+    def get_queryset(self, scantype=None, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
         if self.pagination_class.page_query_param in self.request.GET:
-            return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams)
+            return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
         else:
-            return getScansFromES(request=self.request, domain=domain, scantype=scantype)
+            return getScansFromES(request=self.request, domain=domain, scantype=scantype, date=date)
 
-    def list(self, request):
-        scans = getscantypes()
+    def list(self, request, date=None):
+        scans = getscantypes(date=date)
         return Response(scans)
 
-    def retrieve(self, request, scantype=None):
-        scans = self.get_queryset(scantype=scantype)
+    def retrieve(self, request, scantype=None, date=None):
+        scans = self.get_queryset(scantype=scantype, date=date)
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
@@ -163,8 +167,8 @@ class ScansViewset(viewsets.GenericViewSet):
         serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
-    def scan(self, request, scantype=None, domain=None):
-        scan = self.get_queryset(scantype=scantype, domain=domain)
+    def scan(self, request, scantype=None, domain=None, date=None):
+        scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
         serializer = self.get_serializer(scan[0])

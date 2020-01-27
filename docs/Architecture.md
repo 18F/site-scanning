@@ -46,6 +46,10 @@ The scan API map is:
   - `/api/v1/lists/{scantype}/domaintypes/` enumerates all of the domaintypes that are in the scantype.
   - `/api/v1/lists/{scantype}/values/{field}/` enumerates the unique values contained in the specified field in the given scantype.  The field can be specified with nested fields, like `data.dap_detected` if need be.
     - `/api/v1/lists/{scantype}/values/{field}/{subfield}/` enumerates the unique values in the subfield field in all of the dictionaries under the specified field.  This is so you can query things like `/api/v1/lists/pagedata/values/data/responsecode` to get all the response codes for all of the pages under the data field in the pagedata scantype.
+  - `/api/v1/date/{date}/...` will let you query the index for the specified date.  The `{date}`
+    can be found with the `/api/v1/lists/dates/` API endpoint, and after that, you can append on the
+    normal domains, scans, and list endpoint queries, like
+    `/api/v1/date/2020-01-27/domains/18f.gov/`.
 
 The API returns metadata about the scans that we have, as well as a reference to where the scans are actually
 stored.  In addition, if you go to the `/api/v1/domains/{domain}` endpoint, you will get the scan results inline
