@@ -12,6 +12,8 @@ class CheckAPI(SimpleTestCase):
     domainsjsondata = json.loads(domainsresponse.content)
     scansresponse = client.get("/api/v1/scans/")
     scansjsondata = json.loads(scansresponse.content)
+    datesresponse = client.get("/api/v1/lists/dates/")
+    datesjsondata = json.loads(datesresponse.content)
 
     def test_all_domains(self):
         """All domains are returned from calls to domains endpoint"""
@@ -161,6 +163,104 @@ class CheckAPI(SimpleTestCase):
     def test_fieldvalues_subfield(self):
         """fieldvalues endpoint works with subfields"""
         response = self.client.get("/api/v1/lists/pagedata/values/data/responsecode/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
+        self.assertIn('200', jsondata)
+        self.assertIn('404', jsondata)
+        self.assertIn('-1', jsondata)
+
+    def test_all_domains_date(self):
+        """All domains are returned from calls to domains endpoint with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 10)
+
+    def test_specific_domain_date(self):
+        """All domains are returned from calls to domains endpoint with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/18f.gov/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(jsondata[0]['domain'], '18f.gov')
+
+    def test_specific_domain_scan_date(self):
+        """requesting one particular scantype from one particular domain on a particular date works"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/18f.gov/dap/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata['domain'], '18f.gov')
+
+    def test_scans_list_date(self):
+        """the scans endpoint gets you a list of scans for a particular date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 7)
+        self.assertIn('third_parties', jsondata)
+        self.assertIn('dap', jsondata)
+        self.assertIn('200scanner', jsondata)
+
+    def test_individual_scans_works_date(self):
+        """the scans endpoint gets you a list of scans for a particular date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 3)
+        self.assertEqual(jsondata[0]['scantype'], 'dap')
+
+    def test_dap_scan_works_date(self):
+        """the scans endpoint gets you a list of scans for a particular date and domain"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/gsa.gov/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata['scantype'], 'dap')
+        self.assertIn('GSA', jsondata['data']['dap_parameters']['agency'])
+
+    def test_agencies_endpoint_date(self):
+        """agencies endpoint works with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/dap/agencies/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 2)
+        self.assertIn('General Services Administration', jsondata)
+
+    def test_domaintypes_endpoint_date(self):
+        """domaintypes endpoint works with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/dap/domaintypes/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 1)
+        self.assertIn('Federal Agency - Executive', jsondata)
+
+    def test_fieldvalues_domain_endpoint_date(self):
+        """fieldvalues endpoint works with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/privacy/values/domain/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 3)
+        self.assertIn('18f.gov', jsondata)
+
+    def test_fieldvalues_data_endpoint_date(self):
+        """fieldvalues endpoint works with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/privacy/values/data/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertGreaterEqual(len(jsondata), 3)
+
+    def test_fieldvalues_nested_endpoint_date(self):
+        """fieldvalues endpoint works with nested fields with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/dap/values/data.dap_detected/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(len(jsondata), 2)
+        self.assertIn(True, jsondata)
+        self.assertIn(False, jsondata)
+
+    def test_fieldvalues_subfield_date(self):
+        """fieldvalues endpoint works with subfields with a date"""
+        url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/pagedata/values/data/responsecode/'
+        response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertEqual(len(jsondata), 3)
         self.assertIn('200', jsondata)
