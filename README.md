@@ -10,12 +10,21 @@
 - benefit from this new product + want to retain their edge over their peers
 
 ## What they see when they open the door
-1. Front stage = Product: what it does, how it works, demo
-2. What's cooking = Latest releases + project activity
+1. Front stage
+- what it does
+- how it works
+- demo
+2. What's cooking
+- Latest releases
+- project activity
 3. Backstage
-- Project: Product vision + strategy + roadmap, Project timeline + team + relationship network
-- Product: previous versions
-4. Call to action = Word-of-mouth material, see what improvement ideas others submitted, submit your own idea
+- Product vision + strategy + roadmap
+- Project timeline + team + relationship network
+- Previous product versions
+4. Call to action
+- Word-of-mouth material
+- See what improvement ideas others submitted
+- Submit your own idea
 
 Site scanning is the act of making simple queries to a defined list of government websites, to evaluate compliance with basic government standards and practices. They run automatically, and, with the use of serverless cloud infrastructure, cost about two dollars per daily scan.
 
