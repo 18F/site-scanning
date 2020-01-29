@@ -1,4 +1,19 @@
-# 10x site scanning
+# 10x site scanning 
+
+## Who's our audience with this public repo:
+1. Reference for people behind the scenes of this product who either
+- 10x project team
+- funders
+- decision-makers who have to report project progress
+2. Idea diffuser for people in the federal website evaluation market who either
+- like having new stuff first
+- benefit from this new product + want to retain their edge over their peers
+
+## What they see when they open the door
+1. Front stage = Product: what it does, how it works, previous versions
+2. What's cooking = Latest releases + project activity
+3. Backstage = Project: Product vision + strategy + roadmap, Project timeline + team + relationship network
+4. Call to action = Word-of-mouth material, see what improvement ideas others submitted, submit your own idea
 
 Site scanning is the act of making simple queries to a defined list of government websites, to evaluate compliance with basic government standards and practices. They run automatically, and, with the use of serverless cloud infrastructure, cost about two dollars per daily scan.
 
