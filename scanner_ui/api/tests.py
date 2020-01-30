@@ -112,6 +112,12 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['count'], len(jsondata['results']))
 
+    def test_api_pagesize(self):
+        """page_size on scans endpoint should work"""
+        response = self.client.get("/api/v1/scans/uswds2/?page=1&page_size=2")
+        jsondata = json.loads(response.content)
+        self.assertEqual(2, len(jsondata['results']))
+
     def test_api_cors(self):
         """CORS should be enabled on the API"""
         response = self.client.get("/api/v1/domains/18f.gov/", HTTP_ORIGIN='localhost')

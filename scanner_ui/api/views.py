@@ -91,6 +91,8 @@ def getscantypes(date=None):
 
 
 class ElasticsearchPagination(pagination.PageNumberPagination):
+    page_size_query_param = 'page_size'
+
     def paginate_queryset(self, queryset, request, view=None):
         page_size = self.get_page_size(request)
         if not page_size:
