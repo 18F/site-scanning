@@ -141,7 +141,7 @@ def getListFromFields(index, field, subfield=None):
     try:
         values.sort()
     except TypeError:
-        print('warning:  cannot sort list with varying types')
+        print('warning:  cannot sort list with varying types from field:', field, 'subfield:', str(subfield), 'index:', index)
     return values
 
 
