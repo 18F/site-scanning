@@ -42,10 +42,9 @@ class CheckAPI(SimpleTestCase):
 
     def test_org_field(self):
         """there is an organization field in the API"""
-        response = self.client.get("/api/v1/scans/uswds2/")
+        response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 3)
-        self.assertEqual(jsondata[0]['organization'], '18F')
+        self.assertEqual('18F', jsondata[0]['organization'])
 
     def test_dap_scan_works(self):
         """scans/dap endpoint works"""
@@ -279,3 +278,10 @@ class CheckAPI(SimpleTestCase):
         self.assertIn('200', jsondata)
         self.assertIn('404', jsondata)
         self.assertIn('-1', jsondata)
+
+    def test_fieldvalues_uswdsversion(self):
+        """fieldvalues endpoint works for uswdsversion field"""
+        url = '/api/v1/lists/uswds2/values/data.uswdsversion/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertIn('v2.0.3', jsondata)
