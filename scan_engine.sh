@@ -45,9 +45,7 @@ if [ -z "$ESURL" ] ; then
 fi
 
 # make sure we have all the arguments we need
-if [ -n "$1" ] ; then
-	BUCKET="$1"
-else
+if [ -z "$BUCKETNAME" ] ; then
 	BUCKET=$(echo "$VCAP_SERVICES" | jq -r '.s3[0].credentials.bucket')
 	if [ -z "$BUCKET" ] ; then
 		echo "no bucket supplied"
@@ -55,6 +53,8 @@ else
 		echo "example:  $0 scanbucket"
 		exit 1
 	fi
+else
+	BUCKET="$BUCKETNAME"
 fi
 
 cd /app
@@ -95,22 +95,18 @@ if [ -d ../node_modules ] ; then
 fi
 npm install
 
-# get the list of domains
-if [ -f "$DOMAINCSV" ] ; then
-	# this is so we can supply our own file for testing
-	cp "$DOMAINCSV" /tmp/domains.csv
+# get the domains and split them up.  If we were told to process a particular file,
+# select it.  Otherwise, scan everything.
+../getdomains.sh /tmp/splitdir
+if [ -n "$1" ] ; then
+	if [ ! -f "$1" ] ; then
+		echo "domain file $1 not found.  Aborting!!"
+		exit 1
+	fi
+	DOMAINFILES="$1"
 else
-	wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
+	DOMAINFILES=$(ls /tmp/splitdir/*)
 fi
-
-# uncomment this for doing quick testing on a small set of domains, but
-# BE CAREFUL NOT TO CHECK THIS IN IF YOU DO THAT!
-# cat <<EOF >/tmp/domains.csv
-# domain
-# gsa.gov
-# 18f.gov
-# cloud.gov
-# EOF
 
 # clean up old scans (if there are any)
 if [ -d ./cache ] ; then
@@ -119,15 +115,15 @@ if [ -d ./cache ] ; then
 fi
 
 # execute the scans
-# XXX someday, we should restructure this so that it processes these domains
-# XXX in batches of 2000 or so:  trying to do 100k domains will run out of disk space
 echo "Scan start: $(date)"
-for i in ${SCANTYPES} ; do
-	if ./scan /tmp/domains.csv --scan="$i" ; then
-		echo "scan of $i successful"
-	else
-		echo "scan of $i errored out for some reason"
-	fi
+for z in ${DOMAINFILES} ; do
+	for i in ${SCANTYPES} ; do
+		if ./scan "$z" --scan="$i" ; then
+			echo "scan of $i from $z successful"
+		else
+			echo "scan of $i from $z errored out for some reason"
+		fi
+	done
 done
 
 # add metadata and put scan results into ES

@@ -27,7 +27,7 @@ Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
 GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
 AFRH.GOV,Federal Agency - Executive,Armed Forces Retirement Home,Armed Forces Retirement Home,Washington,DC,(blank)
 EOF
-./scan_engine.sh "$BUCKETNAME"
+./scan_engine.sh
 
 
 # run app test suite
