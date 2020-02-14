@@ -17,7 +17,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         s = getquery(index)
-        self.assertEqual(s.count(), 3)
+        self.assertEqual(s.count(), 5)
 
     def test_getquerydomainsearch(self):
         dates = getdates()
@@ -29,13 +29,13 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-dap'
         s = getquery(index, present='DAP Present', displaytype='dap')
-        self.assertEqual(s.count(), 2)
+        self.assertEqual(s.count(), 4)
 
     def test_getlistfromfields(self):
         dates = getdates()
         index = dates[1] + '-200scanner'
         mylist = getListFromFields(index, 'domain')
-        self.assertEqual(len(mylist), 3)
+        self.assertEqual(len(mylist), 5)
 
     def test_getlistfromfields_subfield(self):
         dates = getdates()

@@ -5,7 +5,7 @@
 #
 
 # This is how many domains to scan in a single task
-BATCHSIZE=2000
+BATCHSIZE="${BATCHSIZE:-2000}"
 
 # get the list of domains
 if [ -f "$DOMAINCSV" ] ; then

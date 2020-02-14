@@ -93,6 +93,10 @@ jobs:
             ./getdomains.sh /tmp/splitdir
 
             # this tells cloud.gov to run the scan
+            # XXX This is assuming that the output of getdomains won't change
+            # XXX too much between when we run it here and when it runs on the
+            # XXX task nodes.  Probably a safe assumption, but there might be
+            # XXX a better way to do this.
             for i in /tmp/splitdir/* ; do
               cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
             done
