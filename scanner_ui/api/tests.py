@@ -72,7 +72,7 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/domains/?data.dap_detected=true")
         jsondata = json.loads(response.content)
         # this should get the gsa and 18f scans and not the afrh.gov scan
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 4)
 
     def test_api_queries_domainfromscan(self):
         """queries from specific scan work"""
@@ -91,14 +91,14 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
         jsondata = json.loads(response.content)
         # 18f and gsa should have scores greater than 50
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 3)
 
     def test_api_queries_uswdslessthan(self):
         """lessthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
-        self.assertEqual(len(jsondata), 1)
+        self.assertEqual(len(jsondata), 2)
 
     def test_api_queries_multipleargs(self):
         """multiple query arguments should be ANDed together"""
@@ -218,7 +218,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 3)
+        self.assertEqual(len(jsondata), 5)
         self.assertEqual(jsondata[0]['scantype'], 'dap')
 
     def test_dap_scan_works_date(self):
