@@ -1,24 +1,18 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Scans Search Home</h1>
-  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
+  <h1>10x Site Scanner</h1>
+  <h2>On-demand analysis of any federal government domain.</h2>
 
-  <h2>How to Use this Site</h2>
-  <p>There's four main sections to this website:</p>
-  <ul>
-    <li><strong>Use Cases:</strong> Short descriptions of how different users could use the different presentation layers to interact with scan data. </li>
-    <li><strong>Presentation Layers:</strong> An index of different dashboards and mashups that provide an interface to the scan.</li>
-    <li><strong>Data Links:</strong> Direct download and API links for the scan data. </li>
-    <li><strong>About Each Scan:</strong> Information about each scan, how it works, and what it does.</li>
-  </ul>
+  <p>There are over 150 federal domains in existence. Ensuring sites maintain particular website design and maintenance standards is critical to safe, secure, and useful public sites. Federal employees interested in analyzing the standards in use on a site used to have to scan them manually, with all the legwork that entails. If someone else wanted to build off their analysis, they had to start from scratch.</p>
 
-  <h2>Dynamic content</h2>
-  <p>The scan library has the following record counts:</p>
-  <ul>
-    <li><strong>Domains:</strong> {{ num_domains }}</li>
-    <li><strong>Scan Types:</strong> {{ num_scantypes }}</li>
-    <li><strong>Number of scans collected:</strong> {{ num_scans }}</li>
-  </ul>
-  <p>The scan library is updated daily.</p>
+<p>Enter the 10x Site Scanner.</p>
+
+<p>Employees don’t scan sites; they instantly access an expanded set of automatically-run scan data for any federal domain. The data is stored in the cloud for easy access from anywhere and is updated daily. They can filter data for specific analysis and reporting.</p>
+
+<p>This means no manual scanning legwork and more robust insights into what's behind any domain.</p>
+ 
+
+  <h3>As of today, Site Scanner is scanning {{ num_domains }} federal domains.</h3>
+ 
 {% endblock %}
