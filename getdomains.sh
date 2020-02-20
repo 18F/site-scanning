@@ -13,12 +13,13 @@ if [ -f "$DOMAINCSV" ] ; then
 	cp "$DOMAINCSV" /tmp/domains.csv
 else
 	wget -O /tmp/domains.csv https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
-fi
 
-## If you add more domains (like subdomains), append them on to
-## /tmp/domains.csv in the https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
-## format, so that when we load them in, we will be able to parse out
-## the agency, branch, etc.
+	## If you add more domains (like subdomains), append them on to
+	## /tmp/domains.csv in the https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv
+	## format, so that when we load them in, we will be able to parse out
+	## the agency, branch, etc.
+	curl -s https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv | tail -n +2 | awk -F, '{printf("%s,,,,,,\n",$1)}' >> /tmp/domains.csv
+fi
 
 
 # figure out where to split the CSV up

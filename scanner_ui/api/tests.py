@@ -90,7 +90,7 @@ class CheckAPI(SimpleTestCase):
         """greaterthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
         jsondata = json.loads(response.content)
-        # 18f and gsa should have scores greater than 50
+        # 18f and gsa and cloud.gov should have scores greater than 50
         self.assertEqual(len(jsondata), 3)
 
     def test_api_queries_uswdslessthan(self):
@@ -98,7 +98,7 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 4)
 
     def test_api_queries_multipleargs(self):
         """multiple query arguments should be ANDed together"""
@@ -141,14 +141,14 @@ class CheckAPI(SimpleTestCase):
         """agencies endpoint works"""
         response = self.client.get("/api/v1/lists/dap/agencies/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 3)
         self.assertIn('General Services Administration', jsondata)
 
     def test_domaintypes_endpoint(self):
         """domaintypes endpoint works"""
         response = self.client.get("/api/v1/lists/dap/domaintypes/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 1)
+        self.assertEqual(len(jsondata), 2)
         self.assertIn('Federal Agency - Executive', jsondata)
 
     def test_fieldvalues_domain_endpoint(self):
@@ -218,7 +218,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 5)
+        self.assertEqual(len(jsondata), 7)
         self.assertEqual(jsondata[0]['scantype'], 'dap')
 
     def test_dap_scan_works_date(self):
@@ -234,7 +234,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/dap/agencies/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 3)
         self.assertIn('General Services Administration', jsondata)
 
     def test_domaintypes_endpoint_date(self):
@@ -242,7 +242,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/dap/domaintypes/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 1)
+        self.assertEqual(len(jsondata), 2)
         self.assertIn('Federal Agency - Executive', jsondata)
 
     def test_fieldvalues_domain_endpoint_date(self):

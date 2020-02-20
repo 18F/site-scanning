@@ -17,7 +17,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         s = getquery(index)
-        self.assertEqual(s.count(), 5)
+        self.assertEqual(s.count(), 7)
 
     def test_getquerydomainsearch(self):
         dates = getdates()
@@ -35,7 +35,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         mylist = getListFromFields(index, 'domain')
-        self.assertEqual(len(mylist), 5)
+        self.assertEqual(len(mylist), 7)
 
     def test_getlistfromfields_subfield(self):
         dates = getdates()
@@ -61,7 +61,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-pagedata'
         domains = domainsWith('/privacy', 'responsecode', '200', index)
-        self.assertEqual(len(domains), 1)
+        self.assertEqual(len(domains), 2)
 
     def test_mixpagedatain(self):
         dates = getdates()
