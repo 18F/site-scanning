@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block title %}<title>Scans Search</title>{% endblock %}
+  {% block title %}<title>10x Site Scanner</title>{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -17,7 +17,8 @@
       {% block sidebar %}
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
-          <li><a href="{% url 'usecases' %}">Use Cases</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'get started' %}">Get started</a></li>
           <li><a href="{% url 'presentationlayers' %}">Presentation Layers</a>:
             <script>
               function presentationlayerredirect() {
@@ -41,11 +42,8 @@
               <option value="{% url 'search200' %}">200 Scanner</option>
             </select>
           </li>
-          <li><a href="{% url 'downloads' %}">Data Links</a></li>
-          <li><a href="{% url 'scans-ui' %}">About Each Scan</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="https://github.com/18F/site-scanning/issues" target="_blank">Feedback</a></li>
-          <li><a href="https://github.com/18F/site-scanning" target="_blank">Edit this Site</a></li>
+         <li><a href="{% url 'help us' %}">Help us build</a></li>
+          <li><a href="{% url 'contact' %}">Get in touch</a></li>
         </ul>
      {% endblock %}
       </div>
