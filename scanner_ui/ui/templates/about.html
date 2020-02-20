@@ -1,23 +1,30 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>About Scans Search</h1>
+  <h1>About 10x Site Scanner</h1>
   <p>
-TTS offers a low-cost, automated scanning solution to determine which government websites are following best practices. The results are published as simple queries and open data files, allowing TTS to measure TTS product performance, and agencies to customize reporting and take action to improve outcomes for the public.
+Site Scanner is developed through a project with 10x, a GSA program for technology-focused ideas from federal employees.
 </p>
 <p>
+We’re creating a way for federal website and standards program managers to see, on demand, the standards and practices in use on federal sites and other information they need to make their jobs easier. Site Scanner automates and enriches the analysis available to make better federal websites.
+</p>
+<p>
+  All 10x projects go through a series of <a ref="https://10x.gsa.gov/the-10x-process/">funded phases</a>. Here's a timeline of this project so far:
+</p><p>
+Original pitched idea (July 2018): Focused on driving adoption of website best practices and standards, and pointed out there was no easy way to scan sites for this information. The idea was to build a cloud-based tool that automatically scanned sites which all federal employees could use to see what's behind any federal site.
+</p><p>
+Phase 1 (Date): Submitted idea is vetted by team and awarded Phase 2 funding.
+</p><p>
+Phase 2 (Date): Initial product strategy is formed. Federal groups interested in having a new tool are identified. Site Scanner MVP is born and tested with TTS stakeholders.
+</p><p>
+Phase 3 (current): Product strategy is refined, outreach efforts expand. Goal is on building demand for this tool from nice-to-have to need-to-have.
 The prototype will return data that the stakeholder(s) identify as useful, and will be built and documented to make it extensible and replicable.
 </p>
 <p>
-The way to think of this services is through these lens:
-</p>
+ To learn more about Site Scanner, check out</p>
 <ul>
-<li>Individual <a href="{% url 'scans-ui' %}">scans</a> that run against each domain</li>
-<li>The <a href="{% url 'downloads' %}">data files</a> that result from each scan</li>
-<li>Various <a href="{% url 'presentationlayers' %}">presentation layers</a> that are built on top of the data files</li>
-<li><a href="{% url 'usecases' %}">Use cases</a> for using the presentation layers and data files</li>
-</ul>
-</p>
-
-  <p>You can contribute to the project by going to <a href="https://github.com/18F/site-scanning">the site-scanning repo</a>.</p>
+  <li>Our plans for development in Phase 3<a ref="https://app.mural.co/t/gsa6/m/gsa6/1581627147978/1b11344000372d71f962ca74d2fea6e835bceeb1">in our Product Roadmap</a></li>
+  <li>How we're building <a href="https://github.com/18F/site-scanning">at our public GitHub repo</a></li>
+   <li>Who our stakeholders are<a ref="https://app.mural.co/t/gsa6/m/gsa6/1577823368252/116ec5df7062195d9eafeb8ed14b1176baf89a94">in our Relationship Network diagram</a></li>
+  </p>
 {% endblock %}
