@@ -97,15 +97,22 @@ npm install
 
 # get the domains and split them up.  If we were told to process a particular file,
 # select it.  Otherwise, scan everything.
-../getdomains.sh /tmp/splitdir
-if [ -n "$1" ] ; then
-	if [ ! -f "$1" ] ; then
-		echo "domain file $1 not found.  Aborting!!"
+if [ -d "/home/vcap/tmp/splitdir" ] ; then
+	TMPDIR="${TMPDIR:-/home/vcap/tmp/splitdir}"
+else
+	TMPDIR="${TMPDIR:-/tmp/splitdir}"
+fi
+
+../getdomains.sh "$TMPDIR"
+if [ -f "$TMPDIR/$1" ] ; then
+	DOMAINFILES="$TMPDIR/$1"
+else
+	if [ -d "$TMPDIR/$1" ] ; then
+		DOMAINFILES=$(ls "$TMPDIR/*")
+	else
+		echo "could not find $1:  Aborting!"
 		exit 1
 	fi
-	DOMAINFILES="$1"
-else
-	DOMAINFILES=$(ls /tmp/splitdir/*)
 fi
 
 # clean up old scans (if there are any)

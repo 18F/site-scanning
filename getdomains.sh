@@ -26,7 +26,13 @@ fi
 if [ -n "$1" ] ; then
 	SPLITDIR="$1"
 else
-	SPLITDIR="/tmp/splitdir"
+	if [ -d "$TMPDIR" ] ; then
+		SPLITDIR="$TMPDIR/splitdir"
+	elif [ -d "/home/vcap/tmp/splitdir" ] ; then
+		SPLITDIR="/home/vcap/tmp/splitdir"
+	else
+		SPLITDIR="/tmp/splitdir"
+	fi
 fi
 
 # remove the header line from the CSV
@@ -34,13 +40,16 @@ tail -n +2 /tmp/domains.csv > /tmp/domains.txt
 
 # split the CSV up!
 echo splitting into "$SPLITDIR"
+rm -rf "$SPLITDIR"
 mkdir -p "$SPLITDIR"
 cd "$SPLITDIR"
 split -l "$BATCHSIZE" /tmp/domains.txt
 
 # put the header line back into each file so that the CSV parser does the right thing
-for i in $(ls "$SPLITDIR"); do
+for i in $(ls "$SPLITDIR") ; do
 	echo 'Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email' > "$i.csv"
 	cat "$i" >> "$i.csv"
 	rm "$i"
 done
+
+ls "$SPLITDIR"
