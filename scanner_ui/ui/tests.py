@@ -32,7 +32,8 @@ class checkviewfunctions(SimpleTestCase):
 
         # XXX test for cloud.gov, since it seems not to be working?
         response = self.client.get("/api/v1/domains/cloud.gov/")
-        print(response.content)
+        jsondata = json.loads(response.content)
+        print(jsondata)
 
         self.assertEqual(s.count(), 4)
 
