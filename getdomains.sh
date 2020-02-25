@@ -51,8 +51,3 @@ for i in $(ls "$SPLITDIR") ; do
 	cat "$i" >> "$i.csv"
 	rm "$i"
 done
-
-echo =========================
-echo contents of "$SPLITDIR":
-ls "$SPLITDIR"
-echo =========================

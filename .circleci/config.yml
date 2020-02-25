@@ -75,7 +75,7 @@ jobs:
           <<: *installcf
       - run:
           name: run scan
-          no_output_timeout: 4h
+          no_output_timeout: 1h
           command: |
             # If we do not specify a space, then deploy to the branch that we are on.
             # This lets you have dev/staging/master branches that automatically go to the right place.
@@ -102,12 +102,16 @@ jobs:
             for i in $(ls "$TMPDIR/splitdir") ; do
               cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
               if [ "$?" != "0" ] ; then
-                echo "running task on $i failed to work, pausing for 2h to let previous jobs complete and trying again"
-                sleep 7200
+                echo "running task on $i failed to work, pausing until previous jobs complete"
+                NUMSCANS="$(cf tasks scanner-ui | grep RUNNING | wc -l)"
+                until [ "$(cf tasks scanner-ui | grep RUNNING | wc -l)" != "$NUMSCANS"] ; do
+                  echo "waiting until there's room to run $i"
+                  sleep 120
+                done
                 cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
                 if [ "$?" != "0" ] ; then
                   FAILED="$i $FAILED"
-                  echo "$i task failed twice:  maybe the scans are taking more than 2h, or we are out of memory?  Investigate!"
+                  echo "$i task failed twice:  maybe we are out of memory?  Investigate!"
                   echo "    trying the next task..."
                 fi
               fi

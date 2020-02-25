@@ -29,6 +29,11 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-dap'
         s = getquery(index, present='DAP Present', displaytype='dap')
+
+        # XXX test for cloud.gov, since it seems not to be working?
+        response = self.client.get("/api/v1/domains/cloud.gov/")
+        print(response.content)
+
         self.assertEqual(s.count(), 4)
 
     def test_getlistfromfields(self):
