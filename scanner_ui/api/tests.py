@@ -71,6 +71,7 @@ class CheckAPI(SimpleTestCase):
         """queries for nested fields work"""
         response = self.client.get("/api/v1/domains/?data.dap_detected=true")
         jsondata = json.loads(response.content)
+        print(jsondata)
         # this should get the gsa and 18f scans and not the afrh.gov scan
         self.assertEqual(len(jsondata), 4)
 
