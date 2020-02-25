@@ -70,10 +70,10 @@ class CheckAPI(SimpleTestCase):
     def test_api_queries_dapdetect(self):
         """queries for nested fields work"""
         response = self.client.get("/api/v1/domains/?data.dap_detected=true")
-        jsondata = json.loads(response.content)
-        print(jsondata)
         # this should get the gsa and 18f scans and not the afrh.gov scan
-        self.assertEqual(len(jsondata), 4)
+        self.assertIn('"domain":"18f.gov"', str(response.content))
+        self.assertIn('"domain":"gsa.gov"', str(response.content))
+        self.assertNotIn('afrh.gov', str(response.content))
 
     def test_api_queries_domainfromscan(self):
         """queries from specific scan work"""
