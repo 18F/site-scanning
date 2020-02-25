@@ -40,7 +40,7 @@ tail -n +2 /tmp/domains.csv > /tmp/domains.txt
 
 # split the CSV up!
 echo splitting into "$SPLITDIR"
-rm -rf "$SPLITDIR"
+rm -rf "$SPLITDIR"/*
 mkdir -p "$SPLITDIR"
 cd "$SPLITDIR"
 split -l "$BATCHSIZE" /tmp/domains.txt
@@ -52,4 +52,7 @@ for i in $(ls "$SPLITDIR") ; do
 	rm "$i"
 done
 
+echo =========================
+echo contents of "$SPLITDIR":
 ls "$SPLITDIR"
+echo =========================

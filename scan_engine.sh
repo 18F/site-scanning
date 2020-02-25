@@ -108,7 +108,7 @@ if [ -f "$TMPDIR/$1" ] ; then
 	DOMAINFILES="$TMPDIR/$1"
 else
 	if [ -d "$TMPDIR/$1" ] ; then
-		DOMAINFILES=$(ls "$TMPDIR/*")
+		DOMAINFILES=$(ls "$TMPDIR"/*)
 	else
 		echo "could not find $1:  Aborting!"
 		exit 1
