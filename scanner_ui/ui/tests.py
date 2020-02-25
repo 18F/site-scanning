@@ -2,6 +2,7 @@ from django.test import SimpleTestCase
 from django.test import Client
 import csv
 import re
+import json
 from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
 # Create your tests here.
