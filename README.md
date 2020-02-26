@@ -6,7 +6,12 @@ Site Scanner scans all domains [from this list updated monthly by GSA](https://g
 
 Miscellaneous links:
 * [TTS Dashboard](https://github.com/18F/site-scanning-dashboard)
-*
+* [Architecture](https://github.com/18F/site-scanning/blob/master/docs/Architecture.md)
+* [Devops](https://github.com/18F/site-scanning/blob/master/docs/DevOps.md)
+* [Install](https://github.com/18F/site-scanning/blob/master/docs/INSTALL.md)
+* [Gray's Cheatsheet](https://github.com/18F/site-scanning/blob/master/docs/cheatsheet.md)
+* [Permissions](https://github.com/18F/site-scanning/blob/master/docs/permissions.md)
+* [System Diagram](https://github.com/18F/site-scanning/blob/master/docs/scanner-ui.png)
 
 ## Contact Us
 
