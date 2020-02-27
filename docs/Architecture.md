@@ -39,7 +39,8 @@ The scan API map is:
   - You can also request pagination by adding a `page=1` parameter to any of the above queries,
     which will give you a request back that has next/previous links and a page number count.  So
     `/api/v1/domains/?page=1` will give you the first 100 entries and `/api/v1/domains/?page=2`
-    will give you the next 100, for example.
+    will give you the next 100, for example.  You can override the default page size of 100 with
+    the `page_size` parameter.  `/api/v1/domains/?page=2&page_size=20`, for example.
 
   - `/api/v1/lists/dates/` enumerates all of the snapshots of scan data that we have.
   - `/api/v1/lists/{scantype}/agencies/` enumerates all of the agencies that are in the scantype.

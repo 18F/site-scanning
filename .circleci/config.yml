@@ -70,10 +70,12 @@ jobs:
     docker:
       - image: circleci/python:3.7
     steps:
+      - checkout
       - run:
           <<: *installcf
       - run:
           name: run scan
+          no_output_timeout: 4h
           command: |
             # If we do not specify a space, then deploy to the branch that we are on.
             # This lets you have dev/staging/master branches that automatically go to the right place.
@@ -88,9 +90,31 @@ jobs:
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
 
-            # this tells cloud.gov to run the scan
-            cf run-task scanner-ui /app/scan_engine.sh -m 1024M -k 2048M
+            # get the list of URLs and split it up
+            ./getdomains.sh /tmp/splitdir
 
+            # this tells cloud.gov to run the scan
+            # XXX This is assuming that the output of getdomains won't change
+            # XXX too much between when we run it here and when it runs on the
+            # XXX task nodes.  Probably a safe assumption, but there might be
+            # XXX a better way to do this.
+            for i in /tmp/splitdir/* ; do
+              cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
+              if [ "$?" != "0" ] ; then
+                echo "running task on $i failed to work, pausing for 2h to let previous jobs complete and trying again"
+                sleep 7200
+                cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
+                if [ "$?" != "0" ] ; then
+                  FAILED="$i $FAILED"
+                  echo "$i task failed twice:  maybe the scans are taking more than 2h, or we are out of memory?  Investigate!"
+                  echo "    trying the next task..."
+                fi
+              fi
+            done
+            if [ -n "$FAILED" ] ; then
+              echo "summary of tasks that failed:  $FAILED"
+              exit 1
+            fi
 
 workflows:
   version: 2

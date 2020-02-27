@@ -20,14 +20,17 @@ aws "$S3ENDPOINT" s3 mb "s3://$BUCKETNAME"
 ./manage.py migrate || cleanup "could not do db migrations"
 
 # load data into our environment
+export BATCHSIZE=3
 export DOMAINCSV="/tmp/testdomains.csv"
 cat <<EOF > "$DOMAINCSV"
 Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
 18F.GOV,Federal Agency - Executive,General Services Administration,18F,Washington,DC,tts-vulnerability-reports@gsa.gov
 GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
 AFRH.GOV,Federal Agency - Executive,Armed Forces Retirement Home,Armed Forces Retirement Home,Washington,DC,(blank)
+CLOUD.GOV,Federal Agency - Executive,General Services Administration,18F | GSA,Washington,DC,tts-vulnerability-reports@gsa.gov
+LOGIN.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,tts-vulnerability-reports@gsa.gov
 EOF
-./scan_engine.sh "$BUCKETNAME"
+./scan_engine.sh
 
 
 # run app test suite

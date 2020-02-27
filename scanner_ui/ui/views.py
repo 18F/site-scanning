@@ -560,29 +560,11 @@ def search200(request, displaytype=None):
             column['Organization'] = i.organization
             column['Branch'] = i.domaintype
             try:
-                dapparams = ""
                 if extradata[i.domain]['dap_detected']:
-                    # dap_traces signifies that we found traces that look like DAP
-                    # but couldn't get the .js file (at least some sites dynamically
-                    # slurp in js and append it onto the page for some reason).
-                    # If dap_detected and dap_traces are true, we are pretty sure there is
-                    # DAP, but couldn't find the UA-XXX-1 thing.  If just dap_traces
-                    # is true, then evidence is slim.
-                    if extradata[i.domain]['dap_traces']:
-                        column['DAP Detected'] = "Probably"
-                    else:
-                        column['DAP Detected'] = "True"
-                    for k, v in extradata[i.domain]['dap_parameters'].items():
-                        if dapparams == "":
-                            dapparams = k + ": " + ", ".join(v)
-                        else:
-                            dapparams = ", ".join([dapparams, k + ": " + ", ".join(v)])
+                    column['DAP Detected'] = "True"
                 else:
-                    if extradata[i.domain]['dap_traces']:
-                        column['DAP Detected'] = "Maybe"
-                    else:
-                        column['DAP Detected'] = "False"
-                column['DAP Parameters'] = dapparams
+                    column['DAP Detected'] = "False"
+                column['DAP Parameters'] = extradata[i.domain]['dap_parameters']
             except Exception:
                 column['DAP Detected'] = "False"
                 column['DAP Parameters'] = ""

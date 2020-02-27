@@ -17,7 +17,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-200scanner'
         s = getquery(index)
-        self.assertEqual(s.count(), 3)
+        self.assertEqual(s.count(), 5)
 
     def test_getquerydomainsearch(self):
         dates = getdates()
@@ -29,13 +29,13 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-dap'
         s = getquery(index, present='DAP Present', displaytype='dap')
-        self.assertEqual(s.count(), 2)
+        self.assertEqual(s.count(), 4)
 
     def test_getlistfromfields(self):
         dates = getdates()
         index = dates[1] + '-200scanner'
         mylist = getListFromFields(index, 'domain')
-        self.assertEqual(len(mylist), 3)
+        self.assertEqual(len(mylist), 5)
 
     def test_getlistfromfields_subfield(self):
         dates = getdates()
@@ -138,7 +138,7 @@ class CheckUI(SimpleTestCase):
         """json export pages filtered by domain should emit proper json"""
         response = self.client.get('/search200/json/?200page=All%20Scans&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=gsa')
         self.assertIn(b'gsa', response.content)
-        self.assertNotIn(b'18f', response.content)
+        self.assertNotIn(b'18f.gov', response.content)
 
     def test_mimetypes(self):
         """if we select a mimetype, we should not get other mimetypes"""
@@ -185,7 +185,7 @@ class CheckUI(SimpleTestCase):
         """ csv pages filtered by domain should generate proper csv"""
         response = self.client.get('/search200/csv/?200page=All%20Scans&date=Scan%20Date&agency=All%20Agencies&domaintype=All%20Branches&org=All%20Organizations&mimetype=all%20content_types&present=Present&displaytype=third_parties&domainsearch=gsa')
         self.assertIn(b'gsa', response.content)
-        self.assertNotIn(b'18f', response.content)
+        self.assertNotIn(b'18f.gov', response.content)
 
     def test_agency_filtered_csv_pages(self):
         """ csv pages filtered by agency should generate proper csv"""

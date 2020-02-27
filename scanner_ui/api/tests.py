@@ -34,18 +34,24 @@ class CheckAPI(SimpleTestCase):
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_individual_scans_works(self):
-        """scans/uswds2 endpoint works"""
-        response = self.client.get("/api/v1/scans/uswds2/")
+        """domains/18f.gov endpoint works"""
+        response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 3)
-        self.assertEqual(jsondata[0]['scantype'], 'uswds2')
+        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(jsondata[0]['domain'], '18f.gov')
+
+    def test_org_field(self):
+        """there is an organization field in the API"""
+        response = self.client.get("/api/v1/domains/18f.gov/")
+        jsondata = json.loads(response.content)
+        self.assertEqual('18F', jsondata[0]['organization'])
 
     def test_dap_scan_works(self):
         """scans/dap endpoint works"""
         response = self.client.get("/api/v1/scans/dap/gsa.gov/")
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'dap')
-        self.assertIn('GSA', jsondata['data']['dap_parameters']['agency'])
+        self.assertIn('GSA', jsondata['data']['dap_parameters'])
 
     def test_thirdparty_scan_works(self):
         """scans/third_party endpoint works"""
@@ -66,7 +72,7 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/domains/?data.dap_detected=true")
         jsondata = json.loads(response.content)
         # this should get the gsa and 18f scans and not the afrh.gov scan
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 4)
 
     def test_api_queries_domainfromscan(self):
         """queries from specific scan work"""
@@ -85,14 +91,14 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
         jsondata = json.loads(response.content)
         # 18f and gsa should have scores greater than 50
-        self.assertEqual(len(jsondata), 2)
+        self.assertEqual(len(jsondata), 3)
 
     def test_api_queries_uswdslessthan(self):
         """lessthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
-        self.assertEqual(len(jsondata), 1)
+        self.assertEqual(len(jsondata), 2)
 
     def test_api_queries_multipleargs(self):
         """multiple query arguments should be ANDed together"""
@@ -111,6 +117,12 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds2/?page=1")
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['count'], len(jsondata['results']))
+
+    def test_api_pagesize(self):
+        """page_size on scans endpoint should work"""
+        response = self.client.get("/api/v1/scans/uswds2/?page=1&page_size=2")
+        jsondata = json.loads(response.content)
+        self.assertEqual(2, len(jsondata['results']))
 
     def test_api_cors(self):
         """CORS should be enabled on the API"""
@@ -206,7 +218,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 3)
+        self.assertEqual(len(jsondata), 5)
         self.assertEqual(jsondata[0]['scantype'], 'dap')
 
     def test_dap_scan_works_date(self):
@@ -215,7 +227,7 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata['scantype'], 'dap')
-        self.assertIn('GSA', jsondata['data']['dap_parameters']['agency'])
+        self.assertIn('GSA', jsondata['data']['dap_parameters'])
 
     def test_agencies_endpoint_date(self):
         """agencies endpoint works with a date"""
@@ -266,3 +278,10 @@ class CheckAPI(SimpleTestCase):
         self.assertIn('200', jsondata)
         self.assertIn('404', jsondata)
         self.assertIn('-1', jsondata)
+
+    def test_fieldvalues_uswdsversion(self):
+        """fieldvalues endpoint works for uswdsversion field"""
+        url = '/api/v1/lists/uswds2/values/data.uswdsversion/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertIn('v2.0.3', jsondata)
