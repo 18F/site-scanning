@@ -99,7 +99,7 @@ class CheckUI(SimpleTestCase):
         response = self.client.get("/")
         self.assertIn(b'On-demand analysis of any federal government domain', response.content)
         res = re.findall(r'Site Scanner is scanning (.*) federal domains', response.content.decode())
-        self.assertGreaterEqual(int(res[0]), 12)
+        self.assertGreaterEqual(int(res[0]), 5)
 
     def test_about(self):
         """about page has proper data"""
