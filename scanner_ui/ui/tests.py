@@ -68,7 +68,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-pagedata'
         domains = domainsWith('/privacy', 'responsecode', '200', index)
-        self.assertEqual(len(domains), 2)
+        self.assertEqual(len(domains), 1)
 
     def test_mixpagedatain(self):
         dates = getdates()
