@@ -104,9 +104,9 @@ jobs:
               if [ "$?" != "0" ] ; then
                 echo "running task on $i failed to work, pausing until previous jobs complete"
                 NUMSCANS="$(cf tasks scanner-ui | grep RUNNING | wc -l)"
-                until [ "$(cf tasks scanner-ui | grep RUNNING | wc -l)" != "$NUMSCANS"] ; do
+                until [ "$(cf tasks scanner-ui | grep RUNNING | wc -l)" != "$NUMSCANS" ] ; do
                   echo "waiting until there's room to run $i"
-                  sleep 120
+                  sleep 600
                 done
                 cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 2048M
                 if [ "$?" != "0" ] ; then
