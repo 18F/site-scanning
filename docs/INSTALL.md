@@ -65,6 +65,9 @@ tests (`./manage.py test`) as well as checking that a scan of a few domains work
 
 #### Run the app
 
+You will need to have [docker installed](https://docs.docker.com/install/)
+for this to work.
+
 `./test.sh nodelete` will run the app, populate it with data scanned from 18f.gov
 and gsa.gov, and run the test suite against it.
 
