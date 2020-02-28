@@ -30,12 +30,6 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-dap'
         s = getquery(index, present='DAP Present', displaytype='dap')
-
-        # XXX test for cloud.gov, since it seems not to be working?
-        response = self.client.get("/api/v1/domains/cloud.gov/")
-        jsondata = json.loads(response.content)
-        print(jsondata)
-
         self.assertEqual(s.count(), 4)
 
     def test_getlistfromfields(self):
@@ -68,7 +62,7 @@ class checkviewfunctions(SimpleTestCase):
         dates = getdates()
         index = dates[1] + '-pagedata'
         domains = domainsWith('/privacy', 'responsecode', '200', index)
-        self.assertEqual(len(domains), 1)
+        self.assertEqual(len(domains), 2)
 
     def test_mixpagedatain(self):
         dates = getdates()
