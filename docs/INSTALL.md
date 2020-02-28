@@ -52,12 +52,16 @@ The configuration for CircleCI can be found in `.circleci/config.yml`.
 
 Developing locally is a quick way to get up and going and test stuff out.
 
+You will need to have [docker installed](https://docs.docker.com/install/)
+for this to work.  You will also need to execute these steps for the next
+few sections to work:
+
+- Clone the site-scanner repo with `git clone https://github.com/18F/site-scanning`.
+- `cd site-scanning` to get into the repo dir.
+
 #### Run tests
 
-You will need to have [docker installed](https://docs.docker.com/install/)
-for this to work.
-
-`./test.sh`
+Run `./test.sh` in your shell window that is in the repo dir.
 
 This can take a while, since the domain-scan repo is really giant, but it fires up
 docker-compose so that it has all the required services and then runs all the python
@@ -65,14 +69,12 @@ tests (`./manage.py test`) as well as checking that a scan of a few domains work
 
 #### Run the app
 
-You will need to have [docker installed](https://docs.docker.com/install/)
-for this to work.
-
-`./test.sh nodelete` will run the app, populate it with data scanned from 18f.gov
-and gsa.gov, and run the test suite against it.
+Run `./test.sh nodelete` in the repo dir.  This will run the app, populate
+it with data scanned from a few domains, run the test suite against it,
+and leave the app running.
 
 You should then be able to go to http://localhost:8000/ and see the UI/API
-working with whatever code was there when you did the `docker-compose up --build`.
+working with whatever code was there when you ran the `test.sh` script.
 
 If you'd like to see the logs from the system, then type `docker-compose logs -f`,
 and you will see the logs streamed from the app and the elasticsearch/minio
