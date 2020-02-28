@@ -51,11 +51,10 @@ The configuration for CircleCI can be found in `.circleci/config.yml`.
 ### Local Development
 
 Developing locally is a quick way to get up and going and test stuff out.
-
-You will need to have [docker installed](https://docs.docker.com/install/)
-for this to work.  You will also need to execute these steps for the next
+You will need to execute these steps for the next
 few sections to work:
 
+- [Install Docker](https://docs.docker.com/install/).
 - Clone the site-scanner repo with `git clone https://github.com/18F/site-scanning`.
 - `cd site-scanning` to get into the repo dir.
 
