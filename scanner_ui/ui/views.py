@@ -33,6 +33,14 @@ def downloads(request):
     return render(request, "downloads.html")
 
 
+def aboutUSWDSscan(request):
+    return render(request, "about-USWDS-scanner.html")
+
+
+def about200scanner(request):
+    return render(request, "about-200-scanner.html")
+
+
 def usecases(request):
     return render(request, "use-cases.html")
 
