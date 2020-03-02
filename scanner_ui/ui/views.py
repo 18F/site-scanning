@@ -37,6 +37,18 @@ def usecases(request):
     return render(request, "use-cases.html")
 
 
+def helpus(request):
+    return render(request, "help-us.html")
+
+
+def contact(request):
+    return render(request, "contact.html")
+
+
+def getstarted(request):
+    return render(request, "get-started.html")
+
+
 def presentationlayers(request):
     return render(request, "presentation-layers.html")
 

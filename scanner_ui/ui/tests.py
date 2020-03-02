@@ -97,14 +97,14 @@ class CheckUI(SimpleTestCase):
     def test_home(self):
         """home page has proper data"""
         response = self.client.get("/")
-        self.assertIn(b'Number of scans collected:</strong>', response.content)
-        res = re.findall(r'Number of scans collected:</strong> (.*)</li>', response.content.decode())
-        self.assertGreaterEqual(int(res[0]), 12)
+        self.assertIn(b'On-demand analysis of any federal government domain', response.content)
+        res = re.findall(r'Site Scanner is scanning (.*) federal domains', response.content.decode())
+        self.assertGreaterEqual(int(res[0]), 5)
 
     def test_about(self):
         """about page has proper data"""
         response = self.client.get("/about/")
-        self.assertIn(b'You can contribute to the project', response.content)
+        self.assertIn(b'low-cost, automated scanning solution', response.content)
 
     def test_scans(self):
         """scans page has proper data"""
