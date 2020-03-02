@@ -21,6 +21,7 @@ else
 	curl -s https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv | tail -n +2 | awk -F, '{printf("%s,,,,,,\n",$1)}' >> /tmp/domains.csv
 fi
 
+# XXX uniq the list here, merge metadata if we can
 
 # figure out where to split the CSV up
 if [ -n "$1" ] ; then
