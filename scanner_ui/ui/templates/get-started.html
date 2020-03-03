@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Get Started</h1>
+  <p>
+Site Scanner checks each federal domain on the server side and client side. Server-side data includes server responses and insights into the site's back-end. Client-side data includes load times, source code, and website design standards.
+</p><p>
+Currently, the tool offers two types of scans to do this: the 200 scan and the USWDS scan.
+</p>
+
+<h2>200 scan</h2>
+<p>
+What: checks each domain for the presence or absence of a variety of different files/pages at a specific location. Supported files/pages include /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, and /sitemap.xml.</p><p>
+How: checks for the 200 server response code from the domain's specific URL, which means the file/page exists at that location and loads successfully.</p><p>
+Why: A 200 response code basically assures us that when someone requests information, they're going to get it.</p><p>
+To learn more: Check out more details <a href="{% url 'about200scanner' %}">about the 200 scan</a>.</p><p>
+<a href="{% url 'search200' %}">See today's 200 scan results here.</a></p><p>
+
+<h2>USWDS scan</h2>
+<p>What: checks each domain for the presence and version of USWDS code.</p><p>
+How: checks for particular code in the domain's CSS and HTML files, which fonts are in use, and the presence of HTML tables.</p><p>
+Why: The latest version of USWDS code in use assures us that the website or digital service is accessible and mobile-friendly.</p><p>
+To learn more: Check out more details <a href="{% url 'aboutUSWDSscan' %}">about the USWDS scan</a>.</p><p>
+<a href="{% url 'searchUSWDS' %}">See today's USWDS scan results here.</a>
+
+{% endblock %}

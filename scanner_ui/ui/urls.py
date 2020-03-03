@@ -16,10 +16,14 @@ urlpatterns = [
     path('sitemap/csv/', views.sitemapcsv, name='sitemapcsv'),
     path('sitemap/', views.sitemap, name='sitemap'),
     path('about/', views.about, name='about'),
+    path('about200scanner/', views.about200scanner, name='about200scanner'),
+    path('aboutUSWDSscan/', views.aboutUSWDSscan, name='aboutUSWDSscan'),
     path('scans/', views.scans, name='scans-ui'),
     path('downloads/', views.downloads, name='downloads'),
-    path('use-cases/', views.usecases, name='usecases'),
-    path('presentation-layers/', views.presentationlayers, name='presentationlayers'),
-
+    path('usecases/', views.usecases, name='usecases'),
+    path('getstarted/', views.getstarted, name='getstarted'),
+    path('helpus/', views.helpus, name='helpus'),
+    path('contact/', views.contact, name='contact'),
+    path('presentationlayers/', views.presentationlayers, name='presentationlayers'),
     path('', views.index, name='index'),
 ]

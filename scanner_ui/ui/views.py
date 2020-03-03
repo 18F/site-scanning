@@ -33,8 +33,28 @@ def downloads(request):
     return render(request, "downloads.html")
 
 
+def aboutUSWDSscan(request):
+    return render(request, "about-USWDS-scanner.html")
+
+
+def about200scanner(request):
+    return render(request, "about-200-scanner.html")
+
+
 def usecases(request):
     return render(request, "use-cases.html")
+
+
+def helpus(request):
+    return render(request, "help-us.html")
+
+
+def contact(request):
+    return render(request, "contact.html")
+
+
+def getstarted(request):
+    return render(request, "get-started.html")
 
 
 def presentationlayers(request):

@@ -16,6 +16,7 @@ SCANTYPES="
 	privacy
 	dap
 	third_parties
+	pshtt
 "
 
 # This is where you set the repo/branch
