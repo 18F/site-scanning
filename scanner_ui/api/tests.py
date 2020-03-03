@@ -30,14 +30,14 @@ class CheckAPI(SimpleTestCase):
         """domains/18f.gov endpoint works"""
         response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(len(jsondata), 8)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_individual_scans_works(self):
         """domains/18f.gov endpoint works"""
         response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(len(jsondata), 8)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_org_field(self):
@@ -53,6 +53,13 @@ class CheckAPI(SimpleTestCase):
         self.assertEqual(jsondata['scantype'], 'dap')
         self.assertIn('GSA', jsondata['data']['dap_parameters'])
 
+    def test_pshtt_scan_works(self):
+        """scans/pshtt endpoint works"""
+        response = self.client.get("/api/v1/scans/pshtt/gsa.gov/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata['scantype'], 'pshtt')
+        self.assertEqual(jsondata['data']['Base Domain'], 'gsa.gov')
+
     def test_thirdparty_scan_works(self):
         """scans/third_party endpoint works"""
         response = self.client.get("/api/v1/scans/third_parties/gsa.gov/")
@@ -64,8 +71,8 @@ class CheckAPI(SimpleTestCase):
         """queries with wildcards work"""
         response = self.client.get("/api/v1/domains/?domain=gsa*")
         jsondata = json.loads(response.content)
-        # There are currently 7 scans, so this should get all the gsa scans
-        self.assertEqual(len(jsondata), 7)
+        # There are currently 8 scans, so this should get all the gsa scans
+        self.assertEqual(len(jsondata), 8)
 
     def test_api_queries_dapdetect(self):
         """queries for nested fields work"""
@@ -193,7 +200,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/18f.gov/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(len(jsondata), 8)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_specific_domain_scan_date(self):
