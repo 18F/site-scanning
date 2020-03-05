@@ -4,6 +4,7 @@
 #
 import csv
 import sys
+from urllib.parse import urlparse
 
 
 # This is the standard header format for the domains.csv file
@@ -29,11 +30,15 @@ with open(sys.argv[3], 'w') as csvout:
         domainlist = []
         for row in domainfile:
             # the new file might not have the same header.  Assuming that first
-            # field is the domain, if it's not 'Domain Name'.
+            # field is the domain, if it's not 'Domain Name'.  Also try 'URL'.
             if 'Domain Name' in row.keys():
                 domain = row['Domain Name']
+            elif 'URL' in row.keys():
+                domain = urlparse(row['URL']).hostname
             else:
                 domain = row[list(row.keys())[0]]
+            if domain == '':
+                next
 
             # If we already did this domain in this file, skip it
             if domain not in domainlist:
