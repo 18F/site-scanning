@@ -141,7 +141,7 @@ for i in ${SCANTYPES} ; do
 	# set the domain field to be a keyword rather than text so we can sort on it
 	DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
 	SHORTDATE=$(date +%Y-%m-%d)
-	echo '{"mappings": {"scan": {"properties": {"domain": {"type": "keyword"}}}}}' > /tmp/mapping.json
+	echo '{"settings": {"index.mapping.total_fields.limit": 2000}, "mappings": {"scan": {"properties": {"domain": {"type": "keyword"}}}}}' > /tmp/mapping.json
 	if curl -s -XPUT "$ESURL/$SHORTDATE-$i" -d @/tmp/mapping.json | grep error ; then
 		echo "problem creating mapping"
 	fi
