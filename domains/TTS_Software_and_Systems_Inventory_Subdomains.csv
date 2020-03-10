@@ -1,0 +1,444 @@
+Component URL,System,Contact,Notes,System Status,Platform,ATO Folder,ATO Artifacts,ATO Type,ATO Level,ATO Expiration Date,ATO Expires,Authorizing Official,TTS Owner,System Owner,Technical Contact (mailing list preferred),Team Shared Email ,Slack channel,Project Mgmt Tracker,Partner Agency,GSA External Stakeholder,Mastersheet Unique ID,Origin sheet Unique ID,Sheet Name,FINAL?,SaaS?
+1.usa.gov,usa.gov,,,Production,CMP,,,,,,,,FAS/TTS/OPP,john.yuda@gsa.gov,,,,,,,56EAFC1F,F1653559,Copy of GSA site inventory TTS 1,Y,N
+10x.gsa.gov,10x.gsa.gov,william.cahoe@gsa.gov,,Production,federalist.18.gov,,,,,,,,FAS/TTS/OPP,sarah.crane@gsa.gov,,,,,,,E11342D2,1187E76F,Copy of GSA site inventory TTS 2,Y,N
+18f.domains.api.data.gov,api.data.gov,,,Deprecated,cloud.gov,,,,,,,,,,,,,,,,,,,,
+18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,,,,,,,,,01D5307E,9A120E09,Copy of LI SaaS Projects (Working Doc) Suspended,N,N
+18f.gsa.gov,18f.gov,,,Production,federalist.18.gov,TBD,,TBD,Low,TBD,,,FAS/TTS/18F,dahianna.salazarforeman@gsa.gov,,,,TBD,18F,No,DB6BDCD2,83FA03FE,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+18franklin.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,7F4AF126,47C29242,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+aapi.data.gov,api.data.gov,,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+accessibility.18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,,,,,,,,,54E3EA2B,98F6AC51,Copy of ATO/System Tracking Index Federalist Sites,N,N
+accessibility.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+acqstack-journeymap.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,27F41E4C,FCC74A09,Copy of ATO/System Tracking Index Federalist Sites,N,N
+acquisitions.18f.gov/,18f.gov,,,Alpha,Cloud.gov,https://drive.google.com/drive/u/0/folders/0BzA5IPWEmW27Ukh3S2pkcDBDU1E,,TBD,Low,DEPRECATED,,,18F,,,,,https://github.com/18F/acqstackdb,18F,TBD,C6E1A62E,8F920361,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+admin-catalog.data.gov,data.gov,datagovhelp@gsa.gov,,Production,FCS,,,,,,,,,,,,,,,,,,,,
+admin.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+ads.18f.gov,18f.gov,,,Deprecated,cloud.gov,,,,,,,,,,,,,,,,B675D7D7,9A2B8DA3,Copy of ATO/System Tracking Index Federalist Sites,N,N
+ag.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+agile-bpa.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,14A7DAB3,9CDE085E,Copy of ATO/System Tracking Index Federalist Sites,N,N
+agile-labor-categories.18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,,,,,,,,,79424440,2CBC4BB3,Copy of ATO/System Tracking Index Federalist Sites,N,N
+agile.18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,,,,,,,,,C47014FD,48A37D98,Copy of ATO/System Tracking Index Federalist Sites,N,N
+agriculture.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,FCS,,,,,,,,,,,,,,,,,,,,
+airnowtome.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,cloud.gov,,,,,,,,,,,,,,,,,,,,
+alpha.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,FCS,,,,,,,,,,,,,,,,,,,,
+analytics-staging.app.cloud.gov,analytics.usa.gov,analytics.usa.gov@gsa.gov,,Staging,cloud.gov,,,,,,,,,,,,,,,,,,,,
+analytics.fr.cloud.gov,analytics.usa.gov,analytics.usa.gov@gsa.gov,,Production,cloud.gov,,,,,,,,,,,,,,,,,,,,
+analytics.usa.gov,analytics.usa.gov,analytics.usa.gov@gsa.gov,,Production,cloud.gov,https://drive.google.com/drive/u/0/folders/0B4f3E1-4As-aaW82VWR1ejZGREE,,,Moderate,Maybe: 6/1/2020,,Maybe: Hyon Kim,OPP,Tim Lowden,Eric Chinn,,,,,,992BA511,B1FAF040,Copy of ATO/System Tracking Index Internal Systems,N,N
+answers.usa.gov,usa.gov,,,Production,CMP,,,,,,,,,,,,,,,,,,,,
+api-all-the-x.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,60761248,F0D0367C,Copy of ATO/System Tracking Index Federalist Sites,N,N
+api-program.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,01CCB458,∞,Copy of ATO/System Tracking Index Federalist Sites,N,N
+api-usability-testing.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,4A5B2DAC,∞,Copy of ATO/System Tracking Index Federalist Sites,N,N
+api.18f.gov,18f.gov,,,Deprecated,federalist.18.gov,,,,,,,,,,,,,,,,B229AE39,CC48B44B,Copy of ATO/System Tracking Index Federalist Sites,N,N
+api.code.gov,code.gov,code@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+api.data.gov,api.data.gov,,,Production,AWS,https://drive.google.com/drive/u/0/folders/0B4f3E1-4As-aYnRTanZLR2hRbTA,https://docs.google.com/document/d/1I3-JzuOV4OG1NqVM5X3mcPc8TPh2GNc_qBhmiaYTFaU/edit,,Low,11/07/2020 — ?,,Holly Allen?,FAS/TTS/OPP,richard.g.brooks@gsa.gov ,Gray Brooks,,,,,,788E991C,652FF1F7,Copy of ATO/System Tracking Index Internal Systems,Y,N
+api.usa.gov,usa.gov,,,Production,CMP,,,,,,,,,,,,,,,,,,,,
+app-empathic-otter.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,cloud.gov,,,,,,,,,,,,,,,,,,,,
+app.brody.identitysandbox.gov,login.gov,all@login.gov,,Staging,AWS,,,,,,,,,,,,,,,,,,,,
+app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,Main Domain for App Staging(s),Production,cloud.gov,,,,,,,,,,,,,,,,,,,,
+app.markryan.identitysandbox.gov,login.gov,all@login.gov,,Deprecated,AWS,,,,,,,,,,,,,,,,,,,,
+apply.pif.gov,pif.gov,pif-team@gsa.gov,,Production,?,,,,,,,,,,,,,,,,,,,,
+apps.gobiernousa.gov,usa.gov,,,Redirect,CMP,,,,,,,,,,,,,,,,,,,,
+apps.gov,18f.gov,,,Deprecated,federalist.18.gov,https://drive.google.com/a/gsa.gov/folderview?id=0B2gHjLPT7cBtSmZSV0Zqa1d2eG8&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,TBD,Low,TBD,,,FAS/TTS/OPP,jacob.parcell@gsa.gov,,,,TBD,GSA ,No,72959F45,6B848C52,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+apps.usa.gov,usa.gov,,,Production,CMP,,,,,,,,,,,,,,,,,,,,
+asis.search.gov,search.gov,amy.lawson@gsa.gov,,Deprecated?,,,,,,,,,,,,,,,,,,,,,
+asis.search.usa.gov,usa.gov,,,Deprecated?,,,,,,,,,,,,,,,,,,,,,
+atf-eregs-demo.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Beta,,,,,,,,,,,,,,,,,,,,,
+atf-eregs.18f.gov,18f.gov,,,Transferred?,Cloud.gov,https://docs.google.com/document/d/1Ea-bL30uTmOjXScrgJl4fg7vsX15-UTx1dyKrgYMyK0/edit,,TBD,Low,11/30/2016,,,18F,,,,,https://trello.com/c/Y4Wdoa9Y,ATF,Yes,3B050C5C,486F59A3,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+atf-eregs.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+atul-docker-presentation.18f.gov,18f.gov,,,Beta,,,,,,,,,,,,,,,,,967A72ED,0071CA2A,Copy of ATO/System Tracking Index Federalist Sites,N,N
+autoapi.18f.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+autodiscover.apps.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+automated-testing-playbook.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,9348B275,ABED22F6,Copy of ATO/System Tracking Index Federalist Sites,N,N
+banks-q.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+before-you-ship.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,791A6516,00A58BC0,Copy of ATO/System Tracking Index Federalist Sites,N,N
+beta.vote.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+blog.gobiernousa.gov,usa.gov,,,Production,CMP,,,,,,,,,,,,,,,,,,,,
+blog.usa.gov,usa.gov,,,Production,CMP,,,,,,,,,,,,,,,,,,,,
+blogging-guide.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,339122A1,4A435832,Copy of ATO/System Tracking Index Federalist Sites,N,N
+boise.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,B37A2984,87DE8D0A,Copy of ATO/System Tracking Index Federalist Sites,N,N
+brand.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,654F1399,B5C6D6C5,Copy of ATO/System Tracking Index Federalist Sites,N,N
+brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,AWS,,,,,,,,,,,,,,,,,,,,
+buscador.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+business.usa.gov,usa.gov,,,Redirect,,https://drive.google.com/drive/u/1/folders/0B1E3Jq_ydSUkY2Q5ZDh0NVMxdzg,,,,,,,,,,,,,,,,,,,
+businessusa.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+businessusa.gov,usa.gov,,,,,,,,,,,,,,,,,,,,,,,,
+c2.18f.gov,18f.gov,,,Deprecated,cloud.gov,,,,,,,,,,,,,,,,A5E49523,∞,Copy of ATO/System Tracking Index Federalist Sites,N,N
+calc-dev.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+calc.gsa.gov,18f.gov,,CAP response now: Yes,Staging,Cloud.gov,https://drive.google.com/drive/folders/0B3FBmDcqOZB5U2hTWEpOM0t2Ums,,"90 Day LATO, extended",Low,9/26/2017,,,18F,James Seppi,,,,TBD,FAS,TBD,76F0CFB0,FDA83A2A,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+cap.18f.gov,,#N/A,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+cap.18f.gov/,18f.gov,,"TTS Ops will pay for this
+In use; Low ATO (https://github.com/18F/Infrastructure/issues/859); https://cap.18f.gov. Steven Reilly is the system owner. 18F currently seems to own it, but everyone in TTS uses this for managing PCard purchases. 18F wants to talk to TTS Operations about whether they should own it.
+* July 2019: Acq is decommissioning this",Redirect,cloud.gov,https://drive.google.com/drive/folders/1N4Z3_8vRWPLO_bSI0D40aS0HbOJqkNce,https://drive.google.com/file/d/1zZcdwBhUsOV4rvM7EY9pzNSxiH0l67PR/view,GSA ATO,Low,03/05/2021,,Kimber Dowsett,18F,Ethan Heppner,Steven Reilly (maybe),,,,,,0F9A932B,87A975B8,Copy of ATO/System Tracking Index Internal Systems,Y,N
+catalog-bsp.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+catalog-next.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+catalog.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+challenge.gov,challenge.gov,jarah.meador@gsa.gov,,Production,federalist.18.gov,https://drive.google.com/drive/folders/1yhA881RzxIlk2VKR7gRN1KvEmEmcZNmk,https://drive.google.com/file/d/0Bzj1CchfVUCHMTI0a2ZRem84R1FySzFlVHNMcDYxVl9hSUtj/view,,Moderate,"December 19, 2021",,Hyon Kim,OPP,Jarah Meador,Tammy White,,,,,,2647728F,7E71E678,Copy of ATO/System Tracking Index Internal Systems,Y,N
+challenges.gov,challenge.gov,jarah.meador@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+charlie.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,D23D94B7,9E1CDE26,Copy of ATO/System Tracking Index Federalist Sites,N,N
+chat.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,89A4D135,BCE9931A,Copy of ATO/System Tracking Index Federalist Sites,N,N
+ci.identitysandbox.gov,login.gov,all@login.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+cities.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+citizenscience.gov,citizenscience.gov,jarah.meador@gsa.gov,,Production,,,,,,,,,FAS/TTS/OPP,jarah.meador@gsa.gov,,,,,,,6CEE751E,452FE91E,Copy of GSA site inventory TTS 16,Y,N
+cld.epa.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+climate-data-user-study.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,037EC50C,6EDB89AA,Copy of ATO/System Tracking Index Federalist Sites,N,N
+climate.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+cloud.gov,cloud.gov,peter.burkholder@gsa.gov,"A lot of apps here are test junk that needs to be cleared out
+Britta spent ~20 hours/week on SSP since 6/2016-12/16/2016; 603 hours Tock'd to Highbar
+Holds lots of system apps",Production,Cloud.gov,Not applicable - ATO materials are hosted by FedRAMP in MAX.gov,https://drive.google.com/drive/folders/0Bw50xHl95jZwamRxNTdxNnVQYmc,FedRAMP JAB P-ATO,Moderate,Not applicable,,FedRAMP JAB,FAS/TTS/18F,eddie.tejeda@gsa.gov,Carlo Costino,,,,,,1F04D240,74D165D7,Copy of ATO/System Tracking Index Internal Systems,Y,N
+cm-jira.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+code.gov,code.gov,code@gsa.gov,,Production,cloud.gov,https://drive.google.com/drive/folders/0Bxno3_1C1DHZU2xObTQzM3dkcDA,https://drive.google.com/drive/folders/0Bxno3_1C1DHZU2xObTQzM3dkcDA,TBD,Moderate,3/18/22,,Kimber Dowsett,FAS/TTS/OPP,karen.trebon@gsa.gov,Froilan Irizarry,,,,PIF,Yes,722C6250,131AB11F,Copy of ATO/System Tracking Index Internal Systems,Y,N
+coe.gsa.gov,coe.gsa.gov,connectcoe@gsa.gov,,Production,federalist.18.gov,,,,,,,,FAS/TTS/COE,victoria.wales@gsa.gov,,,,,,,F70B4926,6A7ABA28,Copy of GSA site inventory TTS 19,Y,N
+college-scorecard.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+collegescorecard.ed.gov,18f.gov,,,Transferred?,,,,,,,,,,,,,,,,,AE85CCBC,26437E9C,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+compliance-viewer.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,28328234,∞,Copy of ATO/System Tracking Index Federalist Sites,N,N
+components.designsystem.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,F8C52A0C,68FA835A,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+components.standards.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+computersforlearning.gov,usa.gov,,,Production,,,,,,,,,FAS,susanne.combs@gsa.gov,,,,,,,832233A0,E5860E98,Copy of GSA site inventory FAS,Y,N
+conectate.gobiernousa.gov,usa.gov,,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+connect.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+connect.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/18F,laura.gerhardt@gsa.gov,,,,,,,8FEE857F,98C377E8,Copy of GSA site inventory TTS 20,Y,N
+connect.usa.gov,usa.gov,,,,,,,,,,,,,,,,,,,,,,,,
+consumer.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+consumeraction.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+consumercomplaintletter.usa.gov,usa.gov,,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+content-guide.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,452BDB3D,B26F9606,Copy of ATO/System Tracking Index Federalist Sites,N,N
+continua11y.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,1E11451F,E3CE0621,Copy of ATO/System Tracking Index Federalist Sites,N,N
+contracting-cookbook.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,9CBB2245,F41E487C,Copy of ATO/System Tracking Index Federalist Sites,N,N
+counties.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+crime-data-explorer.fr.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Beta,,,,,,,,,,,,,,,,,,,,,
+crissupb.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+crm-labs.data.gov,data.gov,datagovhelp@gsa.gov,,Deprecated?,,,,,,,,,,,,,,,,,,,,,
+dap.digitalgov.gov,analytics.usa.gov,analytics.usa.gov@gsa.gov,,Production,AWS,,,,,,,,,,,,,,,,,,,,
+dashboard-labs.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+dashboard.brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+dashboard.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+data.gov,data.gov,datagovhelp@gsa.gov,,Production,FCS,https://drive.google.com/drive/folders/0Bw0F8bl5XHDTUHVsNHFNZVIyU3c,,3 Year ATO,Moderate,3/2/2021,,Hyon Kim,OPP / BSP,John Jediny,John Jediny,,,,,,0638303E,896DA382,Copy of ATO/System Tracking Index Internal Systems,N,N
+demo.10x.gsa.gov,10x.gsa.gov,william.cahoe@gsa.gov,,Staging,federalist.18.gov,,,,,,,,,,,,,,,,92C26641,1DF2BFA8,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+demo.accessibility.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+demo.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+demo.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+demo.fedramp.gov,fedramp.gov,info@FedRAMP.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+demo.innovation.gov,digital.gov,digitalgov-team@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+demo.plainlanguage.gov,digital.gov,digitalgov-team@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+demo.pra.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+demo.touchpoints.digital.gov,touchpoints.digital.gov,,,,,,,,,,,,,,,,,,,,,,,,
+demo1.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+demo1.staging.infr.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+demo2.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+demo2.staging.infr.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+demo3.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+demo3.staging.infr.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+design-principles-guide.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,321D5B43,35291DB7,Copy of ATO/System Tracking Index Federalist Sites,N,N
+designsystem.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+dev.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+developer.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+developers.code.gov,code.gov,code@gsa.gov,,Dev/Sandbox,cloud.gov,,,,,,,,,,,,,,,,,,,,
+developers.login.gov,login.gov,all@login.gov,,Production,AWS,,,,,,,,,,,,,,,,,,,,
+digital-acquisition-playbook.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,DBD32998,AD7D323C,Copy of ATO/System Tracking Index Federalist Sites,N,N
+digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+digitalaccelerator.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,F5013901,FD4FD2ED,Copy of ATO/System Tracking Index Federalist Sites,N,N
+digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+digitalgov.sitesusa.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+disaster.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+disasters.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+discovery.gsa.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+discuss.pif.gov,pif.gov,pif-team@gsa.gov,,Deprecated,TBD,TBD,,TBD,Low,TBD,,,PIF,,,,,TBD,N/A,No,B5532CEA,9DA2B742,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+docs.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+dolores-app.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,EFE0BF49,292F517C,Copy of ATO/System Tracking Index Federalist Sites,N,N
+dolores-staging.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,52300729,8A6733E3,Copy of ATO/System Tracking Index Federalist Sites,N,N
+download.collegescorecard.ed.gov,18f.gov,,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+ecosystems.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+ed.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+education.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+emerging.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+energy.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+eng-hiring.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,BD779B71,D4420F78,Copy of ATO/System Tracking Index Federalist Sites,N,N
+engineering.18f.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+epa-notice.usa.gov,usa.gov,,The notice period will end on 9/26 and the system will be done!,Transferred?,Cloud.gov,https://drive.google.com/drive/u/0/folders/0ByNRVH8rhs0YR0pXNXBENDBkNDg,,90-Day LATO,Low,10/18/2016,,,FAS/TTS/OPP,andrew.dunkman@gsa.gov,,,,https://github.com/eregs/notice-and-comment,OPP,Yes,3276BFF8,350913FA,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+ethics.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+everykidinapark.gov,18f.gov,,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+explore.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+fcsm.sitesusa.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated?,,,,,,,,,,,,,,,,,,,,,
+fdic-cloudworkspace.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+fdic-search.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+fdic-wwwdev.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+federalist-builder.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+federalist-docs-staging.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,,,,,,,,,ECB8840F,E1B47E21,Copy of ATO/System Tracking Index Federalist Sites,N,N
+federalist-docs.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-tts-ops-prototyping,,,,,,,,9166025F,99D79B1B,Copy of cloud.gov IAAs and Orgs,N,N
+federalist-landing-template.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-18f-dolores,,,,,,,,ED05662A,7CFAD807,Copy of cloud.gov IAAs and Orgs,N,N
+federalist-modern-team-template.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-18f-hubot,,,,,,,,606BB6C6,FE45DE36,Copy of cloud.gov IAAs and Orgs,N,N
+federalist-proxy.app.cloud.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,,,,,,,,,,,,,
+federalist-report-template.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-acq-proto,,,,,,,,2A56FDD3,D8AC8154,Copy of cloud.gov IAAs and Orgs,N,N
+federalist-staging.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-tts-infrastructure,,,,,,,,1C615BB5,AE2E5511,Copy of cloud.gov IAAs and Orgs,N,N
+federalist-uswds-template.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,Production,cloud.gov,,,,,,,,gsa-18f-tock,,,,,,,,B59443B8,78D22D33,Copy of cloud.gov IAAs and Orgs,N,N
+federalist.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,"extended boundary ato 
+See also https://federalist.18f.gov/assets/documents/-Compliance-Memo.pdf
+
+ has been ATO'd previously as component of EITI and College Scorecard.",Production,Cloud.gov,https://drive.google.com/a/gsa.gov/folderview?id=0B6RmcCE5z-3OaGJ6NUNQNno3T00&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,GSA ATO,Low,3/5/21,,,FAS/TTS/18F,eddie.tejeda@gsa.gov,,,,TBD,18F,TBD,7D683A96,6436BE14,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+federalistapp-staging.18f.gov,federalist.18f.gov,federalist-support@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+federalistapp.18f.gov,18f.gov,,,Production,cloud.gov,,,,,,,,,,,,,,,,501B85FA,2C50FF24,Copy of cloud.gov IAAs and Orgs,N,N
+federation-staging.data.gov,data.gov,datagovhelp@gsa.gov,,Staging,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+federation.data.gov,data.gov,datagovhelp@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+fedinfo.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+fedramp-dashboard.fr.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+fedramp-develop.fr.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+fedramp.gov,fedramp.gov,info@FedRAMP.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+fedramp.sitesusa.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+fedspendingtransparency.18f.gov,18f.gov,,Transferred to Treasury,Production,,,,,,,,,,,,,,,,,87E83FD3,A3DE9593,Copy of cloud.gov IAAs and Orgs,N,N
+feedback-staging.usa.gov,usa.gov,,,Staging,,,,,,,,,,,,,,,,,,,,,
+feedback.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+feedthefuture.gov,pif.gov,pif-team@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,F25A684F,C308D0E9,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+fellows-in-innovation.pif.gov,pif.gov,pif-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,86C8A6EA,0B0E52C2,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+files.18f.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+finance.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+find.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+find.search.gov,search.gov,amy.lawson@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+findtreatment.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+firstgov.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+food.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+foodsecurity.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+forms.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+fr-stage.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+fr.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+frontend.18f.gov,18f.gov,,,Production,,,,,,,,,gsa-tts-fugacious,,,,,,,,C6180662,366B5B57,Copy of cloud.gov IAAs and Orgs,N,N
+fugacious.18f.gov,18f.gov,,,Deprecated,,,,,,,,,gsa-acq-micropurchase,,,,,,,,89D48901,A112A78E,Copy of cloud.gov IAAs and Orgs,N,N
+geospatial.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+globaldevelopment.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+go.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+gobierno.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+gobiernousa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+govconnect.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,9ADBC30C,397F0E86,Copy of cloud.gov IAAs and Orgs,N,N
+grafana.18f.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+grouplet-playbook.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,ABB13805,12504AC5,Copy of cloud.gov IAAs and Orgs,N,N
+gsaforecast.gsa.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+guides-template.18f.gov,18f.gov,,,Deprecated,,,,,,,,,cloud.gov team orgs:,,,,,,,,D3D6FDEF,5017AF3C,Copy of cloud.gov IAAs and Orgs,N,N
+guides.18f.gov,18f.gov,,,Deprecated,,,,,,,,,cloud-gov,,,,,,,,227F950B,50E3490B,Copy of cloud.gov IAAs and Orgs,N,N
+hamilton.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+handbook.18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,cloud-gov-operators,,,,,,,,21614A0A,E578771E,Copy of cloud.gov IAAs and Orgs,N,N
+health.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+highlights.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+howto.gov,digital.gov,digitalgov-team@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+devicepki.idmanagement.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,BF9FA518,DE4A3A43,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+hackerone.com/tts,hackerone.com/tts,devops@gsa.gov,,Production,Cloud.gov,https://drive.google.com/drive/u/0/folders/0B8-KLfkQr4EVc2VDaGNPc1gtbHc,,TBD,Moderate,New,,,18F,,,,,TBD,OGC,TBD,70755478,0C1ED9A3,Copy of TTS ATOs New and Renewals DEPRECATED,?,?
+https.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+https.cio.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+hub.18f.gov,18f.gov,,,Deprecated,,TBD,,TBD,Low,TBD,,,18F,,,,,TBD,N/A,No,F64D0C8C,2E883C19,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+humanrights.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+i14y.search.gov,search.gov,amy.lawson@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+i14y.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+i14y.usa.gov,search.gov,amy.lawson@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+iaa-forms.18f.gov,18f.gov,,,Deprecated,,,,,,,,,gsa-tts-domains,,,,,,,,E9E3F441,7F74987B,Copy of cloud.gov IAAs and Orgs,N,N
+identity-dev-docs.18f.gov,18f.gov,,,Production,AWS,,,,,,,,test-org,,,,,,,,7D8020DD,B73123B6,Copy of cloud.gov IAAs and Orgs,N,N
+identitysandbox.gov,login.gov,all@login.gov,,,,,,,,,,,,,,,,,,,,,,,
+idmanagement.gov,login.gov,all@login.gov,,Production,,,,,,,,,OGP,rachel.flagg@gsa.gov,,,,,,,7861951D,0DE08E42,Copy of GSA site inventory OGP,Y,N
+idp.brody.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.ci.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.crissupb.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.dev.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.int.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.jjg.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.markryan.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.qa.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+idp.staging.login.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+info.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+innovation-toolkit-prototype.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/18F,dahianna.salazarforeman@gsa.gov,,,,,,,6C8A32A9,31EF7961,Copy of GSA site inventory TTS 3,N,N
+innovation.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+int.identitysandbox.gov,login.gov,all@login.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+inventory.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+jjg.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+jobkit.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,FAS/TTS/OPP,gwynne.kostin@gsa.gov,,,,,,,56482316,64396F25,Copy of GSA site inventory TTS 45,Y,N
+jobs.18f.gov,18f.gov,,,Production,federalist.18.gov,,,,,,,,FAS/TTS/OPP,timothy.lowden@gsa.gov,,,,,,,4C053909,D9B5A3AE,Copy of GSA site inventory TTS 7,N,N
+join.18f.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+join.tts.gsa.gov,tts.gsa.gov,,,Production,,,,,,,,,FAS/TTS/OPS,dahianna.salazarforeman@gsa.gov,,,,,,,23D91028,5016A4CF,Copy of GSA site inventory TTS 46,Y,N
+kibana.demo1.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana.demo2.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana.demo3.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana.search.gov,search.gov,amy.lawson@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+kibana.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+kibana5.demo1.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana5.demo2.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana5.demo3.search.usa.gov,search.gov,amy.lawson@gsa.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+kibana5.search.gov,search.gov,amy.lawson@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+kids.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+kids.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+labs-bsp.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+labs.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+labs.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+law.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+lean-product-design.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/OPP,jacob.parcell@gsa.gov,,,,,,,856DCD18,58D45C18,Copy of GSA site inventory TTS 9,N,N
+login.fr.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+login.gov,login.gov,all@login.gov,CAP response now: Yes,Production,,,,3 year LATO,Low,,,,TTS,,,,,,,,6FCB43EB,BA3D547D,Copy of TTS ATOs New and Renewals - New Dashboard,Y,N
+lookforwatersense-prod.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+lookforwatersense-stage.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+m.gobiernousa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+m.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+make.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+manufacturing.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+markdown-helper.18f.gov,18f.gov,,,Staging,,,,,,,,,FAS/TTS/18F,eddie.tejeda@gsa.gov,,,,,,,F039D3AA,D876F2AF,Copy of GSA site inventory TTS 17,N,N
+marketplace.fedramp.gov,fedramp.gov,info@FedRAMP.gov,,Production,federalist.18.gov,https://drive.google.com/drive/folders/0BzA5IPWEmW27ZVZnUVUzVENzUmc,,TBD,Low,10/31/2016,,,18F,,,,,https://github.com/18F/fedramp-dashboard,OPP,No,0CE975C1,0DF0BDE8,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+methods.18f.gov,18f.gov,,,Production,,,,,,,,,FAS/TTS/OPP,karen.trebon@gsa.gov,,,,,,,E0FF9132,900629F0,Copy of GSA site inventory TTS 18,N,N
+micropurchase.18f.gov,18f.gov,,,Deprecated,Cloud.gov,https://docs.google.com/document/d/1Ea-bL30uTmOjXScrgJl4fg7vsX15-UTx1dyKrgYMyK0/edit,,AO-only ATO,Low,12/2/2016,,,18F,,,,,TBD,18F,No,142C5657,77F962CB,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+modularcontracting.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/OPP,joseph.castle@gsa.gov,,,,,,,048314F5,D614948C,Copy of GSA site inventory TTS 27,N,N
+my.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+mywaterway-dev.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+mywaterway-stage.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+new.vote.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+next.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+notice.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+notice.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+notifications.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+nutrition.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+o166.email.digitalgov.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+ocean.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+onepagetest.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,41ABFF55,C501B8D5,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+open-forest-dev.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+open-forest-staging.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+open-source-guide.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/OPP,jeremy.zilar@gsa.gov,,,,,,,7660938E,31D6A9C3,Copy of GSA site inventory TTS 28,N,N
+open-source-program.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/OPP,andrew.dunkman@gsa.gov,,,,,,,40863440,FBE589F9,Copy of GSA site inventory TTS 31,N,N
+open-staging.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,8A258736,50452218,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+open.foia.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+open.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+openopps.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,"Moving to OPM
+
+Noah spoke with OPM CISO Cord Chase. They may be able to get it under a 90-day ATO this week. Awaiting signature.
+
+Noah spoke with Lisa and made sure she is caught up. Will continue to work with OPM until final hour to get system transferred. Noah will take any mtgs necessary with OPM mgmt if it helps them meet the deadline.
+
+18F can help with transfer before 10/31.  Post 10/31, 18F team will not be under contract and will not be able to help with transfer. 
+Technology risk assessment: The system is within the boundary of cloud.gov, and benefits from all the inherited cloud.gov and AWS controls.
+
+Compliance risk assessment: The underlying components of the system properly leverage cloud.gov, and the underlying AWS. The system correctly implements 16-17 controls of the LATO baseline that are applicable. However the current queue between Infrastructure and GSA IT InfoSec teams will not be able to make room for the system in time. This is a potential audit finding, as currently policies and procedures dictate that GSA IT staff or contractors must conduct all final scans before the CISO will give any concurrance to an ATO. The system also uses deprecated authentication for backend users (MyUSA) and has not yet been hooked up to OPM's auth system or to the new cloud.gov auth.",Production,Cloud.gov,https://drive.google.com/a/gsa.gov/folderview?id=0BynIxtx-CfkdU0hzX2ZydzVqZFE&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,AO-only ATO,Moderate,SHIPPED,,,OPP,,,,,https://trello.com/c/sXKmIBI0,OPP,No,6EF94D33,41307A18,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+pages.18f.gov,18f.gov,,,Deprecated,,,,,,,,,FAS/TTS/18F,eddie.tejeda@gsa.gov,,,,,,,D8FF7DD2,C5634900,Copy of GSA site inventory TTS 35,N,N
+paid-leave-prototype.18f.gov,18f.gov,,,Production,,,,,,,,,FAS/TTS/18F,keith.wilson@gsa.gov,,,,,,,43D01176,ED5C94F5,Copy of GSA site inventory TTS 42,N,N
+participation.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+partnership-playbook.18f.gov,18f.gov,,,Production,,,,,,,,,OGP,lachelle.levan@gsa.gov,,,,,,,0CCD4829,88B4F4C7,Copy of GSA site inventory OGP,N,N
+paygap-slack.pif.gov,pif.gov,pif-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+paygap.pif.gov,pif.gov,pif-team@gsa.gov,,Production,federalist.18.gov,https://drive.google.com/a/gsa.gov/folderview?id=0B2gHjLPT7cBtUE5zazZaZjlfODg&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,TBD,Low,4/11/2017,,,PIF,,,,,TBD,DOC,Yes,98D3B789,4B282FB3,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+performance-gov-research.18f.gov,18f.gov,,,Production,,,,,,,,,OGP,marina.fox@gsa.gov,,,,,,,58F56D46,B17F0B41,Copy of GSA site inventory OGP,N,N
+performance.gov,performance.gov,PgovSupport@GSA.gov,,Production,CMP,,,90-Day LATO,TBD,TBD,,,OPP,lauren.stocker@gsa.gov,,,,TBD,OPP,Yes,A018FD00,A4A22A1A,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+pfabankapi-d.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankapi-q.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankapi.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankfindui-d.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankfindui-n.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankfindui-q.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankfindui.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pfabankui-q.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+pif.gov,pif.gov,pif-team@gsa.gov,,Production,federalist.18.gov,https://docs.google.com/document/d/1j97ltncIyVXtCtOs3FmqAqmUOB6Bgy-xOMR-EUVBhfw/edit,,TBD,Low,7/28/2017,,,PIF,,,,,TBD,OPP,No,∞,62B298E7,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+pif.gsa.gov,pif.gov,pif-team@gsa.gov,,Redirect,,,,,,,,,FAS/TTS/PIF,keith.muth@gsa.gov,,,,,,,7F7DD6BC,19012068,Copy of GSA site inventory TTS 54,Y,N
+piv.idmanagement.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,65BAAC34,3F97A1D6,Copy of ATO/System Tracking Index Federalist Sites,N,N
+pivcac.ci.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+pivcac.crissupb.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+pivcac.int.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+pivcac.jjg.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+pivcac.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+pivcac.prod.login.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+pivcac.staging.login.gov,login.gov,all@login.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+plain-language-tutorial.18f.gov,18f.gov,,,Deprecated,,,,,,,,,OGP,lachelle.levan@gsa.gov,,,,,,,AFDA07CC,9B4E79F6,Copy of GSA site inventory OGP,N,N
+plainlanguage.gov,plainlanguage.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+pra.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+presidentialinnovationfellows.gov,pif.gov,pif-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,3330CBD1,13D5968B,Copy of ATO/System Tracking Index Federalist Sites,N,N
+preview.login.gov,login.gov,all@login.gov,,Staging,Project Hosts,,,GSA LATO,Low,,,,,,,,,,,,66B664A8,97D7E033,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+private-eye.18f.gov,18f.gov,,,Production,,,,,,,,,FAS,jill.akridge@gsa.gov,,,,,,,826DC283,FA0A6AA4,Copy of GSA site inventory FAS,N,N
+product-guide.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+promotions.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+proposal.pif.gov,pif.gov,pif-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+public-sans.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+publications.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+pulse.cio.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+qa.identitysandbox.gov,login.gov,all@login.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+reference.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+registry.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+requests.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+research.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resources-staging.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resources.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,FAS/TTS/OPP,hyon.kim@gsa.gov,,,,,,,C27E4F72,185742D1,Copy of GSA site inventory TTS 60,Y,N
+respuestas.gobiernousa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resque.demo1.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resque.demo2.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resque.demo3.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+resque.search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+review.pif.gov,pif.gov,pif-team@gsa.gov,,Production,Salesforce,,,,,,,,,,,,,,,,,,,,
+rural.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+safety.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+sandbox.gov,tts.gsa.gov,,,,,,,,,,,,,,,,,,,,,,,,
+sbst.gov,,#N/A,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+science.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+sdg-bsp.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+sdg-staging.data.gov,data.gov,datagovhelp@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+sdg.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+search.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+search.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Production,AWS,https://drive.google.com/drive/u/1/folders/0BzGQCMmux7-oSHhQYlJmZUdheFE,drive.google.com/a/gsa.gov/file/d/0BynIxtx-CfkdX2s1UU1PdE9YUDg/view?usp=sharing,90-Day LATO Extension,Low,1/29/2017,,,OPP,,,,,Pivotal Tracker,OPP,Yes,0863D0DE,887CC100,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+search.gov,search.gov,amy.lawson@gsa.gov,,Production,AWS,https://drive.google.com/drive/folders/0B32BQWA0NBiqVjIxOTA2c3FVZEk,https://drive.google.com/open?id=0B7wXaYxmwOaXbFVJLUplSFF2Vlk,,Low,"February 1, 2020",,Hyon Kim,OPP,Dawn McCleskey,Dawn McClesky,,,,,,B59B045C,D699BC5F,Copy of ATO/System Tracking Index Internal Systems,Y,N
+search.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+secure.login.gov,login.gov,all@login.gov,FedRAMP docs: https://drive.google.com/open?id=1xpoGOhO7fcigIATcYGYJfdE5OZJ2pGIK,Production,AWS E/W,https://drive.google.com/drive/u/0/folders/10M8ETlrXwjNI01ggDkHge608mrTmQHbq,https://drive.google.com/a/gsa.gov/file/d/1Vp_6DTrqij7yjGl69DtLssBQwnKcBbe7/view?usp=drivesdk,,Moderate,04/2019,,Anil Cheriyan,18F,J. Alex Dalessio,Mossedeq Zia,,,,,,F3A87F72,FD45E55D,Copy of ATO/System Tracking Index Internal Systems,Y,N
+semantic.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+services.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+site-scanning.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+Sites.usa.gov,usa.gov,,"extention signed
+No evidence of an ATO yet.",Staging,CMP,https://drive.google.com/drive/u/1/folders/0BzGQCMmux7-oTjVqYm9UZHBqN0E,,"90 Day LATO, extended",Moderate,9/11/2017,,,OPP,,,,,TBD,OPP,Yes,4ECA1C27,172289AC,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+skills.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+slides.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,2834F047,591F3877,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+smallbusiness.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+smartdisclosure.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+sp-oidc-sinatra.brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp-oidc-sinatra.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp-rails.brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp-rails.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp-sinatra.brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp-sinatra.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.brody.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.ci.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.crissupb.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.dev.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.int.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.jjg.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.markryan.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+sp.qa.identitysandbox.gov,login.gov,all@login.gov,,Dev/Sandbox,,,,,,,,,,,,,,,,,,,,,
+stage-socialmobileregistry.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+staging.api.data.gov,api.data.gov,,,Staging,,,,,,,,,,,,,,,,,,,,,
+staging.code.gov,code.gov,code@gsa.gov,,Staging,,,,,,,,,,,,,,,,,8EC568C1,7954BA0C,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+staging.login.gov,login.gov,all@login.gov,,Staging,,,,,,,,,,,,,,,,,,,,,
+staging.performance.gov,performance.gov,PgovSupport@GSA.gov,,Staging,,,,,,,,,,,,,,,,,935A0AAA,E0064E66,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+staging.pulse.cio.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+staging.vote.gov,usa.gov,,,Staging,,,,,,,,,,,,,,,,,,,,,
+standards.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+standupbot.18f.gov,18f.gov,,,Deprecated,Cloud.gov,https://drive.google.com/drive/u/0/folders/0BzA5IPWEmW27OUtpNldxWWxkYmc,,TBD,Low,New,,,18F,,,,,https://github.com/18F/standup-bot,18F,TBD,7F4C68CD,2FAF013D,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+states.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+static.data.gov,data.gov,datagovhelp@gsa.gov,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+stats.search.usa.gov,usa.gov,,,Deprecated,,,,,,,,,,,,,,,,,,,,,
+strategy.data.gov,data.gov,datagovhelp@gsa.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+summit.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+support.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+survey.apps.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,Cloud.gov,https://drive.google.com/a/gsa.gov/folderview?id=0B2gdoTPnODnKRTMzMUdsRkRWNFU&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,TBD,Moderate,5/6/2017,,,18F,,,,,TBD,18F,No,A3F82475,86EE048E,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+tailored.fedramp.gov,fedramp.gov,info@FedRAMP.gov,,Production,federalist.18.gov,,,,,,,,,,,,,,,,,,,,
+tell-us.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+tellus.usa.gov,usa.gov,,,Production,,,,,,,,,,,,,,,,,,,,,
+test-migrate.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+test-onrr.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+test.18f.us,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+test.collegescorecard.ed.gov,18f.gov,,,,,,,,,,,,,,,,,,,,,,,,
+testing-cookbook.18f.gov,18f.gov,,,Deprecated,,,,,,,,,,,,,,,,,F58278EE,4D53C55B,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+tmate.18f.gov,,#N/A,,,,,,,,,,,,,,,,,,,,,,,
+tock.18f.gov,18f.gov,,CAP response now: Yes,Beta,Cloud.gov,https://drive.google.com/open?id=1c5uodGaqBT3ubJZLmlPwbE2GgSyhN8d6,https://drive.google.com/drive/folders/1hFaIyRafoTONHqm4jVUW8hXYFJQxaDam,AO-only ATO,Low,7/2/21,,Kimber Dowsett,18F,Roger Ruiz,Steven Reilly,,,,TBD,,7C4BD813,5AE56601,Copy of ATO/System Tracking Index Internal Systems,Y,N
+tome.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+tomeairnow.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+tomeairnow1.app.cloud.gov,cloud.gov,peter.burkholder@gsa.gov,,Transferred?,,,,,,,,,,,,,,,,,,,,,
+tophealth.pif.gov,pif.gov,pif-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+touchpoints.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,FAS/TTS/18F,ryan.wold@gsa.gov,,,,,,,E3D80DF4,E254D798,Copy of GSA site inventory TTS 68,Y,N
+us.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+usa.gov,usa.gov,,"GSA IT is working on getting a full ATO for the full ECAS setup, as well as all of the applications that run on ECAS (which includes GSA.gov, Insite, USA.gov, and a few other things)",Production,CMP,,https://drive.google.com/file/d/139L_0sS3mo22p1pkv2jpgGJkZwWBSYfz/view,90-Day LATO Extension,Moderate,4/2019,,Liz Delnegro (GSA IT),OPP,,Russell O'Neill,,,TBD,N/A,Yes,A9C01A4C,008BF794,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+usagov.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+usdigitalregistry.digitalgov.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+v1.designsystem.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,FAS/TTS/OPP,daniel.williams@gsa.gov,,,,,,,6059D7B2,09FBCAEA,Copy of GSA site inventory TTS 71,Y,N
+v2.designsystem.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+v2.designsystem.digital.gov/,digital.gov,digitalgov-team@gsa.gov,,Production,,,,,,,,,,,,,,,,,54969964,94AB7A4B,Copy of ATO/System Tracking Index Federalist Sites,Y,N
+v2alt.designsystem.digital.gov,digital.gov,digitalgov-team@gsa.gov,,,,,,,,,,,,,,,,,,,,,,,
+vocab.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+vote.gov,usa.gov,,,Production,federalist.18.gov,,,,,,,,,,,,,,,,98CC9513,3204529A,Copy of ATO/System Tracking Index Federalist Sites,N,N
+vote.usa.gov,usa.gov,,,Redirect,,,,,,,,,,,,,,,,,,,,,
+weather.data.gov,data.gov,datagovhelp@gsa.gov,,Redirect,,,,,,,,,,,,,,,,,,,,,
+weekofmaking.pif.gov,pif.gov,pif-team@gsa.gov,,Deprecated,cloud.gov,https://drive.google.com/a/gsa.gov/folderview?id=0B2gHjLPT7cBtNE5WNlQwVnV0TDg&usp=sharing&tid=0BynIxtx-CfkdckljM3BPSkdQT1U,,TBD,Low,3/6/2017,,,PIF,,,,,TBD,PIF,Yes,69F7AF70,52E68CE7,Copy of TTS ATOs New and Renewals DEPRECATED,Y,N
+workflow.digital.gov,digital.gov,digitalgov-team@gsa.gov,,Beta,,,,,,,,,FAS/TTS/OPP,jacob.parcell@gsa.gov,,,,,,,C607091E,AB5E7BFB,Copy of GSA site inventory TTS 72,Y,N
+wp-bsp.data.gov,data.gov,datagovhelp@gsa.gov,,Production,,,,,,,,,,,,,,,,,,,,,
+writing-lab-guide.18f.gov,18f.gov,,,Production,,,,,,,,,,,,,,,,,4A167887,F06408CC,Copy of ATO/System Tracking Index Federalist Sites,Y,N

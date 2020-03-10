@@ -7,6 +7,14 @@
 # This is how many domains to scan in a single task
 BATCHSIZE="${BATCHSIZE:-3000}"
 
+# This function uses the mergedomaincsv.py script to ensure that
+# there are no duplicate domains, and that the metadata from the first
+# instance of a domain remains.
+mergedomains() {
+	./mergedomaincsv.py /tmp/domains.csv "$1" /tmp/mergeddomains.csv
+	mv /tmp/mergeddomains.csv /tmp/domains.csv
+}
+
 # get the list of domains
 if [ -f "$DOMAINCSV" ] ; then
 	# this is so we can supply our own file for testing
@@ -18,14 +26,15 @@ else
 	# XXX HERE IS WHERE TO ADD MORE DOMAINS/SUBDOMAINS!!!
 	# To add more files, make sure they are in the same format as the
 	# current-federal.csv file, OR make sure that the domain is the first
-	# field in your csv file.  The mergedomaincsv.py script will make sure that
-	# there are no duplicate domains, and that the metadata from the first
-	# instance of a domain remains.
-	# Also: Make sure that the final file created ends up being called /tmp/domains.csv!
+	# field in your csv file.  You can put them in the domains dir, and
+	# they will be merged in so there are no duplicates and metadata from
+	# the first instance of the domain will be preserved.
 
-	wget -O /tmp/other-websites.csv https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
-	./mergedomaincsv.py /tmp/domains.csv /tmp/other-websites.csv /tmp/mergeddomains.csv
-	mv /tmp/mergeddomains.csv /tmp/domains.csv
+	# wget -O domains/other-websites.csv https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+
+	for i in domains/*.csv ; do
+		mergedomains "$i"
+	done
 fi
 
 
