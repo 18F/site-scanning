@@ -98,15 +98,15 @@ class CheckAPI(SimpleTestCase):
         """greaterthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=gt:50")
         jsondata = json.loads(response.content)
-        # 18f and gsa and cloud.gov should have scores greater than 50
-        self.assertEqual(len(jsondata), 3)
+        # 18f and gsa and and login.gov and cloud.gov should have scores greater than 50
+        self.assertEqual(len(jsondata), 4)
 
     def test_api_queries_uswdslessthan(self):
         """lessthan queries work"""
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
-        self.assertEqual(len(jsondata), 4)
+        self.assertEqual(len(jsondata), 3)
 
     def test_api_queries_multipleargs(self):
         """multiple query arguments should be ANDed together"""
