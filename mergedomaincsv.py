@@ -20,7 +20,7 @@ with open(sys.argv[3], 'w') as csvout:
         domainfile = csv.DictReader(csvfile, fieldnames=fieldnames)
         for row in domainfile:
             domain = row['Domain Name']
-            if domain not in domains:
+            if domain.upper() not in map(str.upper, domains):
                 domains.append(domain)
             writer.writerow(row)
 
@@ -41,10 +41,10 @@ with open(sys.argv[3], 'w') as csvout:
                 next
 
             # If we already did this domain in this file, skip it
-            if domain not in domainlist:
+            if domain.upper() not in map(str.upper, domainlist):
                 domainlist.append(domain)
                 # if the previous file had the domain, skip it.
-                if domain not in domains:
+                if domain.upper() not in map(str.upper, domains):
                     newrow = {}
                     # make sure that it's the proper format
                     for i in fieldnames:
