@@ -7,11 +7,13 @@
 # This is how many domains to scan in a single task
 BATCHSIZE="${BATCHSIZE:-3000}"
 
+BINDIR=$(dirname "$0")
+
 # This function uses the mergedomaincsv.py script to ensure that
 # there are no duplicate domains, and that the metadata from the first
 # instance of a domain remains.
 mergedomains() {
-	./mergedomaincsv.py /tmp/domains.csv "$1" /tmp/mergeddomains.csv
+	"$BINDIR/mergedomaincsv.py" /tmp/domains.csv "$1" /tmp/mergeddomains.csv
 	mv /tmp/mergeddomains.csv /tmp/domains.csv
 }
 
@@ -30,9 +32,9 @@ else
 	# they will be merged in so there are no duplicates and metadata from
 	# the first instance of the domain will be preserved.
 
-	# wget -O domains/other-websites.csv https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+	# wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
 
-	for i in domains/*.csv ; do
+	for i in $BINDIR/domains/*.csv ; do
 		mergedomains "$i"
 	done
 fi

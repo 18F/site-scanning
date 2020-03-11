@@ -293,3 +293,10 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertIn('v2.0.3', jsondata)
+
+    def test_subdomains_work(self):
+        """test calendar.gsa.gov subdomain exists"""
+        url = '/api/v1/domains/calendar.gsa.gov/'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata[0]['domain'], 'calendar.gsa.gov')
