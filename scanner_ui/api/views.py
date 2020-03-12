@@ -108,8 +108,6 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
         if not page_size:
             return None
         page_number = int(request.query_params.get(self.page_query_param, 1))
-        if not page_number:
-            return None
 
         paginator = self.django_paginator_class(queryset, page_size)
         self.page = paginator.page(page_number)
@@ -119,10 +117,7 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
         finish = start + page_size
 
         qs = queryset[start:finish]
-        if isinstance(qs, ItemsWrapper):
-            return qs
-        else:
-            return ItemsWrapper(qs)
+        return ItemsWrapper(qs)
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -138,6 +133,9 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
+        # XXX not sure why we need to do this, but if we don't add a range, it
+        # will only serialize the first 10 hits.  :-(
+        scans = ItemsWrapper(scans[0:len(scans)])
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
