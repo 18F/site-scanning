@@ -28,6 +28,9 @@ class ItemsWrapper(OrderedDict):
     def __getitem__(self, index):
         return self.s[index]
 
+    def __str__(self):
+        return str(self.s.to_dict())
+
 
 # get all the scans of the type and domain specified from ES.  If the type is
 # None, you get all of that scantype.  If the domain is None, you
