@@ -7,8 +7,26 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range
 import re
+from collections import OrderedDict
 
 # Create your views here.
+
+
+# we need this because AttrDict is used all over by elasticsearch_dsl,
+# and it can't do .items().  So we will wrap it.
+class ItemsWrapper(OrderedDict):
+    def __init__(self, s):
+        self.s = s
+
+    def __iter__(self):
+        for hit in self.s:
+            yield hit.to_dict()
+
+    def __len__(self):
+        return self.s.count()
+
+    def __getitem__(self, index):
+        return self.s[index]
 
 
 # get all the scans of the type and domain specified from ES.  If the type is
@@ -61,21 +79,10 @@ def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None,
     if domain is not None:
         s = s.filter("term", domain=domain)
 
-    # Make the api url pretty
-    if request is not None:
-        apiurl = request.scheme + '://' + request.get_host() + '/api/v1/scans/'
-
-    # generate the list of scans, make the API url pretty.
-    scans = []
-    for i in s.scan():
-        if request is not None:
-            i['scan_data_url'] = apiurl + i['scantype'] + '/' + i['domain'] + '/'
-        scans.append(i.to_dict())
-
     # # XXX
     # print(s.to_dict())
 
-    return scans
+    return ItemsWrapper(s)
 
 
 # get the list of scantypes by scraping the indexes
@@ -107,7 +114,12 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
 
         start = page_size * (page_number - 1)
         finish = start + page_size
-        return queryset[start:finish]
+
+        qs = queryset[start:finish]
+        if isinstance(qs, ItemsWrapper):
+            return qs
+        else:
+            return ItemsWrapper(qs)
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -173,7 +185,7 @@ class ScansViewset(viewsets.GenericViewSet):
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
-        serializer = self.get_serializer(scan[0])
+        serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())
         return Response(serializer.data)
 
 
