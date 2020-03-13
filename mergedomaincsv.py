@@ -37,8 +37,8 @@ with open(sys.argv[3], 'w') as csvout:
                 domain = urlparse(row['URL']).hostname
             else:
                 domain = row[list(row.keys())[0]]
-            if domain == '':
-                next
+            if domain is None or domain == '':
+                continue
 
             # If we already did this domain in this file, skip it
             if domain.upper() not in map(str.upper, domainlist):
