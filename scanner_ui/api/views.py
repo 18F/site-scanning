@@ -116,8 +116,8 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
         start = page_size * (page_number - 1)
         finish = start + page_size
 
-        qs = queryset[start:finish]
-        return ItemsWrapper(qs)
+        qs = ItemsWrapper(queryset[start:finish])
+        return qs
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -133,10 +133,6 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
-        # XXX not sure why we need to do this, but if we don't add a range, it
-        # will only serialize the first 10 hits.  :-(
-        # scans = ItemsWrapper(scans[0:len(scans)])
-        # scans = ItemsWrapper(scans[0:10000])
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:

@@ -136,6 +136,26 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(2, len(jsondata['results']))
 
+    def test_api_secondpage(self):
+        """second page on scans endpoint should work and not be the same as the first page"""
+        response2 = self.client.get("/api/v1/scans/uswds2/?page=2&page_size=2")
+        jsondata2 = json.loads(response2.content)
+        response = self.client.get("/api/v1/scans/uswds2/?page=1&page_size=2")
+        jsondata = json.loads(response.content)
+        self.assertEqual(2, len(jsondata2['results']))
+        self.assertNotEqual(jsondata['results'], jsondata2['results'])
+
+    def test_api_secondpagedomains(self):
+        """second page on domains endpoint should work and not be the same as the first page"""
+        print('\n# getting domains page 2')
+        response2 = self.client.get("/api/v1/domains/?page=2&page_size=2")
+        jsondata2 = json.loads(response2.content)
+        print('\n# getting domains page 1')
+        response = self.client.get("/api/v1/domains/?page=1&page_size=2")
+        jsondata = json.loads(response.content)
+        self.assertEqual(2, len(jsondata2['results']))
+        self.assertNotEqual(jsondata['results'], jsondata2['results'])
+
     def test_api_cors(self):
         """CORS should be enabled on the API"""
         response = self.client.get("/api/v1/domains/18f.gov/", HTTP_ORIGIN='localhost')
