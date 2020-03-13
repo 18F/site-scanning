@@ -102,6 +102,7 @@ def getscantypes(date=None):
 
 class ElasticsearchPagination(pagination.PageNumberPagination):
     page_size_query_param = 'page_size'
+    max_page_size = 1000
 
     def paginate_queryset(self, queryset, request, view=None):
         page_size = self.get_page_size(request)
@@ -136,8 +137,11 @@ class DomainsViewset(viewsets.GenericViewSet):
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
-            page = self.paginate_queryset(scans)
-            if page is not None:
+            pageqs = self.paginate_queryset(scans)
+            if pageqs is not None:
+                page = []
+                for hit in pageqs.s.execute():
+                    page.append(hit.to_dict())
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
 
@@ -171,8 +175,11 @@ class ScansViewset(viewsets.GenericViewSet):
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
-            page = self.paginate_queryset(scans)
-            if page is not None:
+            pageqs = self.paginate_queryset(scans)
+            if pageqs is not None:
+                page = []
+                for hit in pageqs.s.execute():
+                    page.append(hit.to_dict())
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
 

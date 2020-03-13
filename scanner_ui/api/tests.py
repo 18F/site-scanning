@@ -147,10 +147,8 @@ class CheckAPI(SimpleTestCase):
 
     def test_api_secondpagedomains(self):
         """second page on domains endpoint should work and not be the same as the first page"""
-        print('\n# getting domains page 2')
         response2 = self.client.get("/api/v1/domains/?page=2&page_size=2")
         jsondata2 = json.loads(response2.content)
-        print('\n# getting domains page 1')
         response = self.client.get("/api/v1/domains/?page=1&page_size=2")
         jsondata = json.loads(response.content)
         self.assertEqual(2, len(jsondata2['results']))
