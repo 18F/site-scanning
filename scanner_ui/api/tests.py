@@ -147,11 +147,11 @@ class CheckAPI(SimpleTestCase):
 
     def test_api_secondpagedomains(self):
         """second page on domains endpoint should work and not be the same as the first page"""
-        response2 = self.client.get("/api/v1/domains/?page=2&page_size=2")
+        response2 = self.client.get("/api/v1/domains/?page=2&page_size=1")
         jsondata2 = json.loads(response2.content)
-        response = self.client.get("/api/v1/domains/?page=1&page_size=2")
+        response = self.client.get("/api/v1/domains/?page=1&page_size=1")
         jsondata = json.loads(response.content)
-        self.assertEqual(2, len(jsondata2['results']))
+        self.assertEqual(1, len(jsondata2['results']))
         self.assertNotEqual(jsondata['results'], jsondata2['results'])
 
     def test_api_cors(self):
