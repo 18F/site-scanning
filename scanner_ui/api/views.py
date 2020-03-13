@@ -19,7 +19,7 @@ class ItemsWrapper(OrderedDict):
         self.s = s
 
     def __iter__(self):
-        for hit in self.s:
+        for hit in self.s.scan():
             yield hit.to_dict()
 
     def __len__(self):
@@ -135,7 +135,8 @@ class DomainsViewset(viewsets.GenericViewSet):
         scans = self.get_queryset(date=date)
         # XXX not sure why we need to do this, but if we don't add a range, it
         # will only serialize the first 10 hits.  :-(
-        scans = ItemsWrapper(scans[0:len(scans)])
+        # scans = ItemsWrapper(scans[0:len(scans)])
+        # scans = ItemsWrapper(scans[0:10000])
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
