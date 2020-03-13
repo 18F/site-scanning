@@ -7,8 +7,29 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range
 import re
+from collections import OrderedDict
 
 # Create your views here.
+
+
+# we need this because AttrDict is used all over by elasticsearch_dsl,
+# and it can't do .items().  So we will wrap it.
+class ItemsWrapper(OrderedDict):
+    def __init__(self, s):
+        self.s = s
+
+    def __iter__(self):
+        for hit in self.s.scan():
+            yield hit.to_dict()
+
+    def __len__(self):
+        return self.s.count()
+
+    def __getitem__(self, index):
+        return self.s[index]
+
+    def __str__(self):
+        return str(self.s.to_dict())
 
 
 # get all the scans of the type and domain specified from ES.  If the type is
@@ -61,21 +82,10 @@ def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None,
     if domain is not None:
         s = s.filter("term", domain=domain)
 
-    # Make the api url pretty
-    if request is not None:
-        apiurl = request.scheme + '://' + request.get_host() + '/api/v1/scans/'
-
-    # generate the list of scans, make the API url pretty.
-    scans = []
-    for i in s.scan():
-        if request is not None:
-            i['scan_data_url'] = apiurl + i['scantype'] + '/' + i['domain'] + '/'
-        scans.append(i.to_dict())
-
     # # XXX
     # print(s.to_dict())
 
-    return scans
+    return ItemsWrapper(s)
 
 
 # get the list of scantypes by scraping the indexes
@@ -92,14 +102,13 @@ def getscantypes(date=None):
 
 class ElasticsearchPagination(pagination.PageNumberPagination):
     page_size_query_param = 'page_size'
+    max_page_size = 1000
 
     def paginate_queryset(self, queryset, request, view=None):
         page_size = self.get_page_size(request)
         if not page_size:
             return None
         page_number = int(request.query_params.get(self.page_query_param, 1))
-        if not page_number:
-            return None
 
         paginator = self.django_paginator_class(queryset, page_size)
         self.page = paginator.page(page_number)
@@ -107,7 +116,9 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
 
         start = page_size * (page_number - 1)
         finish = start + page_size
-        return queryset[start:finish]
+
+        qs = ItemsWrapper(queryset[start:finish])
+        return qs
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -126,8 +137,11 @@ class DomainsViewset(viewsets.GenericViewSet):
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
-            page = self.paginate_queryset(scans)
-            if page is not None:
+            pageqs = self.paginate_queryset(scans)
+            if pageqs is not None:
+                page = []
+                for hit in pageqs.s.execute():
+                    page.append(hit.to_dict())
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
 
@@ -161,8 +175,11 @@ class ScansViewset(viewsets.GenericViewSet):
 
         # if we are requesting pagination, then give it
         if self.pagination_class.page_query_param in request.GET:
-            page = self.paginate_queryset(scans)
-            if page is not None:
+            pageqs = self.paginate_queryset(scans)
+            if pageqs is not None:
+                page = []
+                for hit in pageqs.s.execute():
+                    page.append(hit.to_dict())
                 serializer = self.get_serializer(page, many=True)
                 return self.get_paginated_response(serializer.data)
 
@@ -173,7 +190,7 @@ class ScansViewset(viewsets.GenericViewSet):
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
         if len(scan) != 1:
             raise Exception('too many or too few scans', scan)
-        serializer = self.get_serializer(scan[0])
+        serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())
         return Response(serializer.data)
 
 

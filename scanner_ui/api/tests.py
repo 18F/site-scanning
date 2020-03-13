@@ -14,14 +14,26 @@ class CheckAPI(SimpleTestCase):
     scansjsondata = json.loads(scansresponse.content)
     datesresponse = client.get("/api/v1/lists/dates/")
     datesjsondata = json.loads(datesresponse.content)
+    numscans = 8
+    numdomains = 7
 
     def test_all_domains(self):
         """All domains are returned from calls to domains endpoint"""
-        self.assertGreaterEqual(len(self.domainsjsondata), 10)
+        domainlist = []
+        for i in self.domainsjsondata:
+            domainlist.append(i['domain'])
+        self.assertEqual(len(self.domainsjsondata), self.numscans * self.numdomains)
+        self.assertIn('18f.gov', domainlist)
+        self.assertIn('gsa.gov', domainlist)
+        self.assertIn('afrh.gov', domainlist)
+        self.assertIn('cloud.gov', domainlist)
+        self.assertIn('login.gov', domainlist)
+        self.assertIn('calendar.gsa.gov', domainlist)
+        self.assertIn('*.ecmapps.treasuryecm.gov', domainlist)
 
     def test_scans_list(self):
         """the scans endpoint gets you a list of scans"""
-        self.assertGreaterEqual(len(self.scansjsondata), 7)
+        self.assertEqual(len(self.scansjsondata), self.numscans)
         self.assertIn('third_parties', self.scansjsondata)
         self.assertIn('dap', self.scansjsondata)
         self.assertIn('200scanner', self.scansjsondata)
@@ -30,14 +42,7 @@ class CheckAPI(SimpleTestCase):
         """domains/18f.gov endpoint works"""
         response = self.client.get("/api/v1/domains/18f.gov/")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 8)
-        self.assertEqual(jsondata[0]['domain'], '18f.gov')
-
-    def test_individual_scans_works(self):
-        """domains/18f.gov endpoint works"""
-        response = self.client.get("/api/v1/domains/18f.gov/")
-        jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 8)
+        self.assertEqual(len(jsondata), self.numscans)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_org_field(self):
@@ -71,8 +76,7 @@ class CheckAPI(SimpleTestCase):
         """queries with wildcards work"""
         response = self.client.get("/api/v1/domains/?domain=gsa*")
         jsondata = json.loads(response.content)
-        # There are currently 8 scans, so this should get all the gsa scans
-        self.assertEqual(len(jsondata), 8)
+        self.assertEqual(len(jsondata), self.numscans)
 
     def test_api_queries_dapdetect(self):
         """queries for nested fields work"""
@@ -132,6 +136,24 @@ class CheckAPI(SimpleTestCase):
         jsondata = json.loads(response.content)
         self.assertEqual(2, len(jsondata['results']))
 
+    def test_api_secondpage(self):
+        """second page on scans endpoint should work and not be the same as the first page"""
+        response2 = self.client.get("/api/v1/scans/uswds2/?page=2&page_size=2")
+        jsondata2 = json.loads(response2.content)
+        response = self.client.get("/api/v1/scans/uswds2/?page=1&page_size=2")
+        jsondata = json.loads(response.content)
+        self.assertEqual(2, len(jsondata2['results']))
+        self.assertNotEqual(jsondata['results'], jsondata2['results'])
+
+    def test_api_secondpagedomains(self):
+        """second page on domains endpoint should work and not be the same as the first page"""
+        response2 = self.client.get("/api/v1/domains/?page=2&page_size=1")
+        jsondata2 = json.loads(response2.content)
+        response = self.client.get("/api/v1/domains/?page=1&page_size=1")
+        jsondata = json.loads(response.content)
+        self.assertEqual(1, len(jsondata2['results']))
+        self.assertNotEqual(jsondata['results'], jsondata2['results'])
+
     def test_api_cors(self):
         """CORS should be enabled on the API"""
         response = self.client.get("/api/v1/domains/18f.gov/", HTTP_ORIGIN='localhost')
@@ -163,14 +185,14 @@ class CheckAPI(SimpleTestCase):
         """fieldvalues endpoint works"""
         response = self.client.get("/api/v1/lists/privacy/values/domain/")
         jsondata = json.loads(response.content)
-        self.assertGreaterEqual(len(jsondata), 3)
+        self.assertEqual(len(jsondata), self.numdomains)
         self.assertIn('18f.gov', jsondata)
 
     def test_fieldvalues_data_endpoint(self):
         """fieldvalues endpoint works"""
         response = self.client.get("/api/v1/lists/privacy/values/data/")
         jsondata = json.loads(response.content)
-        self.assertGreaterEqual(len(jsondata), 3)
+        self.assertEqual(len(jsondata), 6)
 
     def test_fieldvalues_nested_endpoint(self):
         """fieldvalues endpoint works with nested fields"""
@@ -194,14 +216,14 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertGreaterEqual(len(jsondata), 10)
+        self.assertEqual(len(jsondata), self.numscans * self.numdomains)
 
     def test_specific_domain_date(self):
         """All domains are returned from calls to domains endpoint with a date"""
         url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/18f.gov/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 8)
+        self.assertEqual(len(jsondata), self.numscans)
         self.assertEqual(jsondata[0]['domain'], '18f.gov')
 
     def test_specific_domain_scan_date(self):
@@ -216,7 +238,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertGreaterEqual(len(jsondata), 7)
+        self.assertEqual(len(jsondata), self.numscans)
         self.assertIn('third_parties', jsondata)
         self.assertIn('dap', jsondata)
         self.assertIn('200scanner', jsondata)
@@ -226,7 +248,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 7)
+        self.assertEqual(len(jsondata), self.numdomains)
         self.assertEqual(jsondata[0]['scantype'], 'dap')
 
     def test_dap_scan_works_date(self):
@@ -258,7 +280,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/lists/privacy/values/domain/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertGreaterEqual(len(jsondata), 3)
+        self.assertEqual(len(jsondata), self.numdomains)
         self.assertIn('18f.gov', jsondata)
 
     def test_fieldvalues_data_endpoint_date(self):
