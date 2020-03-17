@@ -20,9 +20,9 @@ class CheckAPI(SimpleTestCase):
     def test_all_domains(self):
         """All domains are returned from calls to domains endpoint"""
         domainlist = []
-        for i in self.domainsjsondata:
+        for i in self.domainsjsondata['results']:
             domainlist.append(i['domain'])
-        self.assertEqual(len(self.domainsjsondata), self.numscans * self.numdomains)
+        self.assertEqual(self.domainsjsondata['count'], self.numscans * self.numdomains)
         self.assertIn('18f.gov', domainlist)
         self.assertIn('gsa.gov', domainlist)
         self.assertIn('afrh.gov', domainlist)
@@ -76,7 +76,7 @@ class CheckAPI(SimpleTestCase):
         """queries with wildcards work"""
         response = self.client.get("/api/v1/domains/?domain=gsa*")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), self.numscans)
+        self.assertEqual(jsondata['count'], self.numscans)
 
     def test_api_queries_dapdetect(self):
         """queries for nested fields work"""
@@ -90,7 +90,7 @@ class CheckAPI(SimpleTestCase):
         """queries from specific scan work"""
         response = self.client.get("/api/v1/scans/third_parties/?domain=gsa*")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 1)
+        self.assertEqual(jsondata['count'], 1)
 
     def test_api_queries_dapdetectfromdomain(self):
         """queries from specific domain work"""
@@ -110,13 +110,13 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get("/api/v1/scans/uswds/?data.total_score=lt:50")
         jsondata = json.loads(response.content)
         # afrh.gov should have a score of 0
-        self.assertEqual(len(jsondata), 3)
+        self.assertEqual(jsondata['count'], 3)
 
     def test_api_queries_multipleargs(self):
         """multiple query arguments should be ANDed together"""
         response = self.client.get("/api/v1/domains/?domain=18f*&data.status_code=200")
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), 3)
+        self.assertEqual(jsondata['count'], 3)
 
     def test_domains_api_pagination(self):
         """pagination on domains endpoint should work"""
@@ -216,7 +216,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/domains/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), self.numscans * self.numdomains)
+        self.assertEqual(jsondata['count'], self.numscans * self.numdomains)
 
     def test_specific_domain_date(self):
         """All domains are returned from calls to domains endpoint with a date"""
@@ -248,8 +248,8 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/date/' + self.datesjsondata[0] + '/scans/dap/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertEqual(len(jsondata), self.numdomains)
-        self.assertEqual(jsondata[0]['scantype'], 'dap')
+        self.assertEqual(jsondata['count'], self.numdomains)
+        self.assertEqual(jsondata['results'][0]['scantype'], 'dap')
 
     def test_dap_scan_works_date(self):
         """the scans endpoint gets you a list of scans for a particular date and domain"""
@@ -322,3 +322,24 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata[0]['domain'], 'calendar.gsa.gov')
+
+    def test_pagetoofar_work(self):
+        """test that a page that is too big returns an empty page"""
+        url = '/api/v1/domains/?page=9999999999999999'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata, [])
+
+    def test_negativepage_work(self):
+        """test that a page that is negative returns an empty page"""
+        url = '/api/v1/domains/?page=-12'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata, [])
+
+    def test_invalidpage_work(self):
+        """test that a page that is not an integer returns an empty page"""
+        url = '/api/v1/domains/?page=foo'
+        response = self.client.get(url)
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata, [])

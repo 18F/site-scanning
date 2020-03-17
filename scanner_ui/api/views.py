@@ -4,7 +4,7 @@ from .serializers import ScanSerializer
 import os
 from scanner_ui.ui.views import getdates, getListFromFields
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
+from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
 import re
 from collections import OrderedDict
@@ -108,17 +108,22 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
         page_size = self.get_page_size(request)
         if not page_size:
             return None
-        page_number = int(request.query_params.get(self.page_query_param, 1))
+        try:
+            page_number = int(request.query_params.get(self.page_query_param, 1))
+            paginator = self.django_paginator_class(queryset, page_size)
+            self.page = paginator.page(page_number)
+            self.request = request
 
-        paginator = self.django_paginator_class(queryset, page_size)
-        self.page = paginator.page(page_number)
-        self.request = request
+            start = page_size * (page_number - 1)
+            finish = start + page_size
 
-        start = page_size * (page_number - 1)
-        finish = start + page_size
-
-        qs = ItemsWrapper(queryset[start:finish])
-        return qs
+            qs = ItemsWrapper(queryset[start:finish])
+            return qs
+        except Exception:
+            # return an empty search query
+            es = Elasticsearch([os.environ['ESURL']])
+            s = Search(using=es)
+            return ItemsWrapper(s.query(~Q('match_all')))
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -135,19 +140,17 @@ class DomainsViewset(viewsets.GenericViewSet):
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
 
-        # if we are requesting pagination, then give it
-        if self.pagination_class.page_query_param in request.GET:
+        # paginate the query.  If we return the entire dataset, we run out of memory
+        try:
             pageqs = self.paginate_queryset(scans)
-            if pageqs is not None:
-                page = []
-                for hit in pageqs.s.execute():
-                    page.append(hit.to_dict())
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-        # otherwise, return the full dataset
-        serializer = self.get_serializer(scans, many=True)
-        return Response(serializer.data)
+            mypage = []
+            for hit in pageqs.s.execute():
+                mypage.append(hit.to_dict())
+            serializer = self.get_serializer(mypage, many=True)
+            return self.get_paginated_response(serializer.data)
+        except Exception:
+            # there was nothing on the page, so...
+            return Response([])
 
     def retrieve(self, request, domain=None, date=None):
         scans = self.get_queryset(domain=domain, date=date)
@@ -173,18 +176,17 @@ class ScansViewset(viewsets.GenericViewSet):
     def retrieve(self, request, scantype=None, date=None):
         scans = self.get_queryset(scantype=scantype, date=date)
 
-        # if we are requesting pagination, then give it
-        if self.pagination_class.page_query_param in request.GET:
+        # paginate the query.  If we return the entire dataset, we run out of memory
+        try:
             pageqs = self.paginate_queryset(scans)
-            if pageqs is not None:
-                page = []
-                for hit in pageqs.s.execute():
-                    page.append(hit.to_dict())
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(scans, many=True)
-        return Response(serializer.data)
+            mypage = []
+            for hit in pageqs.s.execute():
+                mypage.append(hit.to_dict())
+            serializer = self.get_serializer(mypage, many=True)
+            return self.get_paginated_response(serializer.data)
+        except Exception:
+            # there was nothing on the page, so...
+            return Response([])
 
     def scan(self, request, scantype=None, domain=None, date=None):
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
