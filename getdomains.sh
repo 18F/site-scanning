@@ -32,11 +32,14 @@ else
 	# they will be merged in so there are no duplicates and metadata from
 	# the first instance of the domain will be preserved.
 
-	# wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
 
 	for i in $BINDIR/domains/*.csv ; do
 		mergedomains "$i"
 	done
+
+	# clean up in case you are running this by hand and don't want to accidentally check this in
+	rm -f "$BINDIR/domains/other-websites.csv"
 fi
 
 
