@@ -9,6 +9,8 @@ for many of the endpoints, because otherwise you run the application out
 of memory.  The example scripts here have code in them to handle pagination,
 and also use http sessions to speed up the process.
 
+You will need to have python3 on your system for these scripts to work.
+
 ## newcodegovsites.py
 
 This script looks for new sites that have `/code.json` files.  By default,
