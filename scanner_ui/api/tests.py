@@ -371,3 +371,9 @@ class CheckAPI(SimpleTestCase):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 self.assertEqual(row['domain'], 'gsa.gov')
+
+    # def test_cv_scan(self):
+    #     """scan for coronavirus page works"""
+    #     response = self.client.get("/api/v1/scans/200scanner/gsa.gov/")
+    #     jsondata = json.loads(response.content)
+    #     self.assertEqual(jsondata['data']['/coronavirus'], '200')
