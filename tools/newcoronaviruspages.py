@@ -23,13 +23,29 @@ else:
 
 try:
     daysago = int(sys.argv[1])
-except IndexError:
+except Exception:
     daysago = 20
+
+# use this to specify whether we want sites that were
+# redirected to other sites or not.  If not specified,
+# get both.
+samedomain = None
+if '-samedomain' in sys.argv:
+    samedomain = True
+if '-notsamedomain' in sys.argv:
+    samedomain = False
+
+# Specify whether we want ssl or not
+# Used to test against http://localhost:8000/, for example.
+if '-nossl' in sys.argv:
+    scheme = 'http'
+else:
+    scheme = 'https'
 
 today = datetime.date.today()
 earlier = today - datetime.timedelta(days=daysago)
 
-dateurl = 'https://' + apihost + '/api/v1/lists/dates/'
+dateurl = scheme + '://' + apihost + '/api/v1/lists/dates/'
 r = requests.get(dateurl)
 dates = r.json()
 
@@ -59,12 +75,22 @@ def get_pages(url):
 
 
 todaydomains = []
-todayurl = 'https://' + apihost + '/api/v1/date/' + str(today) + '/scans/200scanner/?page_size=1000&data.%2Fcoronavirus=200'
+todayurl = scheme + '://' + apihost + '/api/v1/date/' + str(today) + '/scans/pagedata/?page_size=1000&data.%2Fcoronavirus.responsecode=200'
+if samedomain is not None:
+    if samedomain:
+        todayurl = todayurl + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
+    else:
+        todayurl = todayurl + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
 for page in get_pages(todayurl):
     todaydomains.append(page['domain'])
 
 earlierdomains = []
-earlierurl = 'https://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/200scanner/?page_size=1000&data.%2Fcoronavirus=200'
+earlierurl = scheme + '://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/pagedata/?page_size=1000&data.%2Fcoronavirus.responsecode=200'
+if samedomain is not None:
+    if samedomain:
+        earlierurl = earlierurl + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
+    else:
+        earlierurl = earlierurl + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
 for page in get_pages(earlierurl):
     earlierdomains.append(page['domain'])
 
