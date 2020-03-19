@@ -203,18 +203,17 @@ class CSVScansViewset(ScansViewset):
     pagination_class = ElasticsearchPagination
     renderer_classes = (PaginatedCSVRenderer,) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
 
-    def get_renderer_context(self):
-        context = super().get_renderer_context()
+    # XXX implement this if we want to reorder the fields.
+    # XXX Maybe get the queryset and build a list of fields?
+    # XXX domain should be first!
+    # def get_renderer_context(self):
+    #     context = super().get_renderer_context()
 
-        # find list of fields here and order them properly
-        firsthit = self.get_queryset()[0].execute().hits[0].to_dict()
-        fields = list(firsthit.keys())
-        fields.remove('domain')
-        context['header'] = ('domain',)
-        for i in fields:
-            context['header'] = context['header'] + (i,)
-        # XXX need to get subfields too?  like for data.*
-        return context
+    #     # make domain be first and
+    #     # find all the rest of the fields and subfields
+    #     context['header'] = ('domain',) + XXX
+
+    #     return context
 
 
 # This gets all the unique values for a field
