@@ -343,3 +343,9 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata, [])
+
+    # def test_cv_scan(self):
+    #     """scan for coronavirus page works"""
+    #     response = self.client.get("/api/v1/scans/200scanner/gsa.gov/")
+    #     jsondata = json.loads(response.content)
+    #     self.assertEqual(jsondata['data']['/coronavirus'], '200')
