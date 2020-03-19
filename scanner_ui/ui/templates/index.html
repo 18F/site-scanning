@@ -12,9 +12,16 @@
 
 <p>This means no manual scanning legwork and more robust insights into what's behind any domain.</p>
  
-<h3>Check out this demo</h3>
-<h3>Latest features added:</h3>
+<p>
 <h3>As of today, Site Scanner is scanning {{ num_domains }} federal domains.</h3>
-<h3>Click here to get started.</h3>
+We dynamically update the sites we scan from:
+	<ul>
+		<li><a href="https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv">https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv</a></li>
+		<li><a href="https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv">https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv</a></li>
+		<li>a couple of static lists of federalist and TTS related sites that you can see under <a href="https://github.com/18F/site-scanning/tree/master/domains">https://github.com/18F/site-scanning/tree/master/domains</a></li>
+		<li><a href="https://pulse.cio.gov/data/hosts/https.csv">https://pulse.cio.gov/data/hosts/https.csv</a></li>
+	</ul>
+</p>
+<h3>Click on the Presentation Layers popup to get started.</h3>
  
 {% endblock %}

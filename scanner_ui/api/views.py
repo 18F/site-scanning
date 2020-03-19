@@ -8,6 +8,8 @@ from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
 import re
 from collections import OrderedDict
+from rest_framework_csv.renderers import PaginatedCSVRenderer
+from rest_framework.settings import api_settings
 
 # Create your views here.
 
@@ -194,6 +196,24 @@ class ScansViewset(viewsets.GenericViewSet):
             raise Exception('too many or too few scans', scan)
         serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())
         return Response(serializer.data)
+
+
+class CSVScansViewset(ScansViewset):
+    serializer_class = ScanSerializer
+    pagination_class = ElasticsearchPagination
+    renderer_classes = (PaginatedCSVRenderer,) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
+
+    # XXX implement this if we want to reorder the fields.
+    # XXX Maybe get the queryset and build a list of fields?
+    # XXX domain should be first!
+    # def get_renderer_context(self):
+    #     context = super().get_renderer_context()
+
+    #     # make domain be first and
+    #     # find all the rest of the fields and subfields
+    #     context['header'] = ('domain',) + XXX
+
+    #     return context
 
 
 # This gets all the unique values for a field
