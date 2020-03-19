@@ -2,6 +2,8 @@ from django.test import SimpleTestCase
 from rest_framework.test import APIClient
 import json
 import datetime
+import csv
+import io
 
 # tests for views
 
@@ -16,6 +18,15 @@ class CheckAPI(SimpleTestCase):
     datesjsondata = json.loads(datesresponse.content)
     numscans = 8
     numdomains = 7
+    domains = [
+        '18f.gov',
+        'gsa.gov',
+        'afrh.gov',
+        'cloud.gov',
+        'login.gov',
+        'calendar.gsa.gov',
+        '*.ecmapps.treasuryecm.gov'
+    ]
 
     def test_all_domains(self):
         """All domains are returned from calls to domains endpoint"""
@@ -23,13 +34,8 @@ class CheckAPI(SimpleTestCase):
         for i in self.domainsjsondata['results']:
             domainlist.append(i['domain'])
         self.assertEqual(self.domainsjsondata['count'], self.numscans * self.numdomains)
-        self.assertIn('18f.gov', domainlist)
-        self.assertIn('gsa.gov', domainlist)
-        self.assertIn('afrh.gov', domainlist)
-        self.assertIn('cloud.gov', domainlist)
-        self.assertIn('login.gov', domainlist)
-        self.assertIn('calendar.gsa.gov', domainlist)
-        self.assertIn('*.ecmapps.treasuryecm.gov', domainlist)
+        for i in self.domains:
+            self.assertIn(i, domainlist)
 
     def test_scans_list(self):
         """the scans endpoint gets you a list of scans"""
@@ -343,3 +349,25 @@ class CheckAPI(SimpleTestCase):
         response = self.client.get(url)
         jsondata = json.loads(response.content)
         self.assertEqual(jsondata, [])
+
+    def test_scans_csv(self):
+        """test that the CSV endpoint returns the proper list of domains"""
+        url = '/api/v1/scans/dap/csv/'
+        response = self.client.get(url)
+        with io.StringIO(response.content.decode('utf-8')) as csvfile:
+            domainlist = set()
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                self.assertIn(row['domain'], self.domains)
+                domainlist = domainlist | {row['domain']}
+            for i in self.domains:
+                self.assertIn(i, domainlist)
+
+    def test_scans_csvwithquery(self):
+        """test that the CSV endpoint returns the proper domain when we add query parameters"""
+        url = '/api/v1/scans/dap/csv/?domain=gsa.gov'
+        response = self.client.get(url)
+        with io.StringIO(response.content.decode('utf-8')) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                self.assertEqual(row['domain'], 'gsa.gov')
