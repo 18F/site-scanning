@@ -3,6 +3,7 @@
 # This script will find all sites that have valid /coronavirus pages
 #
 import os
+import sys
 import requests
 
 if 'APIHOST' in os.environ:
@@ -10,6 +11,21 @@ if 'APIHOST' in os.environ:
 else:
     apihost = 'site-scanning.app.cloud.gov'
 
+# use this to specify whether we want sites that were
+# redirected to other sites or not.  If not specified,
+# get both.
+samedomain = None
+if '-samedomain' in sys.argv:
+    samedomain = True
+if '-notsamedomain' in sys.argv:
+    samedomain = False
+
+# Specify whether we want ssl or not
+# Used to test against http://localhost:8000/, for example.
+if '-nossl' in sys.argv:
+    scheme = 'http'
+else:
+    scheme = 'https'
 
 # start a session up to make it more efficient to grab pages
 session = requests.Session()
@@ -29,7 +45,13 @@ def get_pages(url):
 
 
 domains = []
-url = 'https://' + apihost + '/api/v1/scans/200scanner/?page_size=1000&data.%2Fcoronavirus=200'
+url = scheme + '://' + apihost + '/api/v1/scans/pagedata/?page_size=1000&data.%2Fcoronavirus.responsecode=200'
+if samedomain is not None:
+    if samedomain:
+        url = url + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
+    else:
+        url = url + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
+
 for page in get_pages(url):
     domains.append(page['domain'])
 
