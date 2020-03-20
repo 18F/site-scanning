@@ -63,23 +63,14 @@ def presentationlayers(request):
 
 def index(request):
     dates = getdates()
-    latestindex = dates[1] + '-*'
+    latestindex = dates[1] + '-200scanner'
     es = Elasticsearch([os.environ['ESURL']])
 
-    allscanscount = Search(using=es, index=latestindex).query().count()
-
-    scantypecount = len(es.indices.get_alias(latestindex))
-
-    s = Search(using=es, index=latestindex).query().source(['domain'])
-    domainmap = {}
-    for i in s.scan():
-        domainmap[i.domain] = 1
-    domaincount = len(domainmap)
+    s = Search(using=es, index=latestindex).source(['domain'])
+    domaincount = s.count()
 
     context = {
         'num_domains': domaincount,
-        'num_scantypes': scantypecount,
-        'num_scans': allscanscount,
     }
     return render(request, "index.html", context=context)
 
