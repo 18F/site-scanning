@@ -14,5 +14,7 @@ with open(sys.argv[1]) as csvfile:
     for row in domainfile:
         if row['Agency'] != '':
             rowswithagency = rowswithagency + 1
+        elif'-p' in sys.argv:
+            print(row['Domain Name'])
         rows = rows + 1
-    print('total rows:', rows, 'rows with agency:', rowswithagency)
+    print('# total rows:', rows, ' rows with agency:', rowswithagency, '=', int((rowswithagency / rows) * 100), '% coverage')
