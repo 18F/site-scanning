@@ -5,6 +5,7 @@
 import csv
 import sys
 from urllib.parse import urlparse
+import tldextract
 
 
 # This is the standard header format for the domains.csv file
@@ -14,6 +15,7 @@ with open(sys.argv[3], 'w') as csvout:
     writer = csv.DictWriter(csvout, fieldnames=fieldnames)
     # writer.writeheader()
     domains = []
+    agencyinfo = {}
 
     # open $1 and read/write it out
     with open(sys.argv[1]) as csvfile:
@@ -22,6 +24,13 @@ with open(sys.argv[3], 'w') as csvout:
             domain = row['Domain Name']
             if domain.upper() not in map(str.upper, domains):
                 domains.append(domain)
+
+                # store agency info for the tld
+                extract = tldextract.extract(domain)
+                topleveldomain = extract.domain + '.' + extract.suffix
+                agency = row['Agency']
+                if agency != '' and topleveldomain not in agencyinfo.keys():
+                    agencyinfo[topleveldomain.upper()] = agency
             writer.writerow(row)
 
     # open $2 and read/write it out, discarding duplicates
@@ -46,6 +55,7 @@ with open(sys.argv[3], 'w') as csvout:
                 # if the previous file had the domain, skip it.
                 if domain.upper() not in map(str.upper, domains):
                     newrow = {}
+
                     # make sure that it's the proper format
                     for i in fieldnames:
                         if i in row.keys():
@@ -53,4 +63,12 @@ with open(sys.argv[3], 'w') as csvout:
                         else:
                             newrow[i] = ''
                     newrow['Domain Name'] = domain
+
+                    # try to add agency info if we know the agency for the tld
+                    if newrow['Agency'] == '':
+                        extract = tldextract.extract(domain)
+                        topleveldomain = extract.domain + '.' + extract.suffix
+                        if topleveldomain.upper() in agencyinfo.keys():
+                            newrow['Agency'] = agencyinfo[topleveldomain.upper()]
+
                     writer.writerow(newrow)
