@@ -20,6 +20,12 @@ if '-samedomain' in sys.argv:
 if '-notsamedomain' in sys.argv:
     samedomain = False
 
+# if this is set, also include sites that redirect all pages
+if '-allowredirectall' in sys.argv:
+    allowredirectall = True
+else:
+    allowredirectall = False
+
 # Specify whether we want ssl or not
 # Used to test against http://localhost:8000/, for example.
 if '-nossl' in sys.argv:
@@ -36,7 +42,7 @@ def get_pages(url):
     first_page = session.get(url + '&page=1').json()
     for i in first_page['results']:
         yield i
-    num_pages = int(first_page['count'] / 1000) + 1
+    num_pages = int(first_page['count'] / 100) + 1
 
     for page in range(2, num_pages):
         next_page = session.get(url + '&page=' + str(page)).json()
@@ -45,7 +51,7 @@ def get_pages(url):
 
 
 domains = []
-url = scheme + '://' + apihost + '/api/v1/scans/pagedata/?page_size=1000&data.%2Fcoronavirus.responsecode=200'
+url = scheme + '://' + apihost + '/api/v1/scans/pagedata/?page_size=100&data.%2Fcoronavirus.responsecode=200'
 if samedomain is not None:
     if samedomain:
         url = url + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
@@ -53,7 +59,11 @@ if samedomain is not None:
         url = url + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
 
 for page in get_pages(url):
-    domains.append(page['domain'])
+    if allowredirectall is False:
+        if page['data']['/redirecttest-foo-bar-baz']['responsecode'] != '200':
+            domains.append(page['domain'])
+    else:
+        domains.append(page['domain'])
 
 print('# domains with valid /coronavirus pages')
 for i in domains:
