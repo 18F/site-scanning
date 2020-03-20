@@ -33,7 +33,7 @@ else
 	# the first instance of the domain will be preserved.
 
 	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
-	wget -O "$BINDIR/domains/pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
+	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
 
 	for i in $BINDIR/domains/*.csv ; do
 		echo "merging $i into /tmp/domains.csv"
@@ -42,7 +42,7 @@ else
 
 	# clean up in case you are running this by hand and don't want to accidentally check this in
 	rm -f "$BINDIR/domains/other-websites.csv"
-	rm -f "$BINDIR/domains/pulse.csv"
+	rm -f "$BINDIR/domains/0pulse.csv"
 fi
 
 
