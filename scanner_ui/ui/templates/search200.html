@@ -2,13 +2,13 @@
 
 {% block content %}
   <h1>{{ displaytypetitle}}</h1>
-  <p>Welcome to the Federal website scanner, a project developed by <em>18F</em>!</p>
-  <p>This search will search the 200 scanner results.</p>
+  <p>The file scanner searches each domain to check for the presence or absence of the following files: /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, /sitemap.xml. <a href="scans.html">Learn more about this scan and why checking for these files is useful</a>. Customize your search by completing the form below.</p>
+
 
   <form action="{% url 'search200' displaytype=displaytype %}" method="get">
     <b>Domain Search:</b>
     {% if selected_domainsearch is None %}
-      <input type="text" name="domainsearch" placeholder="type an optional domain in here and hit return" size="80">
+      <input type="text" name="domainsearch" placeholder="optional: enter a domain and hit return" size="80">
     {% else %}
       <input type="text" name="domainsearch" value="{{ selected_domainsearch }}" size="80">
     {% endif %}
@@ -22,13 +22,13 @@
       </select>
     {% endfor %}
 
-  <h2>Scan Results:</h2>
+  <h2>File scanner results</h2>
     <a href="{% url 'search200json' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">JSON Export</a>
 
     <a href="{% url 'search200csv' %}?200page={{selected_200page| urlencode}}&date={{selected_date | urlencode}}&agency={{selected_agency | urlencode}}&domaintype={{selected_domaintype | urlencode}}&org={{selected_org | urlencode}}&mimetype={{selected_mimetype | urlencode}}&present={{selected_present | urlencode}}&displaytype={{displaytype | urlencode}}&domainsearch={{selected_domainsearch | urlencode}}">CSV Export</a>
 
     <div class="pagination">
-    <p>Hits Per Page:
+    <p>Results per page
     <select name="hitsperpage" onchange="this.form.submit()" style="width: 100px;">
       {% for hits in hitsperpagelist %}
         {% if selected_hitsperpage == hits %}
