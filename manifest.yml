@@ -1,7 +1,7 @@
 ---
 applications:
 - name: scanner-ui
-  disk_quota: 4096M
+  disk_quota: 8192M
   timeout: 180
   services:
     - scanner-storage
