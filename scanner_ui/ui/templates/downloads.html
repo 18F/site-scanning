@@ -1,17 +1,17 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>API and Download Access</h1>
+<h1>API and download access</h1>
 <p>The Federal Website Scanner offers API access and downloadable data files for all scan types and data layers.</p>
 
-<h3>File Scanner</h3>
-<p>The File Scanner checks for the presence or absence of specific files at specific locations including /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, and /sitemap.xml.</p>
+<h2>File scanner</h2>
+<p>The file scanner checks for the presence or absence of specific files at specific locations including /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, and /sitemap.xml.</p>
 <ul>
 <li>Download report for all domains: <a href="{% url 'scans-detail' scantype='200scanner' %}?format=json">JSON</a> | <a href="{% url 'scans-detail' scantype='200scanner'%}">API</a> | <a href="{% url 'search200csv' %}">CSV</a></li>
 <li>Customize report for an individual domain (e.g. 18f.gov): <a href="{% url 'scan' scantype='200scanner' domain='18f.gov' %}?format=json">JSON</a> | <a href="{% url 'scan' scantype='200scanner' domain='18f.gov' %}">API</a></li></ul>
 
-<h3>Sitemap Scanner</h3>
-<p>The Sitemaps Scanner checks for the presence or absence of a /sitemap.xml file. If the file is present, further analysis is provided.</p>
+<h2>Sitemap scanner</h2>
+<p>The sitemap scanner checks for the presence or absence of a /sitemap.xml file. If the file is present, further analysis is provided.</p>
 <ul>
 <li>Download report for all domains: <a href="{% url 'scans-detail' scantype='sitemap' %}format=json">JSON</a> | <a href="{% url 'scans-detail' scantype='sitemap' %}">API</a></li>
 <li>Customize report for an individual domain: <a href="{% url 'scan' scantype='sitemap' domain='18f.gov' %}?format=json">JSON</a> | <a href="{% url 'scan' scantype='sitemap' domain='18f.gov' %}">API</a></li>
