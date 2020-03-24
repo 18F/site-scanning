@@ -1,32 +1,39 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>About 10x Site Scanner</h1>
+  <h1>About the Federal Website Scanner</h1>
   <p>
-Site Scanner is developed through a project with 10x, a GSA program for technology-focused ideas from federal employees.
+The Federal Website Scanner is being developed through the <a href="https://10x.gsa.gov/">10x program</a>. 10x funds and develops ideas from federal employees that use technology to improve government. 10x is managed by GSA’s <a href="https://www.gsa.gov/about-us/organization/federal-acquisition-service/technology-transformation-services">Technology Transformation Services</a> (TTS). <a href="https://18f.gsa.gov/">18F</a>, a digital consultancy that is part of TTS, is leading development of the Federal Website Scanner. 
 </p>
+
 <p>
-The vision of this project is to create a way for TTS to offer a low-cost, automated scanning solution so federal stakeholders can determine the best practices government websites are following and identify ways to improve website performance for the public and public servants. We envision an on-demand service that not only reduces the legwork that scanning has historically entailed, but also enriches the data for analyses available. Performance would be measured on a variety of key dimensions like mobile-friendliness, load times, responsiveness. Not only could stakeholders access this critical data, they'd also be able to copy the scan engine and build off of it for their own, customized uses. Our primary focus is on an open, automated, inexpensive, and fast scanning solution.
+The vision for the scanner is to offer an automated solution that reports on the adoption of best practices on government websites. The data should be customizable and API-accessible. The reports should meet the needs of federal website managers and other stakeholders. The scanner should be on-demand, provide useful, actionable data, and reduce the effort scanning has required in the past.
 </p>
-<h1>Here's a historical timeline of web scanning efforts in federal government</h1>
-<ul>
-	<li> 2011 - 2015: Ben Balter, a staffer within the Office of the Chief Information Officer at the Executive Office of the President and later a Presidential Innovation Fellow, performs an [analysis of federal.gov domains](https://ben.balter.com/2015/05/11/third-analysis-of-federal-executive-dotgovs/).</li>
-	<li> 2015 - Jon Tindle (OGP), Eric Mill (TTS), and Gray Brooks (TTS) build <a href="https://pulse.cio.gov/"> pulse.gov </a> and the <a href="https://github.com/18F/domain-scan"> two open-source site scanners </a> that gather the data for that website: the use of <a href="https://https.cio.gov/"> Hypertext Transfer Protocol Secure (HTTPS) </a> and participation in the government’s <a href="https://analytics.usa.gov/"> Digital Analytics Program (DAP) </a>.</li>
-	<li> 2016 - OGP builds <a href="https://digitaldashboard.gov"> Digital Dashboard </a>, which incorporates results from the Pulse HTTPS and DAP scans, as well as accessibility, mobile-responsiveness, IPv6, and Domain Name System Security Extensions (DNSSEC). Federal employees access scan results behind a secure login. </li>
-	<li> 2015 - 2017 - DHS builds scans for <a href="https://github.com/18F/domain-scan/blob/master/scanners/pshtt.py"> HTTPS </a> and <a href="https://github.com/18F/domain-scan/blob/master/scanners/trustymail.py"> Trusted Email </a> to help assess whether agencies are in compliance with <a href="https://cyber.dhs.gov/directives/"> Binding Operational Directives </a>. From these scans, DHS generates weekly “cyber hygiene reports” and sends these PDFs to agencies. </li>
-	<li> 2016-2017 - Eric Mill prototypes USWDS, Accessibility, and Third-party Services scans.</li>
-	<li> July 2018 - Eric Mills submits an idea to 10x to address the inability to easily scan sites for federal website best practices and standards. At the time there is no actively-maintained scanning infrastructure in production, no long-term solution for storing results (cloud.gov sandbox), and site scanning is not architected to be replicable (for interested parties to stand up their own copy of site scans) or extensible (for new, custom scans to be added to the suite). He proposes 10x to build a cloud-based tool that automatically scans federal sites so federal employees could use to see what's behind these sites.</li>
-	<li> Fall 2018 - 10x funds Site Scanner. <a href="https://10x.gsa.gov/the-10x-process/">Phase 1 begins</a>. Phase 1 team finds in support of the idea and requests Phase 2 funding.</li>
-	<li> Summer 2019 - 10x funds Site Scanner Phase 2. Team develops initial product strategy, and launches prototypes of Site Scanner.</li>
-	<li> Fall 2019 - Phase 2 team launches <a href="{% url 'search200' %}">the Site Scanner website</a> which includes 200 and USWDS scanner search results, individual pages for /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, and /sitemap.xml 200 scans, and various data export options aimed at technical users. Team finds in support of the idea and requests Phase 3 funding.</li>
-	<li> Winter 2019 - 2020 - 10x funds Site Scanner Phase 3. Team refines product strategy, continues outreach, and develops a customizable UI for Site Scanner.</li>
+
+<h2>Best practices for government websites</h2>
+<p>Government websites are required to comply with best practices such as being accessible and mobile-friendly. Consult <a href="https://digital.gov/resources/checklist-of-requirements-for-federal-digital-services/">Digital.gov’s checklist of requirements for federal sites</a> to see the range of laws, policies, and regulations in place. We are working with federal partners to identify the best practice indicators that should inform the scanner’s capabilities.</p>
+
+<h2>Finding federal domains to scan</h2>
+<p>The scanner is currently scanning {{ num_domains }} federal domains. The set of domains is updated daily based on the following data sources.</p>
+	<ul>
+	<li><a href="https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv">https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv</a></li>
+	<li><a href="https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv">https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv</a></li>
+	<li>a couple of static lists of federalist and TTS related sites that you can see under <a href="https://github.com/18F/site-scanning/tree/master/domains">https://github.com/18F/site-scanning/tree/master/domains</a></li>
+	<li><a href="https://pulse.cio.gov/data/hosts/https.csv">https://pulse.cio.gov/data/hosts/https.csv</a></li>
 </ul>
-</p>
-<p>
- To learn more about the 10x project behind Site Scanner, check out</p>
+
+
+<h2>History of website scanning efforts for government websites</h2>
 <ul>
-  <li><a href="https://app.mural.co/t/gsa6/m/gsa6/1581627147978/1b11344000372d71f962ca74d2fea6e835bceeb1">Our goals for Phase 3</a></li>
-  <li><a href="https://github.com/18F/site-scanning">The code for Site Scanner</a></li>
-   <li><a href="https://app.mural.co/t/gsa6/m/gsa6/1577823368252/116ec5df7062195d9eafeb8ed14b1176baf89a94">Our stakeholder network</a></li>
-  </p>
+	<li>2011-2015: Ben Balter, from the Office of the Chief Information Officer at the Executive Office of the President and later a Presidential Innovation Fellow, performs an <a href="https://ben.balter.com/2015/05/11/third-analysis-of-federal-executive-dotgovs/">analysis of federal.gov domains</a>.</li>
+	<li>2015: Jon Tindle (OGP), Eric Mill (TTS), and Gray Brooks (TTS) build <a href="https://pulse.cio.gov/">pulse.gov</a> and <a href="https://github.com/18F/domain-scan"> two open-source scanners</a> that gather data for that website: <a href="https://https.cio.gov/">Hypertext Transfer Protocol Secure (HTTPS)</a> and participation in the government’s <a href="https://analytics.usa.gov/">Digital Analytics Program (DAP)</a>.</li>
+	<li>2016: OGP builds <a href="https://digitaldashboard.gov">Digital Dashboard</a>, which incorporates results from the Pulse HTTPS and DAP scans, as well as accessibility, mobile-responsiveness, IPv6, and Domain Name System Security Extensions (DNSSEC). Federal employees access scan results behind a secure login.</li>
+	<li>2015-2017: DHS builds scans for <a href="https://github.com/18F/domain-scan/blob/master/scanners/pshtt.py">HTTPS</a> and <a href="https://github.com/18F/domain-scan/blob/master/scanners/trustymail.py">Trusted Email</a> to help assess whether agencies are in compliance with <a href="https://cyber.dhs.gov/directives/">Binding Operational Directives</a>. From these scans, DHS generates weekly “cyber hygiene reports” and sends these PDFs to agencies.</li>
+	<li>2016-2017: Eric Mill prototypes USWDS, Accessibility, and Third-party Services scans.</li>
+	<li>July 2018: Eric Mill submits an idea to 10x to address the inability to easily scan sites for federal website best practices and standards. At the time there is no actively maintained scanning infrastructure in production, no long-term solution for storing results (cloud.gov sandbox), and site scanning is not architected to be replicable (for interested parties to stand up their own copy of site scans) or extensible (for new, custom scans to be added to the suite). He proposes a 10x project to build a cloud-based tool that automatically scans federal sites.</li>
+	<li>Fall 2018: 10x funds Site Scanner. <a href="https://10x.gsa.gov/the-10x-process/">Phase 1 begins</a>. Phase 1 team finds in support of the idea and requests Phase 2 funding.</li>
+	<li>Summer 2019: 10x funds Site Scanner Phase 2. Team develops initial product strategy, and launches prototypes of Site Scanner.</li>
+	<li>Fall 2019: Phase 2 team launches <a href="{% url 'search200' %}">the Site Scanner website</a> which includes the USWDS scanner and the file scanner which checks for /code.json, /data.json, /data, /developer, /digitalstrategy, /open, /privacy, /robots.txt, and /sitemap.xml and various data export options aimed at technical users. Team finds in support of the idea and requests Phase 3 funding.</li>
+	<li>Winter 2019-2020: 10x funds Site Scanner Phase 3. Team refines product strategy, continues outreach, and develops a customizable UI for the scanner.</li>
+</ul>
 {% endblock %}
