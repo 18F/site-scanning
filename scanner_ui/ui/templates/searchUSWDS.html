@@ -1,10 +1,20 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>USWDS scanner</h1>
-  <p>The <a href="https://designsystem.digital.gov/">U.S. Web Design System (USWDS)</a> is a design system for U.S. government websites that makes it easier to build accessible, mobile-friendly sites. The USWDS scanner checks each domain for the presence and version of USWDS code. The scanner looks for specific code in the domain's CSS and HTML files, which fonts are in use, and other USWDS indicators.</p>
-
-  <p>The USWDS scanner results are based on an analysis count. The analysis count is a count of the number of USWDS-related indicators. The scanner will search for sites that have an analysis count greater than or equal to the number entered. More details about the USWDS analysis count is available in the <a href="https://github.com/18F/domain-scan/blob/tspencer/200scanner/scanners/uswds2.py#L35-L143">domain-scan codebase</a>.
+  <h1>USWDS Scans Search</h1>
+  <p>Welcome to the Federal website scanner, a project developed by 18F.</p>
+  <p>This search will search the USWDS scanner results.  The query parameter
+    here will search for sites that have an analysis count greater than or equal to the
+    number you input.  
+    The USWDS analysis count is an attempt to be able to autodetect sites that use USWDS code
+    by searching for things that indicate that the people who created the site
+    used USWDS code.  The more things the scanner finds, the more the count
+    adds up.  It is not perfect, but it may be a useful indicator.
+    Details of how we make this count can be found in the
+    <a href="https://github.com/18F/domain-scan/blob/tspencer/200scanner/scanners/uswds2.py#L35-L143">domain-scan codebase</a>.
+    </p>
+    <p>The best indicator if a site is using USWDS code is the
+      version tag, which can be found in some of the CSS files. You can select for this with the versions popup list.
     </p>
 
   <form action="{% url 'searchUSWDS' %}" method="get">

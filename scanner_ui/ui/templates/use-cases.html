@@ -1,21 +1,41 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Use cases</h1>
-  <p>The Federal Website Scanner was designed to meet the needs of an initial set of federal partners. We worked with partners to understand the types of scanning tasks they wanted to perform and how they wanted to access the results. If you have use cases to contribute please let us know! E-mail <a href="mailto:site-scanning@gsa.gov">site-scanning@gsa.gov</a> or <a href="https://github.com/18F/site-scanning">work with us on GitHub</a>.</p>
+  <h1>List of Potential Use Cases</h1>
+  <p>This page lists different scenarios and workflows for using the data and presentation layers made possible by these scans.</p>
+  <p>Elsewhere on the site, you can find information on how to directly <a href="/downloads/">download the scan data</a>; links to <a href="/presentation-layers/">dashboards and other presentation layers</a>; and <a href="/scans/">background and descriptions of each scan</a>.</p>
 
 
-<h2>Code.gov team</h2>
-<p><strong>Challenge:</strong> The Code.gov team needed on-demand access to a list of active code.json files and a method for analyzing those results.</p>
-<p><strong>Solution:</strong> Use the file scanner to <a href="search200.html">search for the presence of code.json files</a> across all government websites or a subset of sites. Results can be filtered by branch, agency, or domain. Results include characteristics of the code.json files. A <a href="https://site-scanning.app.cloud.gov/search200/200-codejson/?200page=/code.json&mimetype=application/json">code.json dashboard</a> was developed as a proof-of-concept.</p>
+<h3>Code.gov Team</h3>
+<p><strong>Task:</strong> Find list of active code.json files </p>
+<p><strong>Process:</strong> </p>
+<p>
+<ol>
+<li>Navigate to <a href="https://cg-bbe64741-a601-484f-bc3b-e8eef3c28590.app.cloud.gov/site/18f/site-scanning-dashboard/codegov/">this presentation layer</a></li>
+</ol>
+</p>
+<p><strong>Task:</strong> Analyze the characteristics of the code.json files </p>
+<p><strong>Process:</strong> </p>
 
-
-<h2>Data.gov team</h2>
-<p><strong>Challenge:</strong> The Data.gov team needed on-demand access to a list of active data.json files.</p>
-<p><strong>Solution:</strong> Use the file scanner to <a href="search200.html">search for the presence of data.json files</a> across all government websites or a subset of sites. Results can be filtered by branch, agency, or domain. Results include characteristics of the data.json files. A <a href="https://site-scanning.app.cloud.gov/search200/200-data.json/?200page=/data.json&mimetype=application/json">data.json dashboard</a> was developed as a proof-of-concept.</a>
+<p>
+<ol>
+<li>Navigate to the <a href="{% url 'search200' displaytype='200-codejson' %}?200page=/code.json&mimetype=application/json">code.json dashboard</a></li>
+<li>Filter for relevant agency, branch, or organization</li>
+<li>Note the json items, file size, and code.gov measurement type fields to the far right of the chart</li>
+</ol>
 </p>
 
-<!--
+
+<h3>Data.gov Team</h3>
+
+<p><strong>Task:</strong> Find list of active data.json files</p>
+<p><strong>Process:</strong> </p>
+<p>
+<ol>
+<li>Navigate to <a href="https://cg-bbe64741-a601-484f-bc3b-e8eef3c28590.app.cloud.gov/site/18f/site-scanning-dashboard/datagov/">this presentation layer</a></li>
+</ol>
+</p>
+
 <p><strong>Task:</strong> Analyze the characteristics of the data.json files </p>
 <p><strong>Process:</strong> </p>
 <p>
@@ -25,7 +45,7 @@
 <li>Note the json items and opendata conformity fields to the far right of the chart</li>
 </ol>
 </p>
-<p>strong>Task:</strong> Find list of suspected data hubs  </p>
+<!--<p>strong>Task:</strong> Find list of suspected data hubs  </p>
 <p><strong>Process:</strong> </p>
 <p>
 <ol>
@@ -55,11 +75,16 @@
 </ol>
 </p>-->
 
-<h2>Search.gov team</h2>
-<p><strong>Challenge:</strong> The Search.gov needed to analyze the characteristics of an agency's sitemap.xml files.</p>
-<p><strong>Solution:</strong> A <a href="{% url 'sitemap' %}">sitemap.xml dashboard</a> was created as a proof-of-concept. The team used the dashboard to filter for the relevant agency, branch, or organization. Results include the URL count and robots.txt locations.</p>
-
-<!--
+<h3>Search.gov Team</h3>
+<p><strong>Task:</strong> Analyze the characteristics of an agency's sitemap.xml files</p>
+<p><strong>Process:</strong> </p>
+<p>
+<ol>
+<li>Navigate to the <a href="{% url 'sitemap' %}">sitemap.xml dashboard</a></li>
+<li>Filter for relevant agency, branch, or organization</li>
+<li>Note the URL count and locations in the robots.txt fields to the far right of the chart</li>
+</ol>
+</p>
 <p><strong>Task:</strong> Analyze the characteristics of an agency's robots.txt files</p>
 <p><strong>Process:</strong> </p>
 <p>
@@ -69,12 +94,18 @@
 <li>Note the content type and file size fields to the far right of the chart</li>
 </ol>
 </p>
--->
 
 
-<h3>USWDS team</h3>
-<p><strong>Task:</strong> The USWDS (U.S. Web Design System) team wanted to generate a list of domains that have implemented parts of the USWDS.</p>
-<p><strong>Challenge:</strong>Use the <a href="{% url 'searchUSWDS' %}">USWDS dashboard</a> to customize a search. Specify an analysis count (such as 50) to filter the results for domains that have implemented USWDS to a certain degree.</p>
+
+<h3>USWDS Team</h3>
+<p><strong>Task:</strong> Find list of domains that have implemented parts of the USWDS</p>
+<p><strong>Process:</strong> </p>
+<p>
+<ol>
+<li>Navigate to the <a href="{% url 'searchUSWDS' %}">USWDS dashboard</a></li>
+<li>Choose an analysis count such as `50` to input into the Analysis Filter so as to filter the results for domains that have implemented USWDS past a certain degree.</li>
+</ol>
+</p>
 <!--<p>strong>Task:</strong> Analyze the characteristics of a domain's USWDS implementation </p>
 <p><strong>Process:</strong> </p>
 <p>
@@ -83,11 +114,11 @@
 <li></li>
 <li></li>
 </ol>
-</p>
+</p>-->
 
 
 
-<h2>Agency Privacy Officer</h2>
+<h3>Agency Privacy Officer</h3>
 <p><strong>Task:</strong> Analyze the characteristics of an agency's privacy pages</p>
 <p><strong>Process:</strong> </p>
 <p>
@@ -96,7 +127,7 @@
 <li>Filter for relevant agency, branch, or organization</li>
 <li>Note the emails and H1, H2, H3 Headers columns to the far right of the chart</li></ol>
 </p>
--->
+
 
 <!--<h3>Webmaster of a individual website</h3>
 <p><strong>Task:</strong> </p>
