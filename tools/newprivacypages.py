@@ -50,7 +50,7 @@ def get_pages(url):
     first_page = session.get(url + '&page=1').json()
     for i in first_page['results']:
         yield i
-    num_pages = int(first_page['count'] / 1000) + 1
+    num_pages = int(first_page['count'] / 100) + 1
 
     for page in range(2, num_pages):
         next_page = session.get(url + '&page=' + str(page)).json()
@@ -59,11 +59,11 @@ def get_pages(url):
 
 
 todaydomains = []
-for page in get_pages('https://' + apihost + '/api/v1/date/' + str(today) + '/scans/privacy/?data.status_code=200&page_size=1000'):
+for page in get_pages('https://' + apihost + '/api/v1/date/' + str(today) + '/scans/privacy/?data.status_code=200&page_size=100'):
     todaydomains.append(page['domain'])
 
 earlierdomains = []
-for page in get_pages('https://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/privacy/?data.status_code=200&page_size=1000'):
+for page in get_pages('https://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/privacy/?data.status_code=200&page_size=100'):
     earlierdomains.append(page['domain'])
 
 newdomains = list(set(todaydomains) - set(earlierdomains))

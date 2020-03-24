@@ -5,7 +5,7 @@
 #
 
 # This is how many domains to scan in a single task
-BATCHSIZE="${BATCHSIZE:-3000}"
+BATCHSIZE="${BATCHSIZE:-4500}"
 
 BINDIR=$(dirname "$0")
 
@@ -33,13 +33,16 @@ else
 	# the first instance of the domain will be preserved.
 
 	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
 
 	for i in $BINDIR/domains/*.csv ; do
+		echo "merging $i into /tmp/domains.csv"
 		mergedomains "$i"
 	done
 
 	# clean up in case you are running this by hand and don't want to accidentally check this in
 	rm -f "$BINDIR/domains/other-websites.csv"
+	rm -f "$BINDIR/domains/0pulse.csv"
 fi
 
 
