@@ -34,7 +34,7 @@ else
 
 	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
 	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
-	./getscandomains.py > "$BINDIR/domains/getscandomains.csv"
+	"$BINDIR/getscandomains.py" > "$BINDIR/domains/getscandomains.csv"
 
 	for i in $BINDIR/domains/*.csv ; do
 		echo "merging $i into /tmp/domains.csv"
