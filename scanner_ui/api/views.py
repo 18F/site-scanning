@@ -1,5 +1,6 @@
 from rest_framework import viewsets, pagination
 from rest_framework.response import Response
+from django.http import StreamingHttpResponse
 from .serializers import ScanSerializer
 import os
 from scanner_ui.ui.views import getdates, getListFromFields
@@ -8,8 +9,7 @@ from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
 import re
 from collections import OrderedDict
-from rest_framework_csv.renderers import PaginatedCSVRenderer
-from rest_framework.settings import api_settings
+from rest_framework_csv.renderers import CSVStreamingRenderer
 
 # Create your views here.
 
@@ -134,10 +134,7 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        if self.pagination_class.page_query_param in self.request.GET:
-            return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
-        else:
-            return getScansFromES(request=self.request, domain=domain, date=date)
+        return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
@@ -188,7 +185,7 @@ class ScansViewset(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         except Exception:
             # there was nothing on the page, so...
-            return Response([])
+            return StreamingHttpResponse([])
 
     def scan(self, request, scantype=None, domain=None, date=None):
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
@@ -198,10 +195,22 @@ class ScansViewset(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
+class StreamingPaginatedCSVRenderer (CSVStreamingRenderer):
+    """
+    Streaming Paginated renderer (when pagination is turned on for DRF)
+    """
+    results_field = 'results'
+
+    def render(self, data, *args, **kwargs):
+        if not isinstance(data, list):
+            data = data.get(self.results_field, [])
+        return super(StreamingPaginatedCSVRenderer, self).render(data, *args, **kwargs)
+
+
 class CSVScansViewset(ScansViewset):
     serializer_class = ScanSerializer
     pagination_class = ElasticsearchPagination
-    renderer_classes = (PaginatedCSVRenderer,) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
+    renderer_classes = (StreamingPaginatedCSVRenderer,)
 
     # XXX implement this if we want to reorder the fields.
     # XXX Maybe get the queryset and build a list of fields?
