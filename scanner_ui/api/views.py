@@ -229,6 +229,14 @@ def iter_items(scans, pseudo_buffer, headers):
     for scan in scans.scan():
         flatscan = scan.to_dict()
         flatten_dict(flatscan)
+        # if we have data.invalid, then remove it and make sure the rest of the fields are there
+        try:
+            del flatscan['data.invalid']
+            for i in headers:
+                if i not in flatscan:
+                    flatscan[i] = ''
+        except KeyError:
+            pass
         yield writer.writerow(flatscan)
 
 
@@ -236,7 +244,14 @@ def retrievecsv(request, scantype=None, date=None):
     """A view that streams a large CSV file."""
     scans = getScansFromES(request=request, scantype=scantype, date=date, raw=True)
 
-    firsthit = scans[0].execute().hits[0].to_dict()
+    # skip over invalid data to get the real deal
+    for hit in scans:
+        firsthit = hit.to_dict()
+        try:
+            if firsthit['data']['invalid']:
+                continue
+        except KeyError:
+            break
     flatten_dict(firsthit)
     fieldnames = list(firsthit.keys())
 
