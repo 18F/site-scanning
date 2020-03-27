@@ -66,6 +66,24 @@ This can take a while, since the domain-scan repo is really giant, but it fires 
 docker-compose so that it has all the required services and then runs all the python
 tests (`./manage.py test`) as well as checking that a scan of a few domains works.
 
+If you want a faster test/dev cycle, you will need to set up your python environment
+and use the docker environment that test.sh sets up.  You can set up to do this by:
+* Installing python 3, either through `brew install python3` or https://www.python.org/downloads/
+* Running `python3 -m venv venv` inside the site-scanning directory.
+* Running `. venv/bin/activate` inside the site-scanning directory.
+* Running `pip3 install -r requirements.txt` inside the site-scanning directory.
+
+Once this environment is set up, to run the tests, you will need to:
+* `. venv/bin/activate` to get python set up in your shell, if you haven't done this already.
+* `./test.sh nodelete` to get the environment up and running in docker, if you haven't done this already.
+* `./manage.py test` to run the tests.
+
+You can keep making changes to the code and running `./manage.py test` to quickly
+test it against the small elasticsearch instance that is running in docker.
+That instance has a few domains which are scanned and loaded in.  The list of
+domains can be [found here](composetest.sh)).
+
+
 #### Run the app
 
 Run `./test.sh nodelete` in the repo dir.  This will run the app, populate
