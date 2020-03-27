@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import DomainsViewset
-from .views import CSVScansViewset
 from .views import ScansViewset
 from .views import ListsViewset
+from . import views
 
 domains_list = DomainsViewset.as_view({
     'get': 'list'
@@ -14,9 +14,6 @@ scans_list = ScansViewset.as_view({
     'get': 'list'
 })
 scans_detail = ScansViewset.as_view({
-    'get': 'retrieve'
-})
-scans_detail_csv = CSVScansViewset.as_view({
     'get': 'retrieve'
 })
 scan = ScansViewset.as_view({
@@ -42,7 +39,7 @@ urlpatterns = [
 
     path('scans/', scans_list, name="scans-list"),
     path('scans/<scantype>/', scans_detail, name="scans-detail"),
-    path('scans/<scantype>/csv/', scans_detail_csv, name="scans-csv"),
+    path('scans/<scantype>/csv/', views.retrievecsv, name="scans-csv"),
     path('scans/<scantype>/<domain>/', scan, name="scan"),
 
     path('lists/<scantype>/agencies/', agencies, name="agencies"),
@@ -57,7 +54,7 @@ urlpatterns = [
 
     path('date/<date>/scans/', scans_list, name="date-scans-list"),
     path('date/<date>/scans/<scantype>/', scans_detail, name="date-scans-detail"),
-    path('date/<date>/scans/<scantype>/csv/', scans_detail_csv, name="date-scans-csv"),
+    path('date/<date>/scans/<scantype>/csv/', views.retrievecsv, name="date-scans-csv"),
     path('date/<date>/scans/<scantype>/<domain>/', scan, name="date-scan"),
 
     path('date/<date>/lists/<scantype>/agencies/', agencies, name="date-agencies"),
