@@ -354,26 +354,35 @@ class CheckAPI(SimpleTestCase):
         """test that the CSV endpoint returns the proper list of domains"""
         url = '/api/v1/scans/dap/csv/'
         response = self.client.get(url)
-        with io.StringIO(response.content.decode('utf-8')) as csvfile:
-            domainlist = set()
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                self.assertIn(row['domain'], self.domains)
-                domainlist = domainlist | {row['domain']}
-            for i in self.domains:
-                self.assertIn(i, domainlist)
+        domainlist = set()
+        count = 0
+
+        # Parse CSV by hand here.  csv.DictReader can't handle encoded inputs.
+        for row in response.streaming_content:
+            rowlist = row.decode('utf-8').split(',')
+            domain = rowlist[0]
+            if domain != 'domain' and count != 0:
+                self.assertIn(domain, self.domains)
+            domainlist = domainlist | {domain}
+            count = count + 1
+        for i in self.domains:
+            self.assertIn(i, domainlist)
 
     def test_scans_csvwithquery(self):
         """test that the CSV endpoint returns the proper domain when we add query parameters"""
         url = '/api/v1/scans/dap/csv/?domain=gsa.gov'
         response = self.client.get(url)
-        with io.StringIO(response.content.decode('utf-8')) as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                self.assertEqual(row['domain'], 'gsa.gov')
+        count = 0
 
-    # def test_cv_scan(self):
-    #     """scan for coronavirus page works"""
-    #     response = self.client.get("/api/v1/scans/200scanner/gsa.gov/")
-    #     jsondata = json.loads(response.content)
-    #     self.assertEqual(jsondata['data']['/coronavirus'], '200')
+        for row in response.streaming_content:
+            rowlist = row.decode('utf-8').split(',')
+            domain = rowlist[0]
+            if domain != 'domain' and count != 0:
+                self.assertEqual(domain, 'gsa.gov')
+            count = count + 1
+
+    def test_cv_scan(self):
+        """scan for coronavirus page works"""
+        response = self.client.get("/api/v1/scans/200scanner/gsa.gov/")
+        jsondata = json.loads(response.content)
+        self.assertEqual(jsondata['data']['/coronavirus'], '200')

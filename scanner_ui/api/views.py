@@ -1,5 +1,6 @@
 from rest_framework import viewsets, pagination
 from rest_framework.response import Response
+from django.http import StreamingHttpResponse
 from .serializers import ScanSerializer
 import os
 from scanner_ui.ui.views import getdates, getListFromFields
@@ -8,8 +9,7 @@ from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
 import re
 from collections import OrderedDict
-from rest_framework_csv.renderers import PaginatedCSVRenderer
-from rest_framework.settings import api_settings
+import csv
 
 # Create your views here.
 
@@ -38,7 +38,7 @@ class ItemsWrapper(OrderedDict):
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None, date=None):
+def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
     es = Elasticsearch([os.environ['ESURL']])
     dates = getdates()
     if date is None or date not in dates:
@@ -87,7 +87,10 @@ def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None,
     # # XXX
     # print(s.to_dict())
 
-    return ItemsWrapper(s)
+    if raw:
+        return s
+    else:
+        return ItemsWrapper(s)
 
 
 # get the list of scantypes by scraping the indexes
@@ -134,10 +137,7 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        if self.pagination_class.page_query_param in self.request.GET:
-            return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
-        else:
-            return getScansFromES(request=self.request, domain=domain, date=date)
+        return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
@@ -166,10 +166,7 @@ class ScansViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, scantype=None, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        if self.pagination_class.page_query_param in self.request.GET:
-            return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
-        else:
-            return getScansFromES(request=self.request, domain=domain, scantype=scantype, date=date)
+        return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
 
     def list(self, request, date=None):
         scans = getscantypes(date=date)
@@ -188,7 +185,7 @@ class ScansViewset(viewsets.GenericViewSet):
             return self.get_paginated_response(serializer.data)
         except Exception:
             # there was nothing on the page, so...
-            return Response([])
+            return StreamingHttpResponse([])
 
     def scan(self, request, scantype=None, domain=None, date=None):
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
@@ -198,22 +195,69 @@ class ScansViewset(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
-class CSVScansViewset(ScansViewset):
-    serializer_class = ScanSerializer
-    pagination_class = ElasticsearchPagination
-    renderer_classes = (PaginatedCSVRenderer,) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
+# This is used for the csv writer used by the StreamingHttpResponse
+class CSVEcho:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
-    # XXX implement this if we want to reorder the fields.
-    # XXX Maybe get the queryset and build a list of fields?
-    # XXX domain should be first!
-    # def get_renderer_context(self):
-    #     context = super().get_renderer_context()
 
-    #     # make domain be first and
-    #     # find all the rest of the fields and subfields
-    #     context['header'] = ('domain',) + XXX
+def flatten_dict(data):
+    if type(data) == dict:
+        for k, v in list(data.items()):
+            if type(v) == dict:
+                flatten_dict(v)
+                data.pop(k)
+                for k2, v2 in v.items():
+                    data[k + "." + k2] = v2
+    return data
 
-    #     return context
+
+def iter_items(scans, pseudo_buffer, headers):
+    writer = csv.DictWriter(pseudo_buffer, fieldnames=headers)
+
+    # write header into CSV
+    headerdict = {}
+    for i in headers:
+        headerdict[i] = i
+    yield writer.writerow(headerdict)
+
+    # write data into CSV
+    for scan in scans.scan():
+        flatscan = scan.to_dict()
+        flatten_dict(flatscan)
+        # if we have data.invalid, then remove it and make sure the rest of the fields are there
+        try:
+            del flatscan['data.invalid']
+            for i in headers:
+                if i not in flatscan:
+                    flatscan[i] = ''
+        except KeyError:
+            pass
+        yield writer.writerow(flatscan)
+
+
+def retrievecsv(request, scantype=None, date=None):
+    """A view that streams a large CSV file."""
+    scans = getScansFromES(request=request, scantype=scantype, date=date, raw=True)
+
+    # skip over invalid data to get the real deal
+    for hit in scans:
+        firsthit = hit.to_dict()
+        try:
+            if firsthit['data']['invalid']:
+                continue
+        except KeyError:
+            break
+    flatten_dict(firsthit)
+    fieldnames = list(firsthit.keys())
+
+    response = StreamingHttpResponse(iter_items(scans, CSVEcho(), fieldnames), content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="scans.csv"'
+    return response
 
 
 # This gets all the unique values for a field
