@@ -4,14 +4,14 @@ The site-scanner is engineered to run on cloud.gov using CircleCI for CI/CD.
 You can also run a local copy if you want to do development on your laptop/desktop.
 You should run these commands on a Mac OS X or Linux host which has tools such as cf, jq, curl, bash, etc on them.
 
-1. **Create a cloud.gov account.**
+**1. Create a cloud.gov account.**
 
 - You can get a free non-production sandbox account by going to https://cloud.gov/quickstart/,
 or by getting an IAA signed and then getting a real production cloud.gov org.
 - Documentation on cloud.gov in general can be found here:  https://cloud.gov/docs/.
 - Once you are set up and able to issue cloudfoundry commands like `cf target`, you will be able to proceed.
 
-2. **Complete the initial setup.
+**2. Complete the initial setup.**
 
 - Clone the site-scanner repo with `git clone https://github.com/18F/site-scanning`.
 - `cd site-scanning` to get into the repo dir.
@@ -25,7 +25,7 @@ or by getting an IAA signed and then getting a real production cloud.gov org.
 You should now be able to go to the URLs given to you at the end of the deploy script
 to see the UI/API in action.
 
-3. **Get the CI/DC setup.
+**3. Get the CI/DC setup.**
 
 - Fork the repo into your own github organization or into your github account, make sure that CircleCI is operating on this fork, and then configure a few environment variables into the CircleCI repo config.
 - `CF_ORG`: This is your cf org.  You can get this with `cf target | grep org`.
@@ -40,7 +40,7 @@ do a deploy if everything worked.  It will also start running scans once a day
 automatically.
 - The configuration for CircleCI can be found in `.circleci/config.yml`.
 
-4. **Develop locally.
+**4. Develop locally.**
 Developing locally is a quick way to get up and going and test stuff out.
 You will need to execute these steps for the next
 few sections to work:
@@ -49,7 +49,7 @@ few sections to work:
 - Clone the site-scanner repo with `git clone https://github.com/18F/site-scanning`.
 - `cd site-scanning` to get into the repo dir.
 
-5. **Run tests.
+**5. Run tests.**
 
 - Run `./test.sh` in your shell window that is in the repo dir.
 - This can take a while, since the domain-scan repo is really giant, but it fires up
@@ -72,7 +72,7 @@ test it against the small elasticsearch instance that is running in docker.
 That instance has a few domains which are scanned and loaded in.  The list of
 domains can be [found here](composetest.sh)).
 
-6. **Run the app.
+**6. Run the app.**
 
 - Run `./test.sh nodelete` in the repo dir.  This will run the app, populate
 it with data scanned from a few domains, run the test suite against it,
@@ -85,7 +85,7 @@ working with whatever code was there when you ran the `test.sh` script.
 and you will see the logs streamed from the app and the elasticsearch/minio
 services.
 
-7. **CI/CD into cloud.gov.
+**7. CI/CD into cloud.gov.**
 
 - If you already have CI/CD going, you should be able to do development on a branch
 and whenever you push your branch, it will run the tests.  You can see how that goes
@@ -97,11 +97,11 @@ branch, and it will do a test then deploy.
 - Currently, there are stubs for being able to create a dev/staging/production deployment
 setup, but this is unfinished as of now.
 
-8.**Add scans.
+**8.Add scans.**
 
 - Site Scanner uses the [domain-scan](https://github.com/18F/domain-scan) engine
 to do the work of parallelizing and collecting all of the scan data. Documention exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
-9. **Set up local development.
+**9. Set up local development.**
 - Check out the code: 
 ```
 git clone https://github.com/18F/domain-scan/
@@ -126,7 +126,7 @@ metadata directly, your scan should perform fine. Make sure the workers are bump
 
 - Copy the `domain-scan/scanners/uswds2.py` scanner plugin and use that as a template for your new scan, or the `domain-scan/scanners/200scanner.py` scanner.
 
-10. **Test the new scans.
+**10. Test the new scans.**
 
 - The primary test harness is the `./test.sh` script, which will fire
 up an elasticsearch and S3 infrastructure, run a scan, load the data
@@ -146,7 +146,7 @@ you might be able to look at in the `utilities` directory, like the `checkscansc
 script, which checks how well the uswds2 scanner works by checking the scores for
 false positives and false negatives.
 
-11. **Configure cloud.gov to use your branch
+**11. Configure cloud.gov to use your branch.**
 
 - Once you have developed your new scan type, you will need to check it into a branch
 and try to get it PR'ed into the domain-scan repo.
@@ -155,7 +155,7 @@ configure your forked repo to use that branch, and to add your new scan type. To
 to the `SCANTYPES` definition near the top of the file for another scan, and
 edit the `BRANCH` variable to set it to your branch.
 
-12. **Kick off a cloud.gov scan for testing
+**12. Kick off a cloud.gov scan for testing.**
 
 - Once the code has made it into the master branch and the deploy to cloud.gov
 has completed,
