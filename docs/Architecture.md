@@ -1,12 +1,10 @@
 # Architecture
 
-There are three components to this project:
-- *The Scanning Engine:*  This engine, when executed, will run all the configured scans 
+There are three components to Site Scanner:
+- *The Scanning Engine:*  This engine, when executed, runs all the configured scans 
   against all of the configured domains and generate json output.
-- *Scanning Engine Plugins:*  These will be plugins that will let you execute different
-  types of scans.  They will be used by the scanning engine, or can be executed by hand.
-  It is anticipated that over time, more plugins will be created to expand the functionality
-  of the scanning engine.
+- *Scanning Engine Plugins:*  These are be plugins that let you execute different
+  types of scans.  They are be used by the scanning engine, or can be executed by hand.
 - *Scan Result UI/API:*  This is a web frontend that also implements a REST API to download/search
   scan results.
 
