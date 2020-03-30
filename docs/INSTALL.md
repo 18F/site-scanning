@@ -101,6 +101,7 @@ setup, but this is unfinished as of now.
 
 - Site Scanner uses the [domain-scan](https://github.com/18F/domain-scan) engine
 to do the work of parallelizing and collecting all of the scan data. Documention exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
+
 **9. Set up local development.**
 - Check out the code: 
 ```
