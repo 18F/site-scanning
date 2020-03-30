@@ -4,7 +4,7 @@ The site-scanner is engineered to run on cloud.gov using CircleCI for CI/CD.
 You can also run a local copy if you want to do development on your laptop/desktop.
 You should run these commands on a Mac OS X or Linux host which has tools such as cf, jq, curl, bash, etc on them.
 
-1. **Create a cloud.gov account.
+1. **Create a cloud.gov account.**
 
 - You can get a free non-production sandbox account by going to https://cloud.gov/quickstart/,
 or by getting an IAA signed and then getting a real production cloud.gov org.
