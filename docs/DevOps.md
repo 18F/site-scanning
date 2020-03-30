@@ -19,7 +19,7 @@ To run the scan manually
 
 ## Restarting the app
 
-1. [set up the cf commandline tools](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line).
+1. [Set up the cf commandline tools](https://cloud.gov/docs/getting-started/setup/#set-up-the-command-line).
 2. Log into this organization/space: `cf target -o gsa-10x-prototyping -s scanner_proto`.
 3. Type `cf restart scanner-ui`.
 4. The app should then restart.
