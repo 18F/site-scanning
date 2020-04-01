@@ -1,4 +1,4 @@
-# Tools!
+# Tools
 
 This directory contains some example tools that you can use directly, or you
 can use as examples to build your own tools that query the site-scanner
