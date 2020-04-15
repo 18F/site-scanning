@@ -1,27 +1,35 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>10x Site Scanner</h1>
-  <h2>On-demand analysis of any federal government domain.</h2>
+  <!-- comment used for testing:  do not remove -->
+  <h1>Site Scanner</h1>
 
-  <p>There are over 150 federal domains in existence. Ensuring sites maintain particular website design and maintenance standards is critical to safe, secure, and useful public sites. Federal employees interested in analyzing the standards in use on a site used to have to scan them manually, with all the legwork that entails. If someone else wanted to build off their analysis, they had to start from scratch.</p>
+  <p>The Site Scanner offers on-demand analysis of U.S. government websites. The scanner looks for indicators that websites are following best practices. The scanner currently scans {{ num_domains }} federal domains.</p>
 
-<p>Enter the 10x Site Scanner.</p>
+<h2>Site Scanner best practice indicators</h2>
+<ul>
+  <li>Presence of specific files (code.json, robots.txt, sitemap.xml and more)</li>
+  <li>Use of shared services including the Digital Analytics Program (DAP) and the U.S. Web Design System (USWDS)</li>
+</ul>
 
-<p>Employees don’t scan sites; they instantly access an expanded set of automatically-run scan data for any federal domain. The data is stored in the cloud for easy access from anywhere and is updated daily. They can filter data for specific analysis and reporting.</p>
+<h2>Site Scanner features</h2>
+<ul>
+  <li>Scans are updated daily</li>
+  <li>Scans can cover entire domains or individual websites</li>
+  <li>Data is customizable</li>
+  <li>Scans are available from anywhere</li>
+  <li>Scans are open to everyone</li>
+  <li>Results are exportable</li>
+  <li>API is available</li>
+</ul>
 
-<p>This means no manual scanning legwork and more robust insights into what's behind any domain.</p>
- 
-<p>
-<h3>As of today, Site Scanner is scanning {{ num_domains }} federal domains.</h3>
-We update the sites we scan from these lists every day:
-	<ul>
-		<li><a href="https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv">https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv</a></li>
-		<li><a href="https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv">https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv</a></li>
-		<li>a couple of static lists of federalist and TTS related sites that you can see under <a href="https://github.com/18F/site-scanning/tree/master/domains">https://github.com/18F/site-scanning/tree/master/domains</a></li>
-		<li><a href="https://pulse.cio.gov/data/hosts/https.csv">https://pulse.cio.gov/data/hosts/https.csv</a></li>
-	</ul>
-</p>
-<h3>Click on the Presentation Layers popup to get started.</h3>
- 
+
+<!--
+<h2>Help us build</h2>
+
+<p>The Site Scanner is a working prototype. Give it a try and let us know what you think. E-mail <a href="mailto:site-scanning@gsa.gov">site-scanning@gsa.gov</a> or <a href="https://github.com/18F/site-scanning">work with us on GitHub</a>.</p>
+-->
+
+<h2><a href="{% url 'search200' %}">Explore scan data for U.S. government sites</a></h2>
+
 {% endblock %}
