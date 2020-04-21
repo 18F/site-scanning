@@ -275,7 +275,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'DAP Scan Search', response.content)
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
-        self.assertIn(b'afrh.gov', response.content)
+        self.assertIn(b'www.afrh.gov', response.content)
         self.assertIn(b'True', response.content)
         self.assertIn(b'False', response.content)
 
@@ -283,7 +283,7 @@ class CheckUI(SimpleTestCase):
         self.assertIn(b'DAP Scan Search', response.content)
         self.assertIn(b'18f.gov', response.content)
         self.assertIn(b'gsa.gov', response.content)
-        self.assertIn(b'afrh.gov', response.content)
+        self.assertIn(b'www.afrh.gov', response.content)
         self.assertIn(b'True', response.content)
         self.assertIn(b'False', response.content)
 
@@ -296,7 +296,7 @@ class CheckUI(SimpleTestCase):
 
         response = self.client.get('/search200/dap/?present=DAP%20Not%20Present')
         self.assertIn(b'DAP Scan Search', response.content)
-        self.assertIn(b'afrh.gov', response.content)
+        self.assertIn(b'www.afrh.gov', response.content)
         self.assertIn(b'False', response.content)
         self.assertNotIn(b'True', response.content)
 

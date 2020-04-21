@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+#
 # This script configures environment variables, loads data into our environment,
 # and then runs tests.
 #
@@ -26,7 +26,7 @@ cat <<EOF > "$DOMAINCSV"
 Domain Name,Domain Type,Agency,Organization,City,State,Security Contact Email
 18F.GOV,Federal Agency - Executive,General Services Administration,18F,Washington,DC,tts-vulnerability-reports@gsa.gov
 GSA.GOV,Federal Agency - Executive,General Services Administration,GSA,Washington,DC,(blank)
-AFRH.GOV,Federal Agency - Executive,Armed Forces Retirement Home,Armed Forces Retirement Home,Washington,DC,(blank)
+WWW.AFRH.GOV,Federal Agency - Executive,Armed Forces Retirement Home,Armed Forces Retirement Home,Washington,DC,(blank)
 CLOUD.GOV,Federal Agency - Executive,General Services Administration,18F | GSA,Washington,DC,tts-vulnerability-reports@gsa.gov
 LOGIN.GOV,Federal Agency - Executive,General Services Administration,General Services Administration,Washington,DC,tts-vulnerability-reports@gsa.gov
 calendar.gsa.gov,,,,,,

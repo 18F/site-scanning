@@ -21,7 +21,7 @@ class CheckAPI(SimpleTestCase):
     domains = [
         '18f.gov',
         'gsa.gov',
-        'afrh.gov',
+        'www.afrh.gov',
         'cloud.gov',
         'login.gov',
         'calendar.gsa.gov',
@@ -90,7 +90,7 @@ class CheckAPI(SimpleTestCase):
         # this should get the gsa and 18f scans and not the afrh.gov scan
         self.assertIn('"domain":"18f.gov"', str(response.content))
         self.assertIn('"domain":"gsa.gov"', str(response.content))
-        self.assertNotIn('afrh.gov', str(response.content))
+        self.assertNotIn('www.afrh.gov', str(response.content))
 
     def test_api_queries_domainfromscan(self):
         """queries from specific scan work"""
