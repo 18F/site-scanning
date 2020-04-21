@@ -103,12 +103,10 @@ setup, but this is unfinished as of now.
 to do the work of parallelizing and collecting all of the scan data. Documention exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
 
 **9. Set up local development.**
-- Check out the code: 
+- Check out the code:
 ```
 git clone https://github.com/18F/domain-scan/
 cd domain-scan
-# Temporary until https://github.com/18F/domain-scan/pull/307 is merged
-git checkout tspencer/200scanner
 python3 -m venv venv
 . venv/bin/activate
 pip3 install -r requirements.txt
