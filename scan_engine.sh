@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script is what gets the list of domains to scan, 
+# This script is what gets the list of domains to scan,
 # runs the scanners, collects the data, and puts it into s3.
 # It also cleans up old scans (>30 days) to prevent clutter.
 #
@@ -17,11 +17,12 @@ SCANTYPES="
 	dap
 	third_parties
 	pshtt
+	lighthouse
 "
 
 # This is where you set the repo/branch
 DOMAINSCANREPO="https://github.com/18F/domain-scan"
-BRANCH="tspencer/200scanner"
+BRANCH="lighthouse-scan-initial"
 
 # How many days to keep around in the index
 INDEXDAYS=30
