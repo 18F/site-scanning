@@ -14,11 +14,13 @@ jobs:
     - run:
         name: install dependencies
         command: |
+          curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
           sudo apt-get update
-          sudo apt-get install -y awscli
+          sudo apt-get install -y awscli nodejs
           python3 -m venv venv
           . venv/bin/activate
           pip3 install -r requirements.txt
+          npm install
     - save_cache:
         paths:
           - ./venv
