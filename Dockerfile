@@ -7,3 +7,5 @@ RUN apt-get update && apt-get install -y jq awscli nodejs gconf-service libasoun
 COPY requirements.txt /app/
 RUN pip3 install -r requirements.txt
 COPY . /app/
+RUN npm install
+ENV LIGHTHOUSE_PATH /app/node_modules/lighthouse/lighthouse-cli/index.js
