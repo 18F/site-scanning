@@ -16,7 +16,7 @@ class CheckAPI(SimpleTestCase):
     scansjsondata = json.loads(scansresponse.content)
     datesresponse = client.get("/api/v1/lists/dates/")
     datesjsondata = json.loads(datesresponse.content)
-    numscans = 8
+    numscans = 9
     numdomains = 7
     domains = [
         '18f.gov',
