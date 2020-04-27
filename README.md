@@ -1,4 +1,4 @@
-# 10x Site Scanner 
+# 10x Site Scanner
 
 Site Scanner enables on-demand analysis of any federal domain.
 
@@ -14,4 +14,4 @@ API Customization:
 
 ## Contact Us
 
-If you have any questions or want to get in touch, email us at site-scanning@gsa.gov.  
+If you have any questions or want to get in touch, email us at site-scanning@gsa.gov.

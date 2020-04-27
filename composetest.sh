@@ -46,7 +46,6 @@ SCANTYPES="
 	privacy
 	dap
 	third_parties
-	pshtt
 	lighthouse
 "
 
