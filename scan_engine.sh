@@ -97,6 +97,11 @@ if [ -d ../node_modules ] ; then
 fi
 npm install
 
+# set to notify Lighthouse scanner the cli path
+export LIGHTHOUSE_PATH=/app/node_modules/lighthouse/lighthouse-cli/index.js
+#export CHROME_PATH=`node -e "console.log(require('puppeteer').executablePath())"`
+export CHROME_PATH=/usr/bin/chromium
+
 # get the domains and split them up.  If we were told to process a particular file,
 # select it.  Otherwise, scan everything.
 if [ -d "/home/vcap/tmp/splitdir" ] ; then

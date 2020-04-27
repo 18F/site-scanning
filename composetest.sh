@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+#
 # This script configures environment variables, loads data into our environment,
 # and then runs tests.
 #
@@ -46,6 +46,7 @@ SCANTYPES="
 	privacy
 	dap
 	third_parties
+	lighthouse
 "
 
 # do a test that checks if the s3 bucket contains data
