@@ -32,8 +32,8 @@ else
 	# they will be merged in so there are no duplicates and metadata from
 	# the first instance of the domain will be preserved.
 
-	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
-	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
+	#wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+	#wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
 
 	for i in $BINDIR/domains/*.csv ; do
 		echo "merging $i into /tmp/domains.csv"
