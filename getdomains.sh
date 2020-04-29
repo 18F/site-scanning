@@ -5,7 +5,9 @@
 #
 
 # This is how many domains to scan in a single task
-BATCHSIZE="${BATCHSIZE:-4500}"
+# 160 is chosen to produce 8 concurrent jobs over the current-federal.csv list,
+# which include 1242 domains.
+BATCHSIZE="${BATCHSIZE:-160}"
 
 BINDIR=$(dirname "$0")
 
