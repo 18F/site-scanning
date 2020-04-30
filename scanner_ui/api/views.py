@@ -1,17 +1,23 @@
-from rest_framework import viewsets, pagination
-from rest_framework.response import Response
-from django.http import StreamingHttpResponse
-from .serializers import ScanSerializer
+"""
+Site scanner API views
+"""
+
+import csv
+import json
 import os
-from scanner_ui.ui.views import getdates, getListFromFields
+import re
+from collections import OrderedDict
+
+from django.http import StreamingHttpResponse
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
-import re
-from collections import OrderedDict
-import csv
+from rest_framework import viewsets, pagination
+from rest_framework.response import Response
 
-# Create your views here.
+from scanner_ui.ui.views import get_dates, get_list_from_fields
+from .serializers import ScanSerializer
+
 
 
 # we need this because AttrDict is used all over by elasticsearch_dsl,
@@ -38,11 +44,13 @@ class ItemsWrapper(OrderedDict):
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
+def get_scans_from_ES(scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
     es = Elasticsearch([os.environ['ESURL']])
-    dates = getdates()
+    dates = get_dates()
+
     if date is None or date not in dates:
         date = dates[1]
+
     selectedindex = date + '-*'
     indices = list(es.indices.get_alias(selectedindex).keys())
     y, m, d, scantypes = zip(*(s.split("-") for s in indices))
@@ -94,9 +102,9 @@ def getScansFromES(scantype=None, domain=None, request=None, excludeparams=None,
 
 
 # get the list of scantypes by scraping the indexes
-def getscantypes(date=None):
+def get_scan_types(date=None):
     es = Elasticsearch([os.environ['ESURL']])
-    dates = getdates()
+    dates = get_dates()
     if date is None:
         date = dates[1]
     selectedindex = date + '-*'
@@ -137,7 +145,7 @@ class DomainsViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        return getScansFromES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
+        return get_scans_from_ES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
@@ -166,10 +174,10 @@ class ScansViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, scantype=None, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        return getScansFromES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
+        return get_scans_from_ES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
 
     def list(self, request, date=None):
-        scans = getscantypes(date=date)
+        scans = get_scan_types(date=date)
         return Response(scans)
 
     def retrieve(self, request, scantype=None, date=None):
@@ -205,18 +213,26 @@ class CSVEcho:
         return value
 
 
-def flatten_dict(data):
-    if type(data) == dict:
-        for k, v in list(data.items()):
-            if type(v) == dict:
-                flatten_dict(v)
-                data.pop(k)
-                for k2, v2 in v.items():
-                    data[k + "." + k2] = v2
+def flatten_dict(data, max_depth, depth=0):
+    depth += 1
+
+    if type(data) != dict:
+        return data
+
+    for key, value in list(data.items()):
+        if type(value) == dict:
+            if depth == max_depth:
+                data[key] = json.dumps(value)
+            else:
+                flatten_dict(value, max_depth, depth=depth)
+                data.pop(key)
+                for key2, value2 in value.items():
+                    data[f'{key}.{key2}'] = value2
+
     return data
 
 
-def iter_items(scans, pseudo_buffer, headers):
+def iter_items(scans, pseudo_buffer, headers, max_depth):
     writer = csv.DictWriter(pseudo_buffer, fieldnames=headers)
 
     # write header into CSV
@@ -228,7 +244,7 @@ def iter_items(scans, pseudo_buffer, headers):
     # write data into CSV
     for scan in scans.scan():
         flatscan = scan.to_dict()
-        flatten_dict(flatscan)
+        flatten_dict(flatscan, max_depth)
         # if we have data.invalid, then remove it and make sure the rest of the fields are there
         try:
             del flatscan['data.invalid']
@@ -240,9 +256,9 @@ def iter_items(scans, pseudo_buffer, headers):
         yield writer.writerow(flatscan)
 
 
-def retrievecsv(request, scantype=None, date=None):
+def retrieve_csv(request, scantype=None, date=None):
     """A view that streams a large CSV file."""
-    scans = getScansFromES(request=request, scantype=scantype, date=date, raw=True)
+    scans = get_scans_from_ES(request=request, scantype=scantype, date=date, raw=True)
 
     # skip over invalid data to get the real deal
     for hit in scans:
@@ -252,10 +268,20 @@ def retrievecsv(request, scantype=None, date=None):
                 continue
         except KeyError:
             break
-    flatten_dict(firsthit)
+
+    # These scans include variable field names - so just dump each top-level
+    # field as a JSON string:
+    if scantype == 'pshtt':
+        max_depth = 4
+    elif scantype == 'lighthouse':
+        max_depth = 2
+    else:
+        max_depth = None
+
+    flatten_dict(firsthit, max_depth)
     fieldnames = list(firsthit.keys())
 
-    response = StreamingHttpResponse(iter_items(scans, CSVEcho(), fieldnames), content_type="text/csv")
+    response = StreamingHttpResponse(iter_items(scans, CSVEcho(), fieldnames, max_depth), content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="scans.csv"'
     return response
 
@@ -264,13 +290,13 @@ def retrievecsv(request, scantype=None, date=None):
 def uniquevalues(date=None, scantype=None, field=None, subfield=None):
     if date is None:
         # default to most recent date
-        date = getdates()[1]
+        date = get_dates()[1]
 
     if scantype is None:
         raise Exception('no scantype specified')
 
     index = date + '-' + scantype
-    things = getListFromFields(index, field, subfield=subfield)
+    things = get_list_from_fields(index, field, subfield=subfield)
     return things
 
 
@@ -278,7 +304,7 @@ class ListsViewset(viewsets.GenericViewSet):
     queryset = ''
 
     def dates(self, request):
-        dates = getdates()[1:]
+        dates = get_dates()[1:]
         return Response(dates)
 
     def agencies(self, request, scantype=None, date=None):

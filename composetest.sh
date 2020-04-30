@@ -34,7 +34,6 @@ calendar.gsa.gov,,,,,,
 EOF
 ./scan_engine.sh
 
-
 # run app test suite
 ./manage.py test || cleanup "python test suite exited uncleanly"
 

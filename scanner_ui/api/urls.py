@@ -39,7 +39,7 @@ urlpatterns = [
 
     path('scans/', scans_list, name="scans-list"),
     path('scans/<scantype>/', scans_detail, name="scans-detail"),
-    path('scans/<scantype>/csv/', views.retrievecsv, name="scans-csv"),
+    path('scans/<scantype>/csv/', views.retrieve_csv, name="scans-csv"),
     path('scans/<scantype>/<domain>/', scan, name="scan"),
 
     path('lists/<scantype>/agencies/', agencies, name="agencies"),
@@ -54,7 +54,7 @@ urlpatterns = [
 
     path('date/<date>/scans/', scans_list, name="date-scans-list"),
     path('date/<date>/scans/<scantype>/', scans_detail, name="date-scans-detail"),
-    path('date/<date>/scans/<scantype>/csv/', views.retrievecsv, name="date-scans-csv"),
+    path('date/<date>/scans/<scantype>/csv/', views.retrieve_csv, name="date-scans-csv"),
     path('date/<date>/scans/<scantype>/<domain>/', scan, name="date-scan"),
 
     path('date/<date>/lists/<scantype>/agencies/', agencies, name="date-agencies"),
