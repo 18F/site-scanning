@@ -8,7 +8,7 @@ import csv
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from django.urls import reverse
-from .viewfunctions import getdates, getquery, periodize, mixpagedatain, getListFromFields, deperiodize, popupbuilder, setdisplaytypetitle
+from .viewfunctions import get_dates, getquery, periodize, mixpagedatain, get_list_from_fields, deperiodize, popupbuilder, setdisplaytypetitle
 
 
 # Create your views here.
@@ -62,7 +62,7 @@ def presentationlayers(request):
 
 
 def index(request):
-    dates = getdates()
+    dates = get_dates()
     latestindex = dates[1] + '-200scanner'
     es = Elasticsearch([os.environ['ESURL']])
 
@@ -89,7 +89,7 @@ def search200json(request):
     if my200page is None:
         my200page = 'All Scans'
 
-    dates = getdates()
+    dates = get_dates()
     indexbase = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
@@ -163,7 +163,7 @@ def search200csv(request):
     if my200page is None:
         my200page = 'All Scans'
 
-    dates = getdates()
+    dates = get_dates()
     indexbase = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
@@ -267,7 +267,7 @@ def search200(request, displaytype=None):
     hitsperpage = request.GET.get('hitsperpage')
     page_no = request.GET.get('page')
 
-    dates = getdates()
+    dates = get_dates()
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
     else:
@@ -293,11 +293,11 @@ def search200(request, displaytype=None):
     my200pages.insert(0, 'All Scans')
 
     # get the agencies/domaintypes/orgs
-    agencies = getListFromFields(index, 'agency')
+    agencies = get_list_from_fields(index, 'agency')
     agencies.insert(0, 'All Agencies')
-    domaintypes = getListFromFields(index, 'domaintype')
+    domaintypes = get_list_from_fields(index, 'domaintype')
     domaintypes.insert(0, 'All Branches')
-    orgs = getListFromFields(index, 'organization')
+    orgs = get_list_from_fields(index, 'organization')
     orgs.insert(0, 'All Organizations')
 
     if agency is None:
@@ -310,7 +310,7 @@ def search200(request, displaytype=None):
         org = 'All Organizations'
 
     # Find list of mime types from the pagedata index
-    mimetypes = getListFromFields(indexbase + '-pagedata', 'data', subfield='content_type')
+    mimetypes = get_list_from_fields(indexbase + '-pagedata', 'data', subfield='content_type')
     mimetypes.insert(0, 'all content_types')
     if mimetype is None:
         mimetype = 'all content_types'
@@ -669,7 +669,7 @@ def searchUSWDSjson(request):
     domaintype = request.GET.get('domaintype')
     sort = request.GET.get('sort')
 
-    dates = getdates()
+    dates = get_dates()
     indexbase = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
@@ -706,7 +706,7 @@ def searchUSWDScsv(request):
     domaintype = request.GET.get('domaintype')
     sort = request.GET.get('sort')
 
-    dates = getdates()
+    dates = get_dates()
     indexbase = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         indexbase = dates[1]
@@ -754,7 +754,7 @@ def searchUSWDScsv(request):
 
 
 def searchUSWDS(request):
-    dates = getdates()
+    dates = get_dates()
 
     date = request.GET.get('date')
     if date == 'None' or date == 'Scan Date' or date is None:
@@ -764,9 +764,9 @@ def searchUSWDS(request):
     index = indexbase + '-uswds2'
 
     # get the agencies/domaintypes
-    agencies = getListFromFields(index, 'agency')
+    agencies = get_list_from_fields(index, 'agency')
     agencies.insert(0, 'All Agencies')
-    domaintypes = getListFromFields(index, 'domaintype')
+    domaintypes = get_list_from_fields(index, 'domaintype')
     domaintypes.insert(0, 'All Branches')
 
     agency = request.GET.get('agency')
@@ -794,7 +794,7 @@ def searchUSWDS(request):
         versions.sort()
     except:
         versions = []
-    # versions = getListFromFields(index, 'data.uswdsversion')
+    # versions = get_list_from_fields(index, 'data.uswdsversion')
     versions.insert(0, 'detected versions')
     versions.insert(0, 'all versions')
 
@@ -855,7 +855,7 @@ def searchUSWDS(request):
 
 
 def privacy(request):
-    dates = getdates()
+    dates = get_dates()
 
     date = request.GET.get('date')
     if date == 'None' or date == 'Scan Date' or date is None:
@@ -865,9 +865,9 @@ def privacy(request):
     index = indexbase + '-privacy'
 
     # get the agencies/domaintypes
-    agencies = getListFromFields(index, 'agency')
+    agencies = get_list_from_fields(index, 'agency')
     agencies.insert(0, 'All Agencies')
-    domaintypes = getListFromFields(index, 'domaintype')
+    domaintypes = get_list_from_fields(index, 'domaintype')
     domaintypes.insert(0, 'All Branches')
 
     agency = request.GET.get('agency')
@@ -963,7 +963,7 @@ def privacyjson(request):
     domaintype = request.GET.get('domaintype')
     present = request.GET.get('present')
 
-    dates = getdates()
+    dates = get_dates()
     index = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         index = dates[1] + '-privacy'
@@ -993,7 +993,7 @@ def privacycsv(request):
     domaintype = request.GET.get('domaintype')
     present = request.GET.get('present')
 
-    dates = getdates()
+    dates = get_dates()
     index = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         index = dates[1] + '-privacy'
@@ -1031,7 +1031,7 @@ def privacycsv(request):
 
 
 def sitemap(request):
-    dates = getdates()
+    dates = get_dates()
 
     date = request.GET.get('date')
     if date == 'None' or date == 'Scan Date' or date is None:
@@ -1041,9 +1041,9 @@ def sitemap(request):
     index = indexbase + '-sitemap'
 
     # get the agencies/domaintypes
-    agencies = getListFromFields(index, 'agency')
+    agencies = get_list_from_fields(index, 'agency')
     agencies.insert(0, 'All Agencies')
-    domaintypes = getListFromFields(index, 'domaintype')
+    domaintypes = get_list_from_fields(index, 'domaintype')
     domaintypes.insert(0, 'All Branches')
 
     agency = request.GET.get('agency')
@@ -1137,7 +1137,7 @@ def sitemapjson(request):
     domaintype = request.GET.get('domaintype')
     present = request.GET.get('present')
 
-    dates = getdates()
+    dates = get_dates()
     index = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         index = dates[1] + '-sitemap'
@@ -1167,7 +1167,7 @@ def sitemapcsv(request):
     domaintype = request.GET.get('domaintype')
     present = request.GET.get('present')
 
-    dates = getdates()
+    dates = get_dates()
     index = ''
     if date == 'None' or date == 'Scan Date' or date is None:
         index = dates[1] + '-sitemap'

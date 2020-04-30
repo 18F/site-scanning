@@ -3,45 +3,45 @@ from django.test import Client
 import csv
 import re
 import json
-from .viewfunctions import getdates, getquery, getListFromFields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
+from .viewfunctions import get_dates, getquery, get_list_from_fields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
 # Create your tests here.
 
 
 class checkviewfunctions(SimpleTestCase):
-    def test_getdates(self):
-        dates = getdates()
+    def test_get_dates(self):
+        dates = get_dates()
         self.assertEqual(len(dates), 2)
         self.assertRegex(dates[1], r'^[0-9]{4}-[0-9]{2}-[0-9]{2}')
 
     def test_checkgetquery(self):
-        dates = getdates()
+        dates = get_dates()
         index = dates[1] + '-200scanner'
         s = getquery(index)
         self.assertEqual(s.count(), 7)
 
     def test_getquerydomainsearch(self):
-        dates = getdates()
+        dates = get_dates()
         index = dates[1] + '-200scanner'
         s = getquery(index, domainsearch='18f')
         self.assertEqual(s.count(), 1)
 
     def test_getquerydapsearch(self):
-        dates = getdates()
+        dates = get_dates()
         index = dates[1] + '-dap'
         s = getquery(index, present='DAP Present', displaytype='dap')
         self.assertEqual(s.count(), 4)
 
-    def test_getlistfromfields(self):
-        dates = getdates()
+    def test_get_list_from_fields(self):
+        dates = get_dates()
         index = dates[1] + '-200scanner'
-        mylist = getListFromFields(index, 'domain')
+        mylist = get_list_from_fields(index, 'domain')
         self.assertEqual(len(mylist), 7)
 
-    def test_getlistfromfields_subfield(self):
-        dates = getdates()
+    def test_get_list_from_fields_subfield(self):
+        dates = get_dates()
         index = dates[1] + '-pagedata'
-        mylist = getListFromFields(index, 'data', subfield='content_type')
+        mylist = get_list_from_fields(index, 'data', subfield='content_type')
         self.assertTrue('application/json' in mylist)
         self.assertTrue('application/xml' in mylist)
         self.assertGreaterEqual(len(mylist), 4)
@@ -59,13 +59,13 @@ class checkviewfunctions(SimpleTestCase):
         self.assertEqual(deslash(mystring), '\/data.json')
 
     def test_domainswith(self):
-        dates = getdates()
+        dates = get_dates()
         index = dates[1] + '-pagedata'
         domains = domainsWith('/privacy', 'responsecode', '200', index)
         self.assertEqual(len(domains), 2)
 
     def test_mixpagedatain(self):
-        dates = getdates()
+        dates = get_dates()
         indexbase = dates[1]
         index = indexbase + '-200scanner'
         s = getquery(index)

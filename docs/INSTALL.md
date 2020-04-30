@@ -74,6 +74,28 @@ domains can be [found here](composetest.sh)).
 
 **6. Run the app.**
 
+- The simplest way to run the app locally with a populated test database is to
+connect to the cloud.gov-deployed Elasticsearch database via an ssh tunnel:
+
+```bash
+cf7 connect-to-service scanner-ui scanner-es
+```
+
+If you have trouble making an ssh connection, you may need to use `cf7` and
+manually configure the port forwarding. Get the hostname and ports from the
+`connect-to-service` output, and run, replacing ports and hostname:
+
+```bash
+cf7 ssh -N -L 52046:hostname:32274 scanner-ui
+```
+
+- Set the `ESURL` environment variable to the provided port on localhost.
+
+- Run `./manage.py runserver` to start the Django development server
+
+Alternately, you may try to piggyback on the test runner's Docker-managed
+database:
+
 - Run `./test.sh nodelete` in the repo dir.  This will run the app, populate
 it with data scanned from a few domains, run the test suite against it,
 and leave the app running.

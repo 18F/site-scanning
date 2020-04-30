@@ -95,7 +95,7 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
 
 
 # search in ES for the list of dates that are indexed
-def getdates():
+def get_dates():
     es = Elasticsearch([os.environ['ESURL']])
     indexlist = es.indices.get_alias().keys()
     datemap = {}
@@ -120,7 +120,7 @@ def getdates():
 # like find all mime_types under all the different pages.
 #
 # XXX seems like there ought to be a way to do this with aggregates in ES.
-def getListFromFields(index, field, subfield=None):
+def get_list_from_fields(index, field, subfield=None):
     es = Elasticsearch([os.environ['ESURL']])
     s = Search(using=es, index=index).query().source([field])
     fieldlist = field.split('.')
