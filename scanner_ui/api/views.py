@@ -44,7 +44,7 @@ class ItemsWrapper(OrderedDict):
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def get_scans_from_ES(scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
+def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
     es = Elasticsearch([os.environ['ESURL']])
     dates = get_dates()
 
@@ -174,7 +174,13 @@ class ScansViewset(viewsets.GenericViewSet):
 
     def get_queryset(self, scantype=None, domain=None, date=None):
         pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        return get_scans_from_ES(request=self.request, domain=domain, scantype=scantype, excludeparams=pageparams, date=date)
+        return get_scans_from_ES(
+            request=self.request,
+            domain=domain,
+            scantype=scantype,
+            excludeparams=pageparams,
+            date=date
+        )
 
     def list(self, request, date=None):
         scans = get_scan_types(date=date)
