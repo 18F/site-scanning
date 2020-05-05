@@ -154,6 +154,9 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 100,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # Don't support ?format=json parameters, as they conflict with the
+    # Elasticsearch filtering usage of GET parameters.
+    'URL_FORMAT_OVERRIDE': None,
 }
 
 # service config
