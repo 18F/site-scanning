@@ -5,9 +5,7 @@
 #
 
 # This is how many domains to scan in a single task
-# 160 is chosen to produce 8 concurrent jobs over the current-federal.csv list,
-# which include 1242 domains.
-BATCHSIZE="${BATCHSIZE:-160}"
+BATCHSIZE="${BATCHSIZE:-1000}"
 
 BINDIR=$(dirname "$0")
 
@@ -34,8 +32,8 @@ else
 	# they will be merged in so there are no duplicates and metadata from
 	# the first instance of the domain will be preserved.
 
-	#wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
-	#wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
+	wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
+	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
 
 	for i in $BINDIR/domains/*.csv ; do
 		echo "merging $i into /tmp/domains.csv"
