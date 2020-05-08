@@ -1,17 +1,17 @@
-# 10x Site Scanner
+# Spotlight
 
-Site Scanner enables on-demand analysis of any federal domain.
+Spotlight highlights the features contributing to any federal website's success, for free.
 
-This repo includes technical instructions and code for Site Scanner's back-end. https://github.com/18F/10x-site-scanner-ui is the repo for the front-end.
+You can see the back-end code Spotlight here. Check out the [Spotlight-ui repo](https://github.com/18F/10x-site-scanner-ui) for front-end code.
 
-Operations:
-* [How to install Site Scanner](https://github.com/18F/site-scanning/blob/master/docs/INSTALL.md)
-* [How to manage Site Scanner as it is deployed in cloud.gov](https://github.com/18F/site-scanning/blob/master/docs/DevOps.md)
+To install Spotlight locally:
+* [How to get started](https://github.com/18F/spotlight/blob/master/docs/INSTALL.md)
+* [How to manage deployment in cloud.gov](https://github.com/18F/spotlight/blob/master/docs/DevOps.md)
 
-API Customization:
-* [The basic architecture of Site Scanner](https://github.com/18F/site-scanning/blob/master/docs/Architecture.md)
-* [Example code that uses Site Scanner API](https://github.com/18F/site-scanning/tree/master/tools)
+To customize Spotlight API:
+* [Basic architecture](https://github.com/18F/spotlight/blob/master/docs/Architecture.md)
+* [Example code using API](https://github.com/18F/spotlight/tree/master/tools)
 
 ## Contact Us
 
-If you have any questions or want to get in touch, email us at site-scanning@gsa.gov.
+Email us at spotlight@gsa.gov with questions or comments about this code.
