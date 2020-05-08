@@ -139,7 +139,7 @@ workflows:
     triggers:
       - schedule:
           # this should be in the middle of the night for most everybody in the US
-          cron: "45 8 * * *"
+          cron: "45 2 * * *"
           filters:
             branches:
               only:
