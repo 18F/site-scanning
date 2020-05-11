@@ -10,18 +10,17 @@ from rest_framework.test import APIClient
 @override_settings(API_OMIT_TODAY=False)
 class CheckAPI(SimpleTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.client = APIClient()
-        cls.domainsresponse = cls.client.get("/api/v1/domains/")
-        cls.domainsjsondata = json.loads(cls.domainsresponse.content)
-        cls.scansresponse = cls.client.get("/api/v1/scans/")
-        cls.scansjsondata = json.loads(cls.scansresponse.content)
-        cls.datesresponse = cls.client.get("/api/v1/lists/dates/")
-        cls.datesjsondata = json.loads(cls.datesresponse.content)
-        cls.numscans = 9
-        cls.numdomains = 7
-        cls.domains = [
+    def setUp(self):
+        self.client = APIClient()
+        self.domainsresponse = self.client.get("/api/v1/domains/")
+        self.domainsjsondata = json.loads(self.domainsresponse.content)
+        self.scansresponse = self.client.get("/api/v1/scans/")
+        self.scansjsondata = json.loads(self.scansresponse.content)
+        self.datesresponse = self.client.get("/api/v1/lists/dates/")
+        self.datesjsondata = json.loads(self.datesresponse.content)
+        self.numscans = 9
+        self.numdomains = 7
+        self.domains = [
             '18f.gov',
             'gsa.gov',
             'afrh.gov',

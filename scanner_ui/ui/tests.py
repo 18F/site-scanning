@@ -1,14 +1,14 @@
-from django.test import SimpleTestCase
-from django.test import Client
 import csv
-import re
 import json
+import re
+
+from django.test import override_settings, Client, SimpleTestCase
+
 from .viewfunctions import get_dates, getquery, get_list_from_fields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
-# Create your tests here.
 
-
-class checkviewfunctions(SimpleTestCase):
+@override_settings(API_OMIT_TODAY=False)
+class CheckViewFunctions(SimpleTestCase):
     def test_get_dates(self):
         dates = get_dates()
         self.assertEqual(len(dates), 2)
@@ -92,6 +92,7 @@ class checkviewfunctions(SimpleTestCase):
         self.assertEqual(popup, p)
 
 
+@override_settings(API_OMIT_TODAY=False)
 class CheckUI(SimpleTestCase):
     client = Client()
 
