@@ -46,7 +46,7 @@ class ItemsWrapper(OrderedDict):
 # for the scan using it.
 def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
     es = Elasticsearch([os.environ['ESURL']])
-    dates = get_dates()
+    dates = get_dates(omit_today=True)
 
     if date is None or date not in dates:
         date = dates[1]
@@ -104,7 +104,7 @@ def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams
 # get the list of scantypes by scraping the indexes
 def get_scan_types(date=None):
     es = Elasticsearch([os.environ['ESURL']])
-    dates = get_dates()
+    dates = get_dates(omit_today=True)
     if date is None:
         date = dates[1]
     selectedindex = date + '-*'
@@ -296,7 +296,7 @@ def retrieve_csv(request, scantype=None, date=None):
 def uniquevalues(date=None, scantype=None, field=None, subfield=None):
     if date is None:
         # default to most recent date
-        date = get_dates()[1]
+        date = get_dates(omit_today=True)[1]
 
     if scantype is None:
         raise Exception('no scantype specified')
@@ -310,7 +310,7 @@ class ListsViewset(viewsets.GenericViewSet):
     queryset = ''
 
     def dates(self, request):
-        dates = get_dates()[1:]
+        dates = get_dates(omit_today=True)[1:]
         return Response(dates)
 
     def agencies(self, request, scantype=None, date=None):

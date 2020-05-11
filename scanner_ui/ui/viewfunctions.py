@@ -1,6 +1,8 @@
-import os
 import logging
+import os
 import re
+from datetime import datetime
+
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool, Q
@@ -95,7 +97,7 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
 
 
 # search in ES for the list of dates that are indexed
-def get_dates():
+def get_dates(omit_today=False):
     es = Elasticsearch([os.environ['ESURL']])
     indexlist = es.indices.get_alias().keys()
     datemap = {}
@@ -106,6 +108,19 @@ def get_dates():
             datemap[date] = 1
     dates = list(datemap.keys())
     dates.sort(reverse=True)
+
+    # If specified, omit today from results.
+    # The use case for this is to omit potentially on-going, incomplete scans
+    # dates from the frontend.
+    # TODO: Revisit this logic, or the default behavior of the API.
+    if omit_today:
+        today = datetime.utcnow().date().isoformat()
+        dates = [
+            date
+            for date in dates
+            if date != today
+        ]
+
     dates.insert(0, 'Scan Date')
     return dates
 
