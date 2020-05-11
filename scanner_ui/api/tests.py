@@ -9,23 +9,26 @@ from rest_framework.test import APIClient
 
 @override_settings(API_OMIT_TODAY=False)
 class CheckAPI(SimpleTestCase):
-    client = APIClient()
-    domainsresponse = client.get("/api/v1/domains/")
-    domainsjsondata = json.loads(domainsresponse.content)
-    scansresponse = client.get("/api/v1/scans/")
-    scansjsondata = json.loads(scansresponse.content)
-    datesresponse = client.get("/api/v1/lists/dates/")
-    datesjsondata = json.loads(datesresponse.content)
-    numscans = 9
-    numdomains = 7
-    domains = [
-        '18f.gov',
-        'gsa.gov',
-        'afrh.gov',
-        'cloud.gov',
-        'login.gov',
-        'calendar.gsa.gov',
-        '*.ecmapps.treasuryecm.gov'
+
+    @classmethod
+    def setUpClass(cls):
+        cls.client = APIClient()
+        cls.domainsresponse = cls.client.get("/api/v1/domains/")
+        cls.domainsjsondata = json.loads(cls.domainsresponse.content)
+        cls.scansresponse = cls.client.get("/api/v1/scans/")
+        cls.scansjsondata = json.loads(cls.scansresponse.content)
+        cls.datesresponse = cls.client.get("/api/v1/lists/dates/")
+        cls.datesjsondata = json.loads(cls.datesresponse.content)
+        cls.numscans = 9
+        cls.numdomains = 7
+        cls.domains = [
+            '18f.gov',
+            'gsa.gov',
+            'afrh.gov',
+            'cloud.gov',
+            'login.gov',
+            'calendar.gsa.gov',
+            '*.ecmapps.treasuryecm.gov'
     ]
 
     def test_all_domains(self):
