@@ -3,6 +3,7 @@ import os
 import re
 from datetime import datetime
 
+from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool, Q
@@ -97,7 +98,7 @@ def getquery(index, present=None, agency=None, domaintype=None, query=None, org=
 
 
 # search in ES for the list of dates that are indexed
-def get_dates(omit_today=False):
+def get_dates():
     es = Elasticsearch([os.environ['ESURL']])
     indexlist = es.indices.get_alias().keys()
     datemap = {}
@@ -113,7 +114,7 @@ def get_dates(omit_today=False):
     # The use case for this is to omit potentially on-going, incomplete scans
     # dates from the frontend.
     # TODO: Revisit this logic, or the default behavior of the API.
-    if omit_today:
+    if settings.API_OMIT_TODAY:
         today = datetime.utcnow().date().isoformat()
         dates = [
             date

@@ -1,13 +1,13 @@
-from django.test import SimpleTestCase
-from rest_framework.test import APIClient
-import json
-import datetime
 import csv
+import datetime
+import json
 import io
 
-# tests for views
+from django.test import override_settings, SimpleTestCase
+from rest_framework.test import APIClient
 
 
+@override_settings(API_OMIT_TODAY=False)
 class CheckAPI(SimpleTestCase):
     client = APIClient()
     domainsresponse = client.get("/api/v1/domains/")
