@@ -173,3 +173,7 @@ else:
     servicejson = os.environ['VCAP_SERVICES']
     services = json.loads(servicejson)
     os.environ['ESURL'] = services['elasticsearch56'][0]['credentials']['uri']
+
+# By default, don't return today's scan results via the API.
+# We do this to avoid in-progress scans from appearing in the UI.
+API_OMIT_TODAY = True

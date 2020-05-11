@@ -1,6 +1,9 @@
-import os
 import logging
+import os
 import re
+from datetime import datetime
+
+from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Range, Bool, Q
@@ -106,6 +109,19 @@ def get_dates():
             datemap[date] = 1
     dates = list(datemap.keys())
     dates.sort(reverse=True)
+
+    # If specified, omit today from results.
+    # The use case for this is to omit potentially on-going, incomplete scans
+    # dates from the frontend.
+    # TODO: Revisit this logic, or the default behavior of the API.
+    if settings.API_OMIT_TODAY:
+        today = datetime.utcnow().date().isoformat()
+        dates = [
+            date
+            for date in dates
+            if date != today
+        ]
+
     dates.insert(0, 'Scan Date')
     return dates
 

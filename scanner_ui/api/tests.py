@@ -1,31 +1,33 @@
-from django.test import SimpleTestCase
-from rest_framework.test import APIClient
-import json
-import datetime
 import csv
+import datetime
+import json
 import io
 
-# tests for views
+from django.test import override_settings, SimpleTestCase
+from rest_framework.test import APIClient
 
 
+@override_settings(API_OMIT_TODAY=False)
 class CheckAPI(SimpleTestCase):
-    client = APIClient()
-    domainsresponse = client.get("/api/v1/domains/")
-    domainsjsondata = json.loads(domainsresponse.content)
-    scansresponse = client.get("/api/v1/scans/")
-    scansjsondata = json.loads(scansresponse.content)
-    datesresponse = client.get("/api/v1/lists/dates/")
-    datesjsondata = json.loads(datesresponse.content)
-    numscans = 9
-    numdomains = 7
-    domains = [
-        '18f.gov',
-        'gsa.gov',
-        'afrh.gov',
-        'cloud.gov',
-        'login.gov',
-        'calendar.gsa.gov',
-        '*.ecmapps.treasuryecm.gov'
+
+    def setUp(self):
+        self.client = APIClient()
+        self.domainsresponse = self.client.get("/api/v1/domains/")
+        self.domainsjsondata = json.loads(self.domainsresponse.content)
+        self.scansresponse = self.client.get("/api/v1/scans/")
+        self.scansjsondata = json.loads(self.scansresponse.content)
+        self.datesresponse = self.client.get("/api/v1/lists/dates/")
+        self.datesjsondata = json.loads(self.datesresponse.content)
+        self.numscans = 9
+        self.numdomains = 7
+        self.domains = [
+            '18f.gov',
+            'gsa.gov',
+            'afrh.gov',
+            'cloud.gov',
+            'login.gov',
+            'calendar.gsa.gov',
+            '*.ecmapps.treasuryecm.gov'
     ]
 
     def test_all_domains(self):
