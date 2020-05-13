@@ -2,12 +2,11 @@ import csv
 import json
 import re
 
-from django.test import override_settings, Client, SimpleTestCase
+from django.test import Client, SimpleTestCase
 
 from .viewfunctions import get_dates, getquery, get_list_from_fields, deperiodize, periodize, deslash, domainsWith, mixpagedatain, popupbuilder
 
 
-@override_settings(API_OMIT_TODAY=False)
 class CheckViewFunctions(SimpleTestCase):
     def test_get_dates(self):
         dates = get_dates()
@@ -92,7 +91,6 @@ class CheckViewFunctions(SimpleTestCase):
         self.assertEqual(popup, p)
 
 
-@override_settings(API_OMIT_TODAY=False)
 class CheckUI(SimpleTestCase):
     client = Client()
 
