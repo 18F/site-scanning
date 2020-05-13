@@ -176,4 +176,4 @@ else:
 
 # By default, don't return today's scan results via the API.
 # We do this to avoid in-progress scans from appearing in the UI.
-API_OMIT_TODAY = True
+API_OMIT_TODAY = 'API_OMIT_TODAY' in os.environ

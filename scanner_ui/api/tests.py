@@ -3,11 +3,10 @@ import datetime
 import json
 import io
 
-from django.test import override_settings, SimpleTestCase
+from django.test import SimpleTestCase
 from rest_framework.test import APIClient
 
 
-@override_settings(API_OMIT_TODAY=False)
 class CheckAPI(SimpleTestCase):
 
     def setUp(self):
