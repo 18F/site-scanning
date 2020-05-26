@@ -13,7 +13,7 @@ TMPDIR="${TMPDIR:-/tmp}"
 # XXX task nodes.  Probably a safe assumption, but there might be
 # XXX a better way to do this.
 for i in $(ls "$TMPDIR/splitdir") ; do
-  cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 512M -k 4096M
+  cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 4096M
   if [ "$?" != "0" ] ; then
     echo "running task on $i failed to work, pausing until previous jobs complete"
     NUMSCANS="$(cf tasks scanner-ui | grep RUNNING | wc -l)"
@@ -21,7 +21,7 @@ for i in $(ls "$TMPDIR/splitdir") ; do
       echo "waiting until there's room to run $i"
       sleep 600
     done
-    cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 512M -k 4096M
+    cf run-task scanner-ui "/app/scan_engine.sh $i" --name "scan_engine $i" -m 1024M -k 4096M
     if [ "$?" != "0" ] ; then
       FAILED="$i $FAILED"
       echo "$i task failed twice:  maybe we are out of memory?  Investigate!"
