@@ -7,6 +7,12 @@
 TMPDIR="${TMPDIR:-/tmp}"
 ./getdomains.sh "$TMPDIR/splitdir"
 
+# Kill any on-going scans
+cf tasks scanner-ui | grep RUNNING | sed 's/|/ /' | awk '{print $1}' | while read line ; do
+  echo "Terminating running scan task ${line}..."
+  cf terminate-task scanner-ui ${line}
+done
+
 # this tells cloud.gov to run the scan
 # XXX This is assuming that the output of getdomains won't change
 # XXX too much between when we run it here and when it runs on the
