@@ -90,6 +90,7 @@ jobs:
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
 
+            pip3 install -r requirements.txt
             ./spawn_scans.sh
 
 workflows:
