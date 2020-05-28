@@ -154,13 +154,14 @@ CORS_ALLOW_HEADERS = [
     'accept-encoding',
     'authorization',
     'content-type',
-    'dnt, origin',
+    'dnt',
+    'origin',
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
 
     # for api.gov support:
-    'X-Api-Key',
+    'x-api-key',
 ]
 
 # REST config
