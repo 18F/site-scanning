@@ -149,6 +149,20 @@ STATICFILES_DIRS = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = ('GET', 'OPTIONS', 'POST',)  # only allow read-only methods
+CORS_ALLOW_HEADERS = [
+    # default corsheaders middleware headers:
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt, origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+
+    # for api.gov support:
+    'X-Api-Key',
+]
 
 # REST config
 REST_FRAMEWORK = {
