@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
     'scanner_ui',
-    'django_extensions',
 ]
 
 MIDDLEWARE = [
