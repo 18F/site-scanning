@@ -169,6 +169,10 @@ class DomainsViewset(viewsets.GenericViewSet):
 
 
 class ScansViewset(viewsets.GenericViewSet):
+    """
+    Returns scan results for the provided scan type.
+    """
+
     serializer_class = ScanSerializer
     pagination_class = ElasticsearchPagination
 
@@ -308,6 +312,10 @@ def uniquevalues(date=None, scantype=None, field=None, subfield=None):
 
 class ListsViewset(viewsets.GenericViewSet):
     queryset = ''
+    serializer_class = ScanSerializer
+
+    #def get_serializer_class(self, *args, **kwargs):
+    #    return None
 
     def dates(self, request):
         dates = get_dates()[1:]

@@ -1,6 +1,7 @@
 boto3>=1.9.174
 Django>=2.2.3
-djangorestframework>=3.9.4
+djangorestframework==3.11.0
+django-rest-swagger==2.2.0
 docutils>=0.14,<0.16
 gunicorn>=19.9.0
 jmespath>=0.9.4
