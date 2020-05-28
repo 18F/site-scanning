@@ -1,8 +1,12 @@
 from django.urls import path
+from rest_framework.schemas import get_schema_view
+from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+
 from .views import DomainsViewset
 from .views import ScansViewset
 from .views import ListsViewset
 from . import views
+
 
 domains_list = DomainsViewset.as_view({
     'get': 'list'
@@ -32,7 +36,14 @@ dates = ListsViewset.as_view({
     'get': 'dates'
 })
 
+from rest_framework_swagger.views import get_swagger_view
+
+swagger_view = get_swagger_view(
+    title='Spotlight API'
+)
+
 urlpatterns = [
+    path('', swagger_view, name="docs"),
     path('domains/', domains_list, name="domains-list"),
     path('domains/<domain>/', domains_detail, name="domains-detail"),
     path('domains/<domain>/<scantype>/', scan, name="scan"),

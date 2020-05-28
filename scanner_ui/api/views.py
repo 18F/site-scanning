@@ -16,7 +16,7 @@ from rest_framework import viewsets, pagination
 from rest_framework.response import Response
 
 from scanner_ui.ui.views import get_dates, get_list_from_fields
-from .serializers import ScanSerializer
+from .serializers import DummySerializer, ScanSerializer
 
 
 
@@ -169,6 +169,10 @@ class DomainsViewset(viewsets.GenericViewSet):
 
 
 class ScansViewset(viewsets.GenericViewSet):
+    """
+    Returns scan results for the provided scan type.
+    """
+
     serializer_class = ScanSerializer
     pagination_class = ElasticsearchPagination
 
@@ -308,6 +312,7 @@ def uniquevalues(date=None, scantype=None, field=None, subfield=None):
 
 class ListsViewset(viewsets.GenericViewSet):
     queryset = ''
+    serializer_class = DummySerializer
 
     def dates(self, request):
         dates = get_dates()[1:]
