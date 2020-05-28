@@ -10,3 +10,7 @@ class ScanSerializer(serializers.Serializer):
     data = serializers.DictField(required=False)
     scan_data_url = serializers.CharField(max_length=400)
     lastmodified = serializers.DateTimeField()
+
+
+class DummySerializer(serializers.Serializer):
+    pass
