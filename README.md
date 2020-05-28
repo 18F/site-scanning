@@ -4,6 +4,8 @@ Spotlight highlights the features contributing to any federal website's success,
 
 You can see the back-end code Spotlight here. Check out the [Spotlight-ui repo](https://github.com/18F/10x-site-scanner-ui) for front-end code.
 
+[Spotlight](https://federalist-05e4f538-b6c2-49a0-a38c-262ad093ad6d.app.cloud.gov/site/18f/spotlight-ui/) was previously known as [Site Scanner](https://site-scanning.app.cloud.gov/), which is still active.
+
 To install Spotlight locally:
 * [How to get started](https://github.com/18F/spotlight/blob/master/docs/INSTALL.md)
 * [How to manage deployment in cloud.gov](https://github.com/18F/spotlight/blob/master/docs/DevOps.md)
