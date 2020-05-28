@@ -2,7 +2,9 @@
 #
 # This script is what gets the list of domains to scan,
 # runs the scanners, collects the data, and puts it into s3.
-# It also cleans up old scans (>7 days) to prevent clutter.
+# It also cleans up old scans (>4 days) to prevent clutter; 4 days is chosen
+# to be aggressively conservative with disk usage on the Elasticsearch cluster,
+# but larger time periods are possible.
 #
 # It is meant to be run like so:
 #   cf run-task scanner-ui /app/scan_engine.sh -m 2048M
@@ -25,7 +27,7 @@ DOMAINSCANREPO="https://github.com/18F/domain-scan"
 BRANCH="lighthouse-scan-initial"
 
 # How many days to keep around in the index
-INDEXDAYS=7
+INDEXDAYS=4
 NUMSCANS=$(echo "$SCANTYPES" | wc -l)
 let "INDEXLINES=$INDEXDAYS * ($NUMSCANS - 2)"
 
