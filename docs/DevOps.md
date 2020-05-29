@@ -60,11 +60,37 @@ set up and authenticated, and you are in the proper organization/space.
 
 ## Making direct queries to Elasticsearch
 
+You can use curl to query Elasticsearch either on the cloud.gov host, or locally with port-forwarding.
+
+### Connect to Elasticsearch
+
+#### On the cloud.gov host
+
 1. ssh into a `scanner-ui` instance (see directly above).
 2. Type `export ESURL=$(echo "$VCAP_SERVICES" | jq -r '.elasticsearch56[0].credentials.uri')`. This will make sure that you will have the credentials/config required to query ES.
-3. You then should be able to query Elasticsearch with commands like this:
+
+#### Locally
+
+To port-forward ssh to localhost, you can use the `cf connect-to-service` command. Note that at time of writing, `cf7` is required:
+
+```bash
+cf7 connect-to-service scanner-ui scanner-es
+```
+
+If you have trouble making an ssh connection, you may need to use `cf7` and manually configure the port forwarding. Get the hostname and ports from cloud.gov, and run, replacing ports and hostname:
+
+```bash
+cf7 ssh -N -L 52046:hostname:32274 scanner-ui
+```
+
+- Set the `ESURL` environment variable to the provided port on localhost.
+
+### Querying Elasticsearch
+
+Once connected, you should be able to query Elasticsearch with commands like this:
+
 * `curl -s $ESURL/_cat/indices?v`
 * `curl -k -X DELETE $ESURL/2019-07-29-pagedata` (deletes indexes)
 * `curl -k -X DELETE $ESURL/2019-07-29-*` (deletes indexes)
-4. You can read up further on [Elasticsearch query language](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/_introducing_the_query_language.html).
 
+You can read up further on [Elasticsearch query language](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/_introducing_the_query_language.html).
