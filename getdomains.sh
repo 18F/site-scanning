@@ -33,7 +33,7 @@ else
 	# the first instance of the domain will be preserved.
 
 	#wget -O "$BINDIR/domains/other-websites.csv" https://raw.githubusercontent.com/GSA/data/master/dotgov-websites/other-websites.csv
-	wget -O "$BINDIR/domains/0pulse.csv" https://pulse.cio.gov/data/hosts/https.csv
+	wget -O "$BINDIR/domains/0pulse.csv" https://github.com/GSA/data/raw/master/dotgov-websites/pulse-subdomains-snapshot-06-08-2020-https.csv
 
 	for i in $BINDIR/domains/*.csv ; do
 		echo "merging $i into /tmp/domains.csv"
