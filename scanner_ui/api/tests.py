@@ -321,7 +321,7 @@ class CheckAPI(SimpleTestCase):
         url = '/api/v1/lists/uswds2/values/data.uswdsversion/'
         response = self.client.get(url)
         jsondata = json.loads(response.content)
-        self.assertIn('v2.6.0', jsondata)
+        self.assertTrue(any(s.startswith('v2') for s in jsondata))
 
     def test_subdomains_work(self):
         """test calendar.gsa.gov subdomain exists"""
