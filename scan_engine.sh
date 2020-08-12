@@ -74,18 +74,6 @@ else
 	cd domain-scan
 fi
 
-# This is a little fragile in that if we ever change the order of the buildpacks or add more,
-# this will need to be updated.
-if [ -x /home/vcap/deps/2/bin/python3 ] ; then
-	/home/vcap/deps/2/bin/python3 -m venv venv
-else
-	python3 -m venv venv
-fi
-. venv/bin/activate
-pip3 install -r requirements.txt
-pip3 install -r requirements-scanners.txt
-pip3 install --upgrade awscli
-
 # install more packages for the chrome headless stuff
 # These _should_ be already installed by the apt buildpack, but this is here to ensure
 # that the test environment gets them too.
