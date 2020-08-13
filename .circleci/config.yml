@@ -3,12 +3,13 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.7
+        user: root
     steps:
     - checkout
     # Download and cache dependencies
     - restore_cache:
         keys:
-        - v1-python37-dependencies-{{ checksum "requirements.txt" }}
+        - v1-python37-dependencies-{{ checksum "poetry.lock" }}
         # fallback to using the latest cache if no exact match is found
         - v1-python37-dependencies-
     - run:
@@ -16,19 +17,18 @@ jobs:
         command: |
           sudo apt-get update
           sudo apt-get install -y awscli
-          python3 -m venv venv
-          . venv/bin/activate
-          pip3 install -r requirements.txt
+          poetry install
     - save_cache:
+        key: v1-python37-dependencies-{{ checksum "poetry.lock" }}
         paths:
-          - ./venv
-        key: v1-python37-dependencies-{{ checksum "requirements.txt" }}
+          - /home/circleci/.cache/pypoetry/virtualenvs
+
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
         name: run tests
         command: |
-          ./test.sh
+          poetry run ./test.sh
     - store_artifacts:
         path: test-reports
         destination: test-reports
@@ -64,6 +64,9 @@ jobs:
             cf api https://api.fr.cloud.gov
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
+
+            # generate our requirements.txt file on the fly
+            poetry export -f requirements.txt --without-hashes > requirements.txt
             ./deploy-cloudgov.sh zdt
 
   scan:
@@ -90,8 +93,8 @@ jobs:
             cf auth "$CF_USERNAME" "$CF_PASSWORD"
             cf target -o "$CF_ORG" -s "$CF_SPACE"
 
-            pip3 install -r requirements.txt
-            ./spawn_scans.sh
+            poetry install
+            poetry run ./spawn_scans.sh
 
 workflows:
   version: 2
