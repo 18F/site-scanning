@@ -66,7 +66,7 @@ jobs:
             cf target -o "$CF_ORG" -s "$CF_SPACE"
 
             # generate our requirements.txt file on the fly
-            poetry export -f requirements.txt > requirements.txt
+            poetry export -f requirements.txt --without-hashes > requirements.txt
             ./deploy-cloudgov.sh zdt
 
   scan:
