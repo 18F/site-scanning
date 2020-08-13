@@ -1,10 +1,8 @@
-# Spotlight
+# Site Scanning Program
 
-Spotlight highlights the features contributing to any federal website's success, for free.
+The Site Scanning program highlights the features contributing to any federal website's success, for free.
 
-You are viewing the Spotlight back-end code. Check out the [Spotlight-ui repo](https://github.com/18F/10x-site-scanner-ui) for front-end code.
-
-[Spotlight](https://federalist-05e4f538-b6c2-49a0-a38c-262ad093ad6d.app.cloud.gov/site/18f/spotlight-ui/) was previously known as [Site Scanner](https://site-scanning.app.cloud.gov/), which is still active.
+You are viewing the scanner's back-end code. Check out the [program documentation](https://github.com/18F/site-scanning-documentation) for front-end code.
 
 To install Spotlight locally:
 * [How to get started](https://github.com/18F/spotlight/blob/master/docs/INSTALL.md)
@@ -16,4 +14,4 @@ To customize Spotlight API:
 
 ## Contact Us
 
-Email us at spotlight@gsa.gov with questions or comments about this code.
+Email us at site-scanning@gsa.gov with questions or comments about this code.
