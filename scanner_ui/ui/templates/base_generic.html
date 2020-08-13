@@ -18,10 +18,7 @@
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="{% url 'getstarted' %}">Get started</a></li>
-          <li><a href="{% url 'helpus' %}">Help us build</a></li>
-          <li><a href="{% url 'contact' %}">Contact us</a></li>
-          <li><a href="{% url 'presentationlayers' %}">Presentation Layers</a>:
+          <li>Presentation Layers:
             <script>
               function presentationlayerredirect() {
                 const e = document.getElementById("presentationlayers");
@@ -44,7 +41,6 @@
             </select>
           </li>
           <li><a href="{% url 'downloads' %}">Data Links</a></li>
-           <li><a href="{% url 'usecases' %}">Use Cases</a></li>
           
         </ul>
      {% endblock %}
