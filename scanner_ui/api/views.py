@@ -1,12 +1,15 @@
+# pylint: disable=invalid-unary-operand-type
 """
 Site scanner API views
 """
 
 import csv
 import json
+import logging
 import os
 import re
 from collections import OrderedDict
+from http import HTTPStatus
 
 from django.http import StreamingHttpResponse
 from elasticsearch import Elasticsearch
@@ -18,6 +21,8 @@ from rest_framework.response import Response
 from scanner_ui.ui.views import get_dates, get_list_from_fields
 from .serializers import DummySerializer, ScanSerializer
 
+
+logger = logging.getLogger(__name__)
 
 
 # we need this because AttrDict is used all over by elasticsearch_dsl,
@@ -44,22 +49,30 @@ class ItemsWrapper(OrderedDict):
 # None, you get all of that scantype.  If the domain is None, you
 # get all domains.  If you supply a request, set the API url up
 # for the scan using it.
-def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams=None, date=None, raw=False):
-    es = Elasticsearch([os.environ['ESURL']])
+def get_scans_from_ES(
+    *,
+    scantype=None,
+    domain=None,
+    request=None,
+    excludeparams=None,
+    date=None,
+    raw=False,
+):
+    es = Elasticsearch([os.environ["ESURL"]])
     dates = get_dates()
 
     if date is None or date not in dates:
         date = dates[1]
 
-    selectedindex = date + '-*'
+    selectedindex = date + "-*"
     indices = list(es.indices.get_alias(selectedindex).keys())
-    y, m, d, scantypes = zip(*(s.split("-") for s in indices))
+    _, _, _, scantypes = zip(*(s.split("-") for s in indices))
     if excludeparams is None:
         excludeparams = []
 
     # if we have a valid scantype, then search that
     if scantype in scantypes:
-        index = date + '-' + scantype
+        index = date + "-" + scantype
         s = Search(using=es, index=index)
     else:
         s = Search(using=es, index=selectedindex)
@@ -73,20 +86,20 @@ def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams
             next
 
         # find greater/lesserthan queries
-        elif re.match(r'^gt:[0-9]+', v):
-            gt = v.split(':')[1]
-            q = Range(**{k: {'gt': gt}})
+        elif re.match(r"^gt:[0-9]+", v):
+            gt = v.split(":")[1]
+            q = Range(**{k: {"gt": gt}})
             s = s.query(q)
-        elif re.match(r'^lt:[0-9]+', v):
-            lt = v.split(':')[1]
-            q = Range(**{k: {'lt': lt}})
+        elif re.match(r"^lt:[0-9]+", v):
+            lt = v.split(":")[1]
+            q = Range(**{k: {"lt": lt}})
             s = s.query(q)
 
         # everything else, just try searching for!
         else:
             s = s.query("query_string", query=v, fields=[k])
 
-    s = s.sort('domain')
+    s = s.sort("domain")
 
     # filter by domain if we have one
     if domain is not None:
@@ -103,18 +116,18 @@ def get_scans_from_ES(*, scantype=None, domain=None, request=None, excludeparams
 
 # get the list of scantypes by scraping the indexes
 def get_scan_types(date=None):
-    es = Elasticsearch([os.environ['ESURL']])
+    es = Elasticsearch([os.environ["ESURL"]])
     dates = get_dates()
     if date is None:
         date = dates[1]
-    selectedindex = date + '-*'
+    selectedindex = date + "-*"
     indices = list(es.indices.get_alias(selectedindex).keys())
-    y, m, d, scantypes = zip(*(s.split("-") for s in indices))
+    _, _, _, scantypes = zip(*(s.split("-") for s in indices))
     return scantypes
 
 
 class ElasticsearchPagination(pagination.PageNumberPagination):
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 1000
 
     def paginate_queryset(self, queryset, request, view=None):
@@ -134,9 +147,9 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
             return qs
         except Exception:
             # return an empty search query
-            es = Elasticsearch([os.environ['ESURL']])
+            es = Elasticsearch([os.environ["ESURL"]])
             s = Search(using=es)
-            return ItemsWrapper(s.query(~Q('match_all')))
+            return ItemsWrapper(s.query(~Q("match_all")))
 
 
 class DomainsViewset(viewsets.GenericViewSet):
@@ -144,8 +157,13 @@ class DomainsViewset(viewsets.GenericViewSet):
     pagination_class = ElasticsearchPagination
 
     def get_queryset(self, domain=None, date=None):
-        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
-        return get_scans_from_ES(request=self.request, domain=domain, excludeparams=pageparams, date=date)
+        pageparams = [
+            self.pagination_class.page_query_param,
+            self.pagination_class.page_size_query_param,
+        ]
+        return get_scans_from_ES(
+            request=self.request, domain=domain, excludeparams=pageparams, date=date
+        )
 
     def list(self, request, date=None):
         scans = self.get_queryset(date=date)
@@ -177,20 +195,27 @@ class ScansViewset(viewsets.GenericViewSet):
     pagination_class = ElasticsearchPagination
 
     def get_queryset(self, scantype=None, domain=None, date=None):
-        pageparams = [self.pagination_class.page_query_param, self.pagination_class.page_size_query_param]
+        logger.debug(f"entered {self.get_queryset.__name__}")
+        pageparams = [
+            self.pagination_class.page_query_param,
+            self.pagination_class.page_size_query_param,
+        ]
         return get_scans_from_ES(
             request=self.request,
             domain=domain,
             scantype=scantype,
             excludeparams=pageparams,
-            date=date
+            date=date,
         )
 
     def list(self, request, date=None):
+        logger.debug(f"entered {self.list.__name__}")
         scans = get_scan_types(date=date)
+        logging.info("successfully got scan types")
         return Response(scans)
 
     def retrieve(self, request, scantype=None, date=None):
+        logger.debug(f"entered {self.retrieve.__name__}")
         scans = self.get_queryset(scantype=scantype, date=date)
 
         # paginate the query.  If we return the entire dataset, we run out of memory
@@ -200,16 +225,24 @@ class ScansViewset(viewsets.GenericViewSet):
             for hit in pageqs.s.execute():
                 mypage.append(hit.to_dict())
             serializer = self.get_serializer(mypage, many=True)
+            logging.info("successfully serialized data")
             return self.get_paginated_response(serializer.data)
         except Exception:
             # there was nothing on the page, so...
+            logger.warning(f"there was nothing on the page for scantype: {scantype}")
             return StreamingHttpResponse([])
 
-    def scan(self, request, scantype=None, domain=None, date=None):
+    def scan(self, _, scantype=None, domain=None, date=None):
+        logger.debug(f"entered {self.scan.__name__}")
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
-        if len(scan) != 1:
-            raise Exception('too many or too few scans', scan)
+        scan_length = len(scan)
+
+        if scan_length != 1:
+            logger.error(f"Scan length was {scan_length}. Expected 1 scan. {scan}")
+            return Response(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
         serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())
+        logging.info("successfully serialized data")
         return Response(serializer.data)
 
 
@@ -218,6 +251,7 @@ class CSVEcho:
     """An object that implements just the write method of the file-like
     interface.
     """
+
     def write(self, value):
         """Write the value by returning it, instead of storing in a buffer."""
         return value
@@ -237,7 +271,7 @@ def flatten_dict(data, max_depth, depth=0):
                 flatten_dict(value, max_depth, depth=depth)
                 data.pop(key)
                 for key2, value2 in value.items():
-                    data[f'{key}.{key2}'] = value2
+                    data[f"{key}.{key2}"] = value2
 
     return data
 
@@ -257,10 +291,10 @@ def iter_items(scans, pseudo_buffer, headers, max_depth):
         flatten_dict(flatscan, max_depth)
         # if we have data.invalid, then remove it and make sure the rest of the fields are there
         try:
-            del flatscan['data.invalid']
+            del flatscan["data.invalid"]
             for i in headers:
                 if i not in flatscan:
-                    flatscan[i] = ''
+                    flatscan[i] = ""
         except KeyError:
             pass
         yield writer.writerow(flatscan)
@@ -271,19 +305,20 @@ def retrieve_csv(request, scantype=None, date=None):
     scans = get_scans_from_ES(request=request, scantype=scantype, date=date, raw=True)
 
     # skip over invalid data to get the real deal
+    firsthit = None
     for hit in scans:
         firsthit = hit.to_dict()
         try:
-            if firsthit['data']['invalid']:
+            if firsthit["data"]["invalid"]:
                 continue
         except KeyError:
             break
 
     # These scans include variable field names - so just dump each top-level
     # field as a JSON string:
-    if scantype == 'pshtt':
+    if scantype == "pshtt":
         max_depth = 4
-    elif scantype == 'lighthouse':
+    elif scantype == "lighthouse":
         max_depth = 2
     else:
         max_depth = None
@@ -291,8 +326,10 @@ def retrieve_csv(request, scantype=None, date=None):
     flatten_dict(firsthit, max_depth)
     fieldnames = list(firsthit.keys())
 
-    response = StreamingHttpResponse(iter_items(scans, CSVEcho(), fieldnames, max_depth), content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="scans.csv"'
+    response = StreamingHttpResponse(
+        iter_items(scans, CSVEcho(), fieldnames, max_depth), content_type="text/csv"
+    )
+    response["Content-Disposition"] = 'attachment; filename="scans.csv"'
     return response
 
 
@@ -303,15 +340,15 @@ def uniquevalues(date=None, scantype=None, field=None, subfield=None):
         date = get_dates()[1]
 
     if scantype is None:
-        raise Exception('no scantype specified')
+        raise Exception("no scantype specified")
 
-    index = date + '-' + scantype
+    index = date + "-" + scantype
     things = get_list_from_fields(index, field, subfield=subfield)
     return things
 
 
 class ListsViewset(viewsets.GenericViewSet):
-    queryset = ''
+    queryset = ""
     serializer_class = DummySerializer
 
     def dates(self, request):
@@ -319,15 +356,17 @@ class ListsViewset(viewsets.GenericViewSet):
         return Response(dates)
 
     def agencies(self, request, scantype=None, date=None):
-        agencies = uniquevalues(date=date, scantype=scantype, field='agency')
+        agencies = uniquevalues(date=date, scantype=scantype, field="agency")
         return Response(agencies)
 
     def domaintypes(self, request, scantype=None, date=None):
-        domaintypes = uniquevalues(date=date, scantype=scantype, field='domaintype')
+        domaintypes = uniquevalues(date=date, scantype=scantype, field="domaintype")
         return Response(domaintypes)
 
     def fieldvalues(self, request, date=None, scantype=None, field=None, subfield=None):
         if field is None:
-            raise Exception('no field specified')
-        things = uniquevalues(date=date, scantype=scantype, field=field, subfield=subfield)
+            raise Exception("no field specified")
+        things = uniquevalues(
+            date=date, scantype=scantype, field=field, subfield=subfield
+        )
         return Response(things)

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import json
 import string
-import random
+from random import SystemRandom
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,80 +24,100 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 def random_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for x in range(size))
+    cryptogen = SystemRandom()
+    return "".join(cryptogen.choice(chars) for x in range(size))
 
 
-if 'SECRET_KEY' in os.environ:
-    SECRET_KEY = os.environ['SECRET_KEY']
+if "SECRET_KEY" in os.environ:
+    SECRET_KEY = os.environ["SECRET_KEY"]
 else:
     SECRET_KEY = random_generator(100)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if 'DEBUG' in os.environ:
-    DEBUG = os.environ['DEBUG']
+if "DEBUG" in os.environ:
+    DEBUG = os.environ["DEBUG"]
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework_swagger',
-    'corsheaders',
-    'scanner_ui',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_swagger",
+    "corsheaders",
+    "scanner_ui",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'scanner_ui.urls'
+ROOT_URLCONF = "scanner_ui.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'scanner_ui/ui/templates'),
-            os.path.join(BASE_DIR, 'scanner_ui/api/templates'),
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(BASE_DIR, "scanner_ui/ui/templates"),
+            os.path.join(BASE_DIR, "scanner_ui/api/templates"),
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'scanner_ui.wsgi.application'
+WSGI_APPLICATION = "scanner_ui.wsgi.application"
+
+# logging
+# https://docs.djangoproject.com/en/3.1/topics/logging/
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {"format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "formatter": "console",
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+        }
+    },
+    "root": {"handlers": ["console"], "level": "INFO"},
+}
 
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
@@ -107,26 +127,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -139,59 +153,62 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "ui/static"),
 ]
 
 # to allow CORS for the site
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_URLS_REGEX = r'^/api/.*$'
-CORS_ALLOW_METHODS = ('GET', 'OPTIONS', 'POST',)  # only allow read-only methods
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_METHODS = (
+    "GET",
+    "OPTIONS",
+    "POST",
+)  # only allow read-only methods
 CORS_ALLOW_HEADERS = [
     # default corsheaders middleware headers:
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
     # for api.gov support:
-    'x-api-key',
+    "x-api-key",
 ]
 
 # REST config
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    'PAGE_SIZE': 100,
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "PAGE_SIZE": 100,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     # Don't support ?format=json parameters, as they conflict with the
     # Elasticsearch filtering usage of GET parameters.
-    'URL_FORMAT_OVERRIDE': None,
+    "URL_FORMAT_OVERRIDE": None,
 }
 
 # service config
-if 'VCAP_SERVICES' not in os.environ:
-    print('VCAP_SERVICES not set, assuming you are testing and have set ESURL')
+if "VCAP_SERVICES" not in os.environ:
+    print("VCAP_SERVICES not set, assuming you are testing and have set ESURL")
     if "ESURL" not in os.environ:
         # default to an ES running on localhost
-        os.environ['ESURL'] = "http://localhost:9200"
+        os.environ["ESURL"] = "http://localhost:9200"
 else:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    STATIC_ROOT = '/app/staticfiles'
-    servicejson = os.environ['VCAP_SERVICES']
+    STATIC_ROOT = "/app/staticfiles"
+    servicejson = os.environ["VCAP_SERVICES"]
     services = json.loads(servicejson)
-    os.environ['ESURL'] = services['elasticsearch56'][0]['credentials']['uri']
+    os.environ["ESURL"] = services["elasticsearch56"][0]["credentials"]["uri"]
 
 # By default, don't return today's scan results via the API.
 # We do this to avoid in-progress scans from appearing in the UI.
-API_OMIT_TODAY = 'API_OMIT_TODAY' in os.environ
+API_OMIT_TODAY = "API_OMIT_TODAY" in os.environ
