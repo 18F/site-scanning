@@ -52,7 +52,7 @@ jobs:
           name: deploy to cloud.gov
           command: |
             # If we do not specify a space, then deploy to the branch that we are on.
-            # This lets you have dev/staging/master branches that automatically go to the right place.
+            # This lets you have dev/staging/main branches that automatically go to the right place.
             if [ -z "$CF_SPACE" ] ; then
               export CF_SPACE="$CIRCLE_BRANCH"
             fi
@@ -80,7 +80,7 @@ jobs:
           no_output_timeout: 1h
           command: |
             # If we do not specify a space, then deploy to the branch that we are on.
-            # This lets you have dev/staging/master branches that automatically go to the right place.
+            # This lets you have dev/staging/main branches that automatically go to the right place.
             if [ -z "$CF_SPACE" ] ; then
               export CF_SPACE="$CIRCLE_BRANCH"
             fi
@@ -107,7 +107,7 @@ workflows:
             branches:
               # Add more branches here if you want dev/staging/whatever environments
               only:
-                - master
+                - main
   nightly:
     triggers:
       - schedule:
@@ -116,6 +116,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - scan

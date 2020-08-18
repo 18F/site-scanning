@@ -35,7 +35,7 @@ to see the UI/API in action.
 - `CF_USERNAME`:  This is the username that lets CircleCI deploy
 	to your space.  You can get it with `cf service-key scanner-ui deployer | grep username`.
 
-- Once these are set up, any time you push to master, it should run the tests and then
+- Once these are set up, any time you push to `main`, it should run the tests and then
 do a deploy if everything worked.  It will also start running scans once a day
 automatically.
 - The configuration for CircleCI can be found in `.circleci/config.yml`.
@@ -126,7 +126,7 @@ services.
 and whenever you push your branch, it will run the tests.  You can see how that goes
 in github if you have a PR for your branch, or by looking at CircleCI.
 
-- If you want to do a deploy to production, you can merge your code into the master
+- If you want to do a deploy to production, you can merge your code into the `main`
 branch, and it will do a test then deploy.
 
 - Currently, there are stubs for being able to create a dev/staging/production deployment
@@ -190,7 +190,7 @@ edit the `BRANCH` variable to set it to your branch.
 
 #### Kick off a cloud.gov scan for testing
 
-- Once the code has made it into the master branch and the deploy to cloud.gov
+- Once the code has made it into the `main` branch and the deploy to cloud.gov
 has completed,
 run `cf run-task scanner-ui /app/scan_engine.sh -m 1024M -k 4096M` to kick off a scan.
 - You should be able to see how it goes with `cf logs scanner-ui`, and
