@@ -71,7 +71,7 @@ You can use curl to query Elasticsearch either on the cloud.gov host, or locally
 
 #### Locally
 
-To port-forward ssh to localhost, you can use the `cf connect-to-service` command. Note that at time of writing, `cf7` is required:
+To port-forward ssh to localhost, you can use the `cf connect-to-service` plugin. Directions to install that plugin can be found on the [cf-service-connect repository](https://github.com/cloud-gov/cf-service-connect#local-installation). Note that at time of writing, `cf7` is required:
 
 ```bash
 cf7 connect-to-service scanner-ui scanner-es
