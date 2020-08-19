@@ -16,6 +16,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import Range
 from rest_framework import viewsets, pagination
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from scanner_ui.ui.views import get_dates, get_list_from_fields
@@ -150,6 +151,14 @@ class ElasticsearchPagination(pagination.PageNumberPagination):
             es = Elasticsearch([os.environ["ESURL"]])
             s = Search(using=es)
             return ItemsWrapper(s.query(~Q("match_all")))
+
+
+@api_view(["GET"])
+def meta(_):
+    """
+    meta returns data about the API itself.
+    """
+    return Response({"version": "v1"})
 
 
 class DomainsViewset(viewsets.GenericViewSet):
