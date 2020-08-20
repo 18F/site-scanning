@@ -132,10 +132,10 @@ done
 # add metadata and put scan results into ES
 echo "Adding metadata and loading scan results into elasticsearch.  This can take a while..."
 for i in ${SCANTYPES} ; do
-	echo "loading scantype: $i"
-	# set the domain field to be a keyword rather than text so we can sort on it
 	DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
 	SHORTDATE=$(date +%Y-%m-%d)
+	echo "loading scantype $i with index: $SHORTDATE-$i"
+	# set the domain field to be a keyword rather than text so we can sort on it
 	echo '{"settings": {"index.mapping.total_fields.limit": 2000, "index.max_result_window": 2000000}, "mappings": {"scan": {"properties": {"domain": {"type": "keyword"}}}}}' > /tmp/mapping.json
 	if curl -s -XPUT "$ESURL/$SHORTDATE-$i" -d @/tmp/mapping.json | grep error ; then
 		echo "problem creating mapping"
