@@ -5,7 +5,7 @@
 #
 
 # This is how many domains to scan in a single task
-BATCHSIZE="${BATCHSIZE:-3000}"
+BATCHSIZE="${BATCHSIZE:-6000}"
 
 BINDIR=$(dirname "$0")
 
