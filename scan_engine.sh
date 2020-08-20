@@ -19,7 +19,6 @@ SCANTYPES="
 	dap
 	third_parties
 	pshtt
-	lighthouse
 "
 
 # This is where you set the repo/branch
