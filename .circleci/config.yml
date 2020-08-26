@@ -73,16 +73,16 @@ jobs:
           command: |
             # If we do not specify a space, then deploy to the branch that we are on.
             # This lets you have dev/staging/main branches that automatically go to the right place.
-            if [ -z "$CF_SPACE" ] ; then
-              export CF_SPACE="$CIRCLE_BRANCH"
+            if [ -z "$SITESCAN_SPACE" ] ; then
+              export SITESCAN_SPACE="$CIRCLE_BRANCH"
             fi
-            if [ -z "$CF_ORG" ] ; then
-              echo CF_ORG not set, aborting
+            if [ -z "$SITESCAN_ORG" ] ; then
+              echo SITESCAN_ORG not set, aborting
               exit 1
             fi
             cf api https://api.fr.cloud.gov
-            cf auth "$CF_USERNAME" "$CF_PASSWORD"
-            cf target -o "$CF_ORG" -s "$CF_SPACE"
+            cf auth "$SITESCAN_USERNAME" "$SITESCAN_PASSWORD"
+            cf target -o "$SITESCAN_ORG" -s "$SITESCAN_SPACE"
 
             # generate our requirements.txt file on the fly
             poetry export -f requirements.txt --without-hashes > requirements.txt
