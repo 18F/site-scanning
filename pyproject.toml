@@ -35,12 +35,14 @@ lxml = "^4.5.2"
 ijson = "^3.1.1"
 beautifulsoup4 = "^4.9.1"
 awscli = "^1.18.117"
+httpx = "^0.14.2"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.6.2"
 black = "^19.10b0"
 flake8 = "^3.8.3"
 pylint = "^2.5.3"
+rope = "^0.17.0"
 
 [build-system]
 build-backend = "poetry.masonry.api"
