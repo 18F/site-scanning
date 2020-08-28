@@ -21,6 +21,7 @@ from urllib.parse import urljoin
 import httpx
 
 API_URL = "https://site-scanning.app.cloud.gov/"
+# API_URL = "https://scanner-ui-chipper-tiger-do.app.cloud.gov/"
 API_VERSION = "v1"
 NUM_DOMAINS = 200
 SCAN_TYPES = [
@@ -132,7 +133,9 @@ def process_responses(responses: Tuple[Response]):
             counter[error.request.scantype] += 1
 
         for k, v in counter.items():
-            print(f"Found {v} errors for the {k} scantype.")
+            print(
+                f"{v} errors for the {k} scantype. {(v / NUM_DOMAINS) * 100}% of domains."
+            )
 
 
 async def main():
