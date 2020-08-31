@@ -36,6 +36,7 @@ ijson = "^3.1.1"
 beautifulsoup4 = "^4.9.1"
 awscli = "^1.18.117"
 httpx = "^0.14.2"
+fire = "^0.3.1"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.6.2"
