@@ -9,7 +9,7 @@ with randomly choosen domains. It then shows output about success and error rate
 Args:
     api_url (str): The api url to test. Defaults to https://site-scanning.app.cloud.gov/
     api_version (str): The api version to test. Defaults to v1.
-    num-domains (int): The number of domains to choose randomly. Defaults to 200.
+    num_domains (int): The number of domains to choose randomly. Defaults to 200.
     date (str): A date to test in the form YYYY-MM-DD. Defaults to yesterday's date.
     scan_types (str): A comma-separated list of scan types. Defaults to all scans.
 """
@@ -31,7 +31,7 @@ BASE_DOMAINS_URL = (
     "https://github.com/GSA/data/raw/master/dotgov-domains/current-federal.csv"
 )
 
-client = httpx.AsyncClient()
+client = httpx.AsyncClient(timeout=None)
 
 
 @dataclasses.dataclass
@@ -87,7 +87,7 @@ async def test_api(requests: List[Request]) -> Tuple[Response]:
 
 
 def construct_requests(
-    api_url: str, api_version: str, domains: List[str], scantypes: List[str], date: str
+    api_url: str, api_version: str, scantypes: List[str], date: str, domains: List[str]
 ) -> List[Request]:
     """
     construct_requests builds requests for the endpoint using scantypes, domains, and date.
@@ -154,9 +154,9 @@ async def main(options: dict):
     requests = construct_requests(
         options["api_url"],
         options["api_version"],
-        random_domains,
         options["scan_types"],
-        date=options["date"],
+        options["date"],
+        random_domains,
     )
     responses = await test_api(requests)
     process_responses(options, responses)
