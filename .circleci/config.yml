@@ -48,25 +48,6 @@ jobs:
             sudo apt-get install cf-cli
             cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org
             cf install-plugin blue-green-deploy -r CF-Community -f
-      - run:
-          name: deploy to cloud.gov 10x
-          command: |
-            # If we do not specify a space, then deploy to the branch that we are on.
-            # This lets you have dev/staging/main branches that automatically go to the right place.
-            if [ -z "$CF_SPACE" ] ; then
-              export CF_SPACE="$CIRCLE_BRANCH"
-            fi
-            if [ -z "$CF_ORG" ] ; then
-              echo CF_ORG not set, aborting
-              exit 1
-            fi
-            cf api https://api.fr.cloud.gov
-            cf auth "$CF_USERNAME" "$CF_PASSWORD"
-            cf target -o "$CF_ORG" -s "$CF_SPACE"
-
-            # generate our requirements.txt file on the fly
-            poetry export -f requirements.txt --without-hashes > requirements.txt
-            ./deploy-cloudgov.sh zdt
 
       - run:
           name: deploy to cloud.gov sitescan
@@ -95,26 +76,6 @@ jobs:
       - checkout
       - run:
           <<: *installcf
-      - run:
-          name: run scan 10x
-          no_output_timeout: 1h
-          command: |
-            # If we do not specify a space, then deploy to the branch that we are on.
-            # This lets you have dev/staging/main branches that automatically go to the right place.
-            if [ -z "$CF_SPACE" ] ; then
-              export CF_SPACE="$CIRCLE_BRANCH"
-            fi
-            if [ -z "$CF_ORG" ] ; then
-              echo CF_ORG not set, aborting
-              exit 1
-            fi
-            cf api https://api.fr.cloud.gov
-            cf auth "$CF_USERNAME" "$CF_PASSWORD"
-            cf target -o "$CF_ORG" -s "$CF_SPACE"
-
-            poetry install
-            poetry run ./spawn_scans.sh
-
       - run:
           name: run scan sitescan
           no_output_timeout: 1h
