@@ -385,6 +385,18 @@ six = "*"
 develop = ["mock", "pytest (>=3.0.0)", "pytest-cov", "pytz", "sphinx", "sphinx-rtd-theme"]
 
 [[package]]
+category = "main"
+description = "A library for automatically generating command line interfaces."
+name = "fire"
+optional = false
+python-versions = "*"
+version = "0.3.1"
+
+[package.dependencies]
+six = "*"
+termcolor = "*"
+
+[[package]]
 category = "dev"
 description = "the modular source code checker: pep8 pyflakes and co"
 name = "flake8"
@@ -1136,6 +1148,14 @@ test = ["pytest"]
 
 [[package]]
 category = "main"
+description = "ANSII Color formatting for output in terminal."
+name = "termcolor"
+optional = false
+python-versions = "*"
+version = "1.1.0"
+
+[[package]]
+category = "main"
 description = "Accurately separate the TLD from the registered domain and subdomains of a URL, using the Public Suffix List. By default, this includes the public ICANN TLDs and their exceptions. You can optionally support the Public Suffix List's private domains as well."
 name = "tldextract"
 optional = false
@@ -1276,7 +1296,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "d69d2d6b483400c6f1d710b409741dc007b60b2f02278b9f84b680461b477acf"
+content-hash = "85837b95494eea84c1b3feda697767deb6f9dd72ca2a3854aa3d7ac925ff38c5"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1440,6 +1460,9 @@ elasticsearch = [
 elasticsearch-dsl = [
     {file = "elasticsearch-dsl-5.4.0.tar.gz", hash = "sha256:cbef6467085d7debc870bc450d996c7ba5b8822eb86a6033bba09134ffb01ba8"},
     {file = "elasticsearch_dsl-5.4.0-py2.py3-none-any.whl", hash = "sha256:197246ddd556b4b7d2738dfa9e4831068c9b5cb21706f6aca035136d42849109"},
+]
+fire = [
+    {file = "fire-0.3.1.tar.gz", hash = "sha256:9736a16227c3d469e5d2d296bce5b4d8fa8d7851e953bda327a455fc2994307f"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},
@@ -1885,6 +1908,9 @@ tabledata = [
 tcolorpy = [
     {file = "tcolorpy-0.0.7-py3-none-any.whl", hash = "sha256:e3b5763c9106ede26751014723c5148d72fe58b705db4c4fb3f90fd28260d4d8"},
     {file = "tcolorpy-0.0.7.tar.gz", hash = "sha256:3e7745620908d3a7883558e2e9217c8d6186c3060dc32f71b52d766970a78a2d"},
+]
+termcolor = [
+    {file = "termcolor-1.1.0.tar.gz", hash = "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"},
 ]
 tldextract = [
     {file = "tldextract-2.2.3-py2.py3-none-any.whl", hash = "sha256:c2a8a392edf3ea6fa8be80930f04c3ac29e91fa604cb2139bdf6a37fc1e1ac6d"},
