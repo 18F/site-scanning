@@ -16,7 +16,7 @@ jobs:
         command: |
           sudo apt-get update
           sudo apt-get install -y awscli
-          npm install -g pyright
+          sudo npm install -g pyright@1.1.66
           poetry install
     - save_cache:
         key: v1-python37-dependencies-{{ checksum "poetry.lock" }}
