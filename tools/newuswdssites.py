@@ -15,10 +15,10 @@ import sys
 import datetime
 import requests
 
-if 'APIHOST' in os.environ:
-    apihost = os.environ['APIHOST']
+if "APIHOST" in os.environ:
+    apihost = os.environ["APIHOST"]
 else:
-    apihost = 'site-scanning.app.cloud.gov'
+    apihost = "site-scanning.app.cloud.gov"
 
 
 try:
@@ -34,7 +34,7 @@ except IndexError:
 today = datetime.date.today()
 earlier = today - datetime.timedelta(days=daysago)
 
-dateurl = 'https://' + apihost + '/api/v1/lists/dates/'
+dateurl = "https://" + apihost + "/api/v1/lists/dates/"
 r = requests.get(dateurl)
 dates = r.json()
 
@@ -52,29 +52,47 @@ session = requests.Session()
 
 # use this to slurp the items on the pages down
 def get_pages(url):
-    first_page = session.get(url + '&page=1').json()
-    for i in first_page['results']:
+    first_page = session.get(url + "&page=1").json()
+    for i in first_page["results"]:
         yield i
-    num_pages = int(first_page['count'] / 100) + 1
+    num_pages = int(first_page["count"] / 100) + 1
 
     for page in range(2, num_pages):
-        next_page = session.get(url + '&page=' + str(page)).json()
-        for i in next_page['results']:
+        next_page = session.get(url + "&page=" + str(page)).json()
+        for i in next_page["results"]:
             yield i
 
 
 todaydomains = []
-todayurl = 'https://' + apihost + '/api/v1/date/' + str(today) + '/scans/uswds2/?data.status_code=200&data.total_score=gt:' + score + '&page_size=100'
+todayurl = (
+    "https://"
+    + apihost
+    + "/api/v1/date/"
+    + str(today)
+    + "/scans/uswds2/?data.status_code=200&data.total_score=gt:"
+    + score
+    + "&page_size=100"
+)
 for page in get_pages(todayurl):
-    todaydomains.append(page['domain'])
+    todaydomains.append(page["domain"])
 
 earlierdomains = []
-earlierurl = 'https://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/uswds2/?data.status_code=200&data.total_score=gt:' + score + '&page_size=100'
+earlierurl = (
+    "https://"
+    + apihost
+    + "/api/v1/date/"
+    + str(earlier)
+    + "/scans/uswds2/?data.status_code=200&data.total_score=gt:"
+    + score
+    + "&page_size=100"
+)
 for page in get_pages(earlierurl):
-    earlierdomains.append(page['domain'])
+    earlierdomains.append(page["domain"])
 
 newdomains = list(set(todaydomains) - set(earlierdomains))
 
-print('# New domains with an analysis score of', score, 'between', today, 'and', earlier)
+print(
+    "# New domains with an analysis score of", score, "between", today, "and", earlier
+)
 for i in newdomains:
     print(i)

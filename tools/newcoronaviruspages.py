@@ -15,10 +15,10 @@ import sys
 import datetime
 import requests
 
-if 'APIHOST' in os.environ:
-    apihost = os.environ['APIHOST']
+if "APIHOST" in os.environ:
+    apihost = os.environ["APIHOST"]
 else:
-    apihost = 'site-scanning.app.cloud.gov'
+    apihost = "site-scanning.app.cloud.gov"
 
 
 try:
@@ -30,28 +30,28 @@ except Exception:
 # redirected to other sites or not.  If not specified,
 # get both.
 samedomain = None
-if '-samedomain' in sys.argv:
+if "-samedomain" in sys.argv:
     samedomain = True
-if '-notsamedomain' in sys.argv:
+if "-notsamedomain" in sys.argv:
     samedomain = False
 
 # if this is set, also include sites that redirect all pages
-if '-allowredirectall' in sys.argv:
+if "-allowredirectall" in sys.argv:
     allowredirectall = True
 else:
     allowredirectall = False
 
 # Specify whether we want ssl or not
 # Used to test against http://localhost:8000/, for example.
-if '-nossl' in sys.argv:
-    scheme = 'http'
+if "-nossl" in sys.argv:
+    scheme = "http"
 else:
-    scheme = 'https'
+    scheme = "https"
 
 today = datetime.date.today()
 earlier = today - datetime.timedelta(days=daysago)
 
-dateurl = scheme + '://' + apihost + '/api/v1/lists/dates/'
+dateurl = scheme + "://" + apihost + "/api/v1/lists/dates/"
 r = requests.get(dateurl)
 dates = r.json()
 
@@ -69,49 +69,63 @@ session = requests.Session()
 
 # use this to slurp the items on the pages down
 def get_pages(url):
-    first_page = session.get(url + '&page=1').json()
-    for i in first_page['results']:
+    first_page = session.get(url + "&page=1").json()
+    for i in first_page["results"]:
         yield i
-    num_pages = int(first_page['count'] / 100) + 1
+    num_pages = int(first_page["count"] / 100) + 1
 
     for page in range(2, num_pages):
-        next_page = session.get(url + '&page=' + str(page)).json()
-        for i in next_page['results']:
+        next_page = session.get(url + "&page=" + str(page)).json()
+        for i in next_page["results"]:
             yield i
 
 
 todaydomains = []
-todayurl = scheme + '://' + apihost + '/api/v1/date/' + str(today) + '/scans/pagedata/?page_size=100&data.%2Fcoronavirus.responsecode=200'
+todayurl = (
+    scheme
+    + "://"
+    + apihost
+    + "/api/v1/date/"
+    + str(today)
+    + "/scans/pagedata/?page_size=100&data.%2Fcoronavirus.responsecode=200"
+)
 if samedomain is not None:
     if samedomain:
-        todayurl = todayurl + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
+        todayurl = todayurl + "&data.%2Fcoronavirus.final_url_in_same_domain=true"
     else:
-        todayurl = todayurl + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
+        todayurl = todayurl + "&data.%2Fcoronavirus.final_url_in_same_domain=false"
 for page in get_pages(todayurl):
     if allowredirectall is False:
-        if page['data']['/redirecttest-foo-bar-baz']['responsecode'] != '200':
-            todaydomains.append(page['domain'])
+        if page["data"]["/redirecttest-foo-bar-baz"]["responsecode"] != "200":
+            todaydomains.append(page["domain"])
     else:
-        todaydomains.append(page['domain'])
+        todaydomains.append(page["domain"])
 
 
 earlierdomains = []
-earlierurl = scheme + '://' + apihost + '/api/v1/date/' + str(earlier) + '/scans/pagedata/?page_size=100&data.%2Fcoronavirus.responsecode=200'
+earlierurl = (
+    scheme
+    + "://"
+    + apihost
+    + "/api/v1/date/"
+    + str(earlier)
+    + "/scans/pagedata/?page_size=100&data.%2Fcoronavirus.responsecode=200"
+)
 if samedomain is not None:
     if samedomain:
-        earlierurl = earlierurl + '&data.%2Fcoronavirus.final_url_in_same_domain=true'
+        earlierurl = earlierurl + "&data.%2Fcoronavirus.final_url_in_same_domain=true"
     else:
-        earlierurl = earlierurl + '&data.%2Fcoronavirus.final_url_in_same_domain=false'
+        earlierurl = earlierurl + "&data.%2Fcoronavirus.final_url_in_same_domain=false"
 for page in get_pages(earlierurl):
     if allowredirectall is False:
-        if page['data']['/redirecttest-foo-bar-baz']['responsecode'] != '200':
-            earlierdomains.append(page['domain'])
+        if page["data"]["/redirecttest-foo-bar-baz"]["responsecode"] != "200":
+            earlierdomains.append(page["domain"])
     else:
-        earlierdomains.append(page['domain'])
+        earlierdomains.append(page["domain"])
 
 
 newdomains = list(set(todaydomains) - set(earlierdomains))
 
-print('# New domains with valid /coronavirus pages', 'between', today, 'and', earlier)
+print("# New domains with valid /coronavirus pages", "between", today, "and", earlier)
 for i in newdomains:
     print(i)

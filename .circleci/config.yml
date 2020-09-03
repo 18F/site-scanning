@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.7-node
     steps:
     - checkout
     # Download and cache dependencies
@@ -16,11 +16,17 @@ jobs:
         command: |
           sudo apt-get update
           sudo apt-get install -y awscli
+          sudo npm install -g pyright@1.1.66
           poetry install
     - save_cache:
         key: v1-python37-dependencies-{{ checksum "poetry.lock" }}
         paths:
           - /home/circleci/.cache/pypoetry/virtualenvs
+
+    - run:
+        name: lint
+        command: |
+          poetry run ./lint.sh
 
     - setup_remote_docker:
         docker_layer_caching: true

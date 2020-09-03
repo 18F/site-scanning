@@ -13,11 +13,11 @@ import re
 def deperiodkeys(mydict):
     data = {}
     for k, v in mydict.items():
-        data[re.sub(r'\.', '//', k)] = v
+        data[re.sub(r"\.", "//", k)] = v
     return data
 
 
-with open(sys.argv[1], 'r') as f:
+with open(sys.argv[1], "r") as f:
     data = f.read()
 
 jsondata = json.loads(data, object_hook=deperiodkeys)
