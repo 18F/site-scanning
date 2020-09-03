@@ -21,6 +21,7 @@ from rest_framework.response import Response
 
 from scanner_ui.ui.views import get_dates, get_list_from_fields
 from .serializers import DummySerializer, ScanSerializer
+from .errors import APIError
 
 
 logger = logging.getLogger(__name__)
@@ -166,6 +167,7 @@ class DomainsViewset(viewsets.GenericViewSet):
     pagination_class = ElasticsearchPagination
 
     def get_queryset(self, domain=None, date=None):
+        logging.debug(f"entered {self.get_queryset.__name__}")
         pageparams = [
             self.pagination_class.page_query_param,
             self.pagination_class.page_size_query_param,
@@ -175,6 +177,7 @@ class DomainsViewset(viewsets.GenericViewSet):
         )
 
     def list(self, request, date=None):
+        logging.debug(f"entered {self.list.__name__}")
         scans = self.get_queryset(date=date)
 
         # paginate the query.  If we return the entire dataset, we run out of memory
@@ -185,12 +188,22 @@ class DomainsViewset(viewsets.GenericViewSet):
                 mypage.append(hit.to_dict())
             serializer = self.get_serializer(mypage, many=True)
             return self.get_paginated_response(serializer.data)
-        except Exception:
-            # there was nothing on the page, so...
-            return Response([])
+        except Exception as exc:
+            msg = f"Could not find results for {date}. Please try a different date."
+            logging.warning(msg, exc_info=exc)
+            e = APIError.HttpNotFound(msg)
+            return Response(e, status=HTTPStatus.NOT_FOUND)
 
     def retrieve(self, request, domain=None, date=None):
+        logging.debug(f"entered {self.retrieve.__name__}")
         scans = self.get_queryset(domain=domain, date=date)
+        if not scans:
+            msg = f"Could not find scans for {domain} for date {date}."
+            logging.warning(msg)
+            e = APIError.HttpNotFound(msg)
+            return Response(e, status=HTTPStatus.NOT_FOUND)
+
+        logging.info(f"found scans for {domain} for date {date}.")
         serializer = self.get_serializer(scans, many=True)
         return Response(serializer.data)
 
@@ -220,6 +233,12 @@ class ScansViewset(viewsets.GenericViewSet):
     def list(self, request, date=None):
         logger.debug(f"entered {self.list.__name__}")
         scans = get_scan_types(date=date)
+        if not scans:
+            msg = f"Could not find scans for {date}."
+            logging.warning(msg)
+            e = APIError.HttpNotFound(msg)
+            return Response(e, status=HTTPStatus.NOT_FOUND)
+
         logging.info("successfully got scan types")
         return Response(scans)
 
@@ -236,19 +255,28 @@ class ScansViewset(viewsets.GenericViewSet):
             serializer = self.get_serializer(mypage, many=True)
             logging.info("successfully serialized data")
             return self.get_paginated_response(serializer.data)
-        except Exception:
-            # there was nothing on the page, so...
-            logger.warning(f"there was nothing on the page for scantype: {scantype}")
-            return StreamingHttpResponse([])
+        except Exception as exc:
+            msg = f"Could not find scans for {scantype} on {date}"
+            logger.warning(msg, exc_info=exc)
+            e = APIError.HttpNotFound(msg)
+            return Response(e, status=HTTPStatus.NOT_FOUND)
 
     def scan(self, _, scantype=None, domain=None, date=None):
         logger.debug(f"entered {self.scan.__name__}")
         scan = self.get_queryset(scantype=scantype, domain=domain, date=date)
         scan_length = len(scan)
 
-        if scan_length != 1:
-            logger.error(f"Scan length was {scan_length}. Expected 1 scan. {scan}")
-            return Response(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+        if not scan_length:
+            msg = f"Could not find scans for {scantype} scan for {domain} on {date}."
+            logger.warning(msg)
+            e = APIError.HttpNotFound(msg)
+            return Response(e, status=HTTPStatus.NOT_FOUND)
+
+        if scan_length > 1:
+            msg = f"Scan length was {scan_length} for {scantype} scan for {domain} on {date}."
+            logger.error(msg)
+            e = APIError.InternalServerError()
+            return Response(e, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
         serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())
         logging.info("successfully serialized data")
