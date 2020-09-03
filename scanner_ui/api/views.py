@@ -275,7 +275,7 @@ class ScansViewset(viewsets.GenericViewSet):
         if scan_length > 1:
             msg = f"Scan length was {scan_length} for {scantype} scan for {domain} on {date}."
             logger.error(msg)
-            e = APIError.InternalServerError(msg)
+            e = APIError.InternalServerError()
             return Response(e, status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
         serializer = self.get_serializer(scan[0].execute().hits[0].to_dict())

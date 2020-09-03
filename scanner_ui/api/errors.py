@@ -38,5 +38,5 @@ class APIError(dict):
         return cls("HttpNotFound", msg)
 
     @classmethod
-    def InternalServerError(cls, msg: str):
-        return cls("InternalServerError", msg)
+    def InternalServerError(cls):
+        return cls("InternalServerError", "Internal Server Error.")
