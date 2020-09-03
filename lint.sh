@@ -7,6 +7,9 @@ set -o pipefail
 printf "Security linting with bandit...\n"
 bandit -r . 
 
+printf "\n Type checking with pyright...\n"
+pyright
+
 printf "\n Checking code quality with flake8...\n"
 flake8 . --benchmark
 
