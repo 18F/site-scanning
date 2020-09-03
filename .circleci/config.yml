@@ -23,9 +23,9 @@ jobs:
           - /home/circleci/.cache/pypoetry/virtualenvs
 
     - run:
-      name: lint
-      command: |
-        poetry run ./lint.sh
+        name: lint
+        command: |
+          poetry run ./lint.sh
 
     - setup_remote_docker:
         docker_layer_caching: true
