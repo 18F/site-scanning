@@ -12,6 +12,7 @@ Args:
     num_domains (int): The number of domains to choose randomly. Defaults to 200.
     date (str): A date to test in the form YYYY-MM-DD. Defaults to yesterday's date.
     scan_types (str): A comma-separated list of scan types. Defaults to all scans.
+    show_failures (bool): Show the urls that failed. Defaults to false.
 """
 
 import asyncio
@@ -128,6 +129,13 @@ def process_responses(options: dict, responses: Tuple[Response]):
             error_count += 1
             errors.append(response)
 
+            if options["show_failures"]:
+                domain = response.request.domain
+                scantype = response.request.scantype
+                print(f"Error found for scantype {scantype} on {domain}")
+                print(f"Status: {response.status}")
+                print(f"Content: {response.content}\n")
+
     success_rate = ((total_requests - error_count) / total_requests) * 100
     print(f"{total_requests} requests with {error_count} error(s)")
     print(f"Success rate: {success_rate}")
@@ -171,6 +179,7 @@ def options(
     num_domains: int = None,
     date: str = None,
     scan_types: str = None,
+    show_failures: bool = False,
 ) -> dict:
     if not api_url:
         api_url = "https://site-scanning.app.cloud.gov/"
@@ -204,6 +213,7 @@ def options(
         "num_domains": num_domains,
         "date": date,
         "scan_types": scans,
+        "show_failures": show_failures,
     }
 
     return opts
