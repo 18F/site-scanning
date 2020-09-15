@@ -4,11 +4,11 @@ The Site Scanning program highlights the features contributing to any federal we
 
 You are viewing the scanner's back-end code. Check out the [program documentation](https://github.com/18F/site-scanning-documentation) for front-end code.
 
-To install Spotlight locally:
+To install `site-scanning` locally:
 * [How to get started](docs/INSTALL.md)
 * [How to manage deployment in cloud.gov](docs/DevOps.md)
 
-To customize Spotlight API:
+To customize `site-scanning` API:
 * [Basic architecture](docs/Architecture.md)
 * [Example code using API](tools/)
 

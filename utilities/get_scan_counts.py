@@ -15,7 +15,7 @@ from datetime import datetime
 import requests
 
 
-API_ROOT = "https://spotlight.app.cloud.gov/api/v1"
+API_ROOT = "https://site-scanning.app.cloud.gov/api/v1"
 SCAN_TYPES = [
     "200scanner",
     "dap",
