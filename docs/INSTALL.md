@@ -1,6 +1,6 @@
-# Setup Spotlight
+# Setup site-scanning
 
-Spotlight is engineered to run on cloud.gov using CircleCI for CI/CD.
+site-scanning is engineered to run on cloud.gov using CircleCI for CI/CD.
 You can also run a local copy for local development. 
 You should run these commands on a Mac OS X or Linux host which has tools such as cf, jq, curl, bash, etc on them.
 
@@ -13,9 +13,9 @@ or by getting an IAA signed and then getting a real production cloud.gov org.
 - Once you are set up and able to issue cloudfoundry commands like `cf target`, you will be able to proceed.
 
 ### Complete the initial setup
-- Clone the repo with `git clone https://github.com/18F/Spotlight` or `git clone git@github.com:18F/Spotlight.git` over SSH.
+- Clone the repo with `git clone https://github.com/18F/site-scanning` or `git clone git@github.com:18F/site-scanning.git` over SSH.
 
-- `cd Spotlight` to get into the repo dir.
+- `cd site-scanning` to get into the repo dir.
 - Create the services required and do the initial app push:
 	- If you are in a sandbox org/space, do this: `./deploy-cloudgov.sh setup`.
 	- If you are in a production org/space, do this: `./deploy-cloudgov.sh setup prod`
@@ -49,11 +49,11 @@ automatically.
 
 ## Development Setup
 
-Spotlight requires Docker and Python to run locally.
+`site-scanning` requires Docker and Python to run locally.
 
 ### Code
-- Clone the repo with `git clone https://github.com/18F/Spotlight` or `git clone git@github.com:18F/Spotlight.git` over SSH.
-- `cd Spotlight` to get into the repo dir.
+- Clone the repo with `git clone https://github.com/18F/site-scanning` or `git clone git@github.com:18F/site-scanning.git` over SSH.
+- `cd site-scanning to get into the repo dir.
 
 ### Docker
 - [Install Docker](https://docs.docker.com/install/).
@@ -133,7 +133,7 @@ branch, and it will do a test then deploy.
 setup, but this is unfinished as of now.
 
 ### Domain Scan
-- Spotlight uses the [domain-scan](https://github.com/18F/domain-scan) engine
+- `site-scanning` uses the [domain-scan](https://github.com/18F/domain-scan) engine
 to do the work of parallelizing and collecting all of the scan data. Documention exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
 
 #### Set up local development

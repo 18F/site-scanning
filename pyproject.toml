@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = ["Alex Hendrie Bielen <alex.bielen@gsa.gov>"]
-description = "Spotlight highlights the features contributing to any federal website's success, for free."
-name = "spotlight"
+description = "site-scanning highlights the features contributing to any federal website's success, for free."
+name = "site-scanning"
 version = "0.1.0"
 
 [tool.poetry.dependencies]

@@ -13,7 +13,7 @@ agencies = ListsViewset.as_view({"get": "agencies"})
 domaintypes = ListsViewset.as_view({"get": "domaintypes"})
 fieldvalues = ListsViewset.as_view({"get": "fieldvalues"})
 dates = ListsViewset.as_view({"get": "dates"})
-swagger_view = get_swagger_view(title="Spotlight API")
+swagger_view = get_swagger_view(title="site-scanning API")
 
 urlpatterns = [
     path("", swagger_view, name="docs"),
