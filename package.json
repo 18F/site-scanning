@@ -2,8 +2,9 @@
   "name": "domain-scan-headless-lambda",
   "description": "Dependencies for building Lambda containers for headless Chrome in domain-scan.",
   "dependencies": {
-    "lighthouse": "^6.2.0",
-    "puppeteer": "^5.2.1",
-    "tar": "^6.0.2"
+    "lighthouse": "^6.4.1",
+    "node-forge": "^0.10.0",
+    "puppeteer": "^5.3.1",
+    "tar": "^6.0.5"
   }
 }
