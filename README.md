@@ -1,4 +1,9 @@
-# Site Scanning Program
+
+# Note: This repo contains the code for the first Site Scanning engine (which has now been replaced), as well as the program issue tracker for 2019-2020.  The current engine's codebase can be found [here](https://github.com/18F/site-scanning-engine/) and the program's new issue tracker is [here](https://github.com/gsa/site-scanning).  
+
+
+
+# Site Scanning Engine v1
 
 The Site Scanning program highlights the features contributing to any federal website's success, for free.
 
