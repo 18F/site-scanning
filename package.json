@@ -4,7 +4,7 @@
   "dependencies": {
     "lighthouse": "^6.4.1",
     "node-forge": "^0.10.0",
-    "puppeteer": "^5.3.1",
+    "puppeteer": "^22.8.2",
     "tar": "^6.0.5"
   }
 }
