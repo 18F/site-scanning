@@ -53,13 +53,13 @@ automatically.
 
 ### Code
 - Clone the repo with `git clone https://github.com/18F/site-scanning` or `git clone git@github.com:18F/site-scanning.git` over SSH.
-- `cd site-scanning to get into the repo dir.
+- `cd site-scanning` to get into the repo dir.
 
 ### Docker
 - [Install Docker](https://docs.docker.com/install/).
 - Run `docker --version` and `docker-compose --version` to ensure that both are installed.
 - To set up the environment with no data run `docker-compose up --build -d`
-- To set up the environment with data, see the (Run Tests)[#run-tests] section
+- To set up the environment with data, see the [Run Tests](#run-tests) section.
 - Troubleshooting: Docker for Mac's default memory requirements are not sufficient to run ElasticSearch. If you're having trouble getting the ElasticSearch container to start or if you're seeing Exit Code 137, open up the Docker Preferences and set the memory to at least 4 GB.
 
 ### Python
@@ -70,9 +70,7 @@ While optional, we recommend that you use `pyenv` to manage your Python versions
 - `cd` into the repo and run `pyenv install` to install the project's Python version.
 
 #### Poetry
-- [Install Poetry](https://github.com/python-poetry/poetry#installation). Poetry is a sophisticated Python dependency manager that has manages virtual environemnts, supports deterministic builds, and has a dependency solver.
-
-- [Install Poetry](https://github.com/python-poetry/poetry#installation)
+- [Install Poetry](https://github.com/python-poetry/poetry#installation). Poetry is a sophisticated Python dependency manager that manages virtual environments, supports deterministic builds, and has a dependency solver.
 - Install the project's dependencies with `poetry install`. 
 - There are two ways to run scripts with Poetry:
 	- `poetry shell` creates a shell with the virtual environment in which you can run 
@@ -96,13 +94,13 @@ and use the docker environment that test.sh sets up.  You can set up to do this 
 - You can keep making changes to the code and running `poetry run manage.py test` to quickly
 test it against the small elasticsearch instance that is running in docker.
 That instance has a few domains which are scanned and loaded in.  The list of
-domains can be [found here](composetest.sh)).
+domains can be [found here](../composetest.sh).
 
 ### Running Locally Against Cloud.gov
 - One simple way to run the app locally with a populated test database is to
 connect to the cloud.gov-deployed Elasticsearch database via an ssh tunnel.
 
-- See [the DevOps documentation](Devops.md#connect-to-elasticsearch) for details on how to tunnel from cloud.gov
+- See [the DevOps documentation](DevOps.md#connect-to-elasticsearch) for details on how to tunnel from cloud.gov.
 - Set the `ESURL` environment variable to the provided port on localhost.
 - Run `poetry run python manage.py runserver` to start the Django development server
 
@@ -134,7 +132,7 @@ setup, but this is unfinished as of now.
 
 ### Domain Scan
 - `site-scanning` uses the [domain-scan](https://github.com/18F/domain-scan) engine
-to do the work of parallelizing and collecting all of the scan data. Documention exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
+to do the work of parallelizing and collecting all of the scan data. Documentation exists to help you [add new scanners](https://github.com/18F/domain-scan#developing-new-scanners).
 
 #### Set up local development
 - Check out the code:
